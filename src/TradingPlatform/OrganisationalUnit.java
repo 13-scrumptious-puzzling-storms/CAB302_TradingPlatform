@@ -30,6 +30,12 @@ public class OrganisationalUnit{
     }
 
     /**
+     * Creates a null instance of an organisational unit
+     */
+    public OrganisationalUnit() {
+    }
+
+    /**
      * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
      * @param organisationID Organisational unit's unique ID
      * @param asset Asset object type to  added to organisational unit
