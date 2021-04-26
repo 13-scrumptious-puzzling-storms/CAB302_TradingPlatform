@@ -50,7 +50,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource 
         ResultSet rs = null;
 
         try {
-            getOrganisationalUnit.setString(1, id);
+            getOrganisationalUnit.setInt(1, id);
             rs = getOrganisationalUnit.executeQuery();
             rs.next();
 
