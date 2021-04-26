@@ -36,6 +36,33 @@ public class OrganisationalUnit{
     }
 
     /**
+     * Sets the OrganisationalUnit's ID to id
+     *
+     * @param id
+     */
+    public void setID(int id) {
+        this.organisationID = id;
+    }
+
+    /**
+     * Sets the OrganisationalUnit's name to name
+     *
+     * @param name
+     */
+    public void setName(String name) {
+        this.organisationName = name;
+    }
+
+    /**
+     * Sets the OrganisationalUnit's credits to credits
+     *
+     * @param credits
+     */
+    public void setCredits(int credits) {
+        this.organisationCredit = credits;
+    }
+
+    /**
      * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
      * @param organisationID Organisational unit's unique ID
      * @param asset Asset object type to  added to organisational unit
