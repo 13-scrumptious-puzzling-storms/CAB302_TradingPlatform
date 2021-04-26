@@ -5,9 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Creates a new instance of an organisational unit.
+ */
 public class OrganisationalUnit{
     String organisationName;
     int organisationCredit;
+    int organisationID;
     HashMap<Object, Integer> assetCollection;
 
     /**
@@ -27,27 +31,37 @@ public class OrganisationalUnit{
 
     /**
      * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
-     * @param organisationName Name of the organisational unit
+     * @param organisationID Organisational unit's unique ID
      * @param asset Asset object type to  added to organisational unit
      * @param quantity Quantity of asset to be added under organisational unit
      */
-    public void addAsset(String organisationName, Object asset, int quantity){
+    public void addAsset(int organisationID, Object asset, int quantity){
     }
 
     /**
      * Returns entire set of assets owned by the organisational unit
-     * @param organisationName Name of the organisational unit
-     * @return
+     * @param organisationID Organisational Unit's unique ID
+     * @return allAssets
      */
-    public HashMap getAssets(String organisationName){
+    public HashMap getAssets(int organisationID){
         return assetCollection;
     }
 
-    public HashMap getCurrentBuyOrders(String organisationName, Object asset, int quantity){
+    /**
+     * Returns current asset orders placed for organisation
+     * @param organisationID Organisational Unit's unique ID
+     * @return buyAssets
+     */
+    public HashMap getCurrentBuyOrders(int organisationID){
         return assetCollection;
     }
 
-    public HashMap getCurrentSellOrders(String organisationName, Object asset, int quantity){
+    /**
+     * Returns current asset sell orders placed for organisation
+     * @param organisationID Organisational Unit's unique ID
+     * @return sellAssets
+     */
+    public HashMap getCurrentSellOrders(int organisationID){
         return assetCollection;
     }
 
