@@ -4,20 +4,18 @@ package TradingPlatform;
  * A user is a part of an organisational unit, and has their own username, password,
  * and account type.
  */
-public class User {
+public abstract class User {
     private final OrganisationalUnit unit;
     private final String username;
-    private final AccountType accountType;
+    private int userID;
 
     /**
-     *
-     * @param username User's username.
-     * @param unit Unit that the user belongs to.
+     * Instantiates a user from their userid, getting their information from the database
+     * @param userID The user's userid
      */
-    public User(String username, OrganisationalUnit unit){
-        this.username = username;
-        this.unit = unit;
-        this.accountType = AccountType.MEMBER;
+    public User(int userID){
+        this.unit = null;
+        this.username = null;
     }
 
     /**
@@ -30,9 +28,7 @@ public class User {
     /**
      * @return The user's account type (Member or Admin).
      */
-    public AccountType getAccountType() {
-        return accountType;
-    }
+    public abstract AccountType getAccountType();
 
     /**
      * @return The unit the user belongs to.
@@ -43,6 +39,7 @@ public class User {
 
     /**
      * Changes the user's password.
+     *
      * @param currentPassword The user's current password.
      * @param newPassword The user's new password.
      * @return True if the password was successfully changed.
