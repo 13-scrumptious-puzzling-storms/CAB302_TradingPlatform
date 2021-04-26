@@ -38,7 +38,7 @@ public class OrganisationalUnit{
     /**
      * Sets the OrganisationalUnit's ID to id
      *
-     * @param id
+     * @param id the id of the Organisational Unit
      */
     public void setId(int id) {
         this.organisationID = id;
@@ -47,7 +47,7 @@ public class OrganisationalUnit{
     /**
      * Sets the OrganisationalUnit's name to name
      *
-     * @param name
+     * @param name the name of the Organisational Unit
      */
     public void setName(String name) {
         this.organisationName = name;
@@ -56,7 +56,7 @@ public class OrganisationalUnit{
     /**
      * Sets the OrganisationalUnit's credits to credits
      *
-     * @param credits
+     * @param credits the credits belonging to the Organisational Unit
      */
     public void setCredits(int credits) {
         this.organisationCredit = credits;
