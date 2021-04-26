@@ -40,7 +40,7 @@ public class OrganisationalUnit{
      *
      * @param id
      */
-    public void setID(int id) {
+    public void setId(int id) {
         this.organisationID = id;
     }
 
