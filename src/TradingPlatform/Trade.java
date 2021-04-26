@@ -6,17 +6,18 @@ package TradingPlatform;
 public class Trade{
 
     private boolean type;
-    private Object asset;
+    private Asset asset;
     private int quantity;
     private int organisation;
 
     /**
      * Creates a new trade instance
-     * @param type
-     * @param asset
-     * @param quantity
+     * @param type The trade type (true for buy, false for sell).
+     * @param asset The trade asset.
+     * @param quantity The quantity of the asset for the trade.
+     * @param organisationId The organisation initiating the trade order.
      */
-    public Trade(boolean type, Object asset, int quantity, int organisationId){
+    public Trade(boolean type, Asset asset, int quantity, int organisationId){
         this.type = type;
         this.asset = asset;
         this.quantity = quantity;
@@ -25,8 +26,8 @@ public class Trade{
 
     /**
      * returns the amount of credits needed for a trade
-     * @param asset
-     * @param quantity
+     * @param asset The trade asset
+     * @param quantity The number of assets
      * @return price
      */
     public float value(String asset, int quantity){
@@ -35,7 +36,7 @@ public class Trade{
 
     /**
      * Sets the type of a trade to either BUY or SELL
-     * @param type
+     * @param type True for buy, false for sell.
      */
     public void setType(boolean type){
 
@@ -51,9 +52,9 @@ public class Trade{
 
     /**
      * Sets the asset used for the trade
-     * @param asset
+     * @param asset The asset the trade will be for.
      */
-    public void setAsset(Object asset){
+    public void setAsset(Asset asset){
 
     }
 
@@ -61,13 +62,13 @@ public class Trade{
      * Gets the asset from the trade
      * @return asset
      */
-    public Object getAsset(){
-        return 0;
+    public Asset getAsset(){
+        return null;
     }
 
     /**
      * Sets the quantity of assets in the trade
-     * @param quantity
+     * @param quantity The quantity of assets in the trade
      */
     public void setQuantity(int quantity){
 

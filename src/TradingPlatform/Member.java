@@ -1,5 +1,8 @@
 package TradingPlatform;
 
+/**
+ * A member is a regular employee that belongs to an Organisational Unit.
+ */
 public class Member extends User {
     /**
      * Instantiates a member from their userid, getting their information from the database

@@ -10,15 +10,15 @@ public class Asset {
 
     /**
      * creates a new instance of an asset from the assetName
-     * @param assetName
+     * @param assetName The name of the asset
      */
     public Asset(String assetName){
         this.assetName = assetName;
     }
 
     /**
-     * grabs the assetID from the db
-     * @param assetId
+     * grabs the asset from the db
+     * @param assetId The assetID of the asset.
      */
     public Asset(int assetId){
         this.assetId = assetId;
