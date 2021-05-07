@@ -22,12 +22,12 @@ public class OrganisationalUnit{
     public OrganisationalUnit(String organisationName, int organisationCredit) {
     }
 
-    /**
-     * Creates new instance of an organisational unit
-     * @param organisationID organisation's unique ID
-     */
-    public OrganisationalUnit(int organisationID){
-    }
+//    /**
+//     * Creates new instance of an organisational unit
+//     * @param organisationID organisation's unique ID
+//     */
+//    public OrganisationalUnit(int organisationID){
+//    }
 
     /**
      * Creates a null instance of an organisational unit
