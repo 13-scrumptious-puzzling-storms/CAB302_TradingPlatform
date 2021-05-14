@@ -7,6 +7,7 @@ package TradingPlatform;
 public abstract class User {
     private final OrganisationalUnit unit;
     private final String username;
+    private AccountType accountType;
     private int userID;
 
     /**
@@ -14,6 +15,7 @@ public abstract class User {
      * @param userID The user's userid
      */
     public User(int userID){
+        this.userID = userID;
         this.unit = null;
         this.username = null;
     }
@@ -28,7 +30,7 @@ public abstract class User {
     /**
      * @return The user's account type (Member or Admin).
      */
-    public abstract AccountType getAccountType();
+    public AccountType getAccountType() { return accountType; }
 
     /**
      * @return The unit the user belongs to.
@@ -48,33 +50,4 @@ public abstract class User {
         return false;
     }
 
-    /**
-     * Enum of the different account types.
-     */
-    public enum AccountType {
-        /**
-         * A regular employee account.
-         */
-        MEMBER(0),
-        /**
-         * An IT Administrator account.
-         */
-        ADMINISTRATOR(1);
-
-        private final int value;
-
-        /**
-         * Sets the enum value
-         * @param value The enum value
-         */
-        AccountType(final int value) {
-            this.value = value;
-        }
-
-        /**
-         * Gets the int value of an enum
-         * @return The enum's value.
-         */
-        public int getValue() { return value; }
-    }
 }
