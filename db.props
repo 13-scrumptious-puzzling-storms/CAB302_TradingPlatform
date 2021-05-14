@@ -1,0 +1,4 @@
+jdbc.url=jdbc:mariadb://revisionary.ddns.net:3306
+jdbc.schema=test
+jdbc.username=root
+jdbc.password=toor
