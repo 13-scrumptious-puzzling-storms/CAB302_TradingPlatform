@@ -14,7 +14,7 @@ import java.util.Properties;
  * @author Malcolm Corney
  */
 public class DBConnection {
-    private String propsFile = "./db.props";
+    private String propsFile = "db.props";
 
     /**
      * The singleton instance of the database connection.
@@ -28,7 +28,7 @@ public class DBConnection {
         Properties props = new Properties();
         FileInputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(propsFile);
+            inputStream = new FileInputStream("db.props");
             props.load(inputStream);
             inputStream.close();
 
