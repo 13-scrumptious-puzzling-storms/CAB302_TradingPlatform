@@ -42,7 +42,6 @@ public class OrganisationalUnit{
         this.organisationName = "";
         this.organisationCredit = 0;
         this.organisationID = assignID();
-
     }
 
     private int assignID() {
