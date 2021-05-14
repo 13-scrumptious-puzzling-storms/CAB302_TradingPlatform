@@ -12,6 +12,7 @@ public class OrganisationalUnit{
     String organisationName;
     int organisationCredit;
     int organisationID;
+    static int nextID;
     HashMap<Object, Integer> assetCollection;
 
     /**
@@ -20,6 +21,9 @@ public class OrganisationalUnit{
      * @param organisationCredit Credit amount held by the organisational unit
      */
     public OrganisationalUnit(String organisationName, int organisationCredit) {
+        this.organisationName = organisationName;
+        this.organisationCredit = organisationCredit;
+        this.organisationID = assignID();
     }
 
 //    /**
@@ -33,10 +37,23 @@ public class OrganisationalUnit{
      * Creates a null instance of an organisational unit
      */
     public OrganisationalUnit() {
+        this.organisationName = "";
+        this.organisationCredit = 0;
+        this.organisationID = assignID();
+
+    }
+
+    private int assignID() {
+        nextID = nextID + 1;
+        return nextID;
+    }
+
+    public int getID(){
+        return organisationID;
     }
 
     /**
-     * Sets the OrganisationalUnit's ID to id
+     * Sets the OrganisationalUnit's ID to id ****DELETE??***
      *
      * @param id the id of the Organisational Unit
      */
