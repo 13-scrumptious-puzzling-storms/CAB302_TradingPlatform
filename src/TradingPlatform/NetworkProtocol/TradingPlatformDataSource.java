@@ -21,7 +21,7 @@ public interface TradingPlatformDataSource {
      * @param orgUnit
      */
 
-        +
+
     void addOrganisationalUnit(OrganisationalUnit orgUnit);
 
     /**

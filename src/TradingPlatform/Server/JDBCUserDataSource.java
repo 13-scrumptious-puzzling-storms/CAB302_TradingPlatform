@@ -2,33 +2,46 @@ package TradingPlatform.Server;
 
 import TradingPlatform.AccountType;
 import TradingPlatform.Interfaces.UserDataSource;
-import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.OrganisationalUnit;
 
 import java.sql.*;
 
 public class JDBCUserDataSource implements UserDataSource {
 
-//    private static final String INSERT_ORGANISATIONALUNIT = "INSERT INTO organisationalunit (name, credits) VALUES (?, ?);";
-    private static final String GET_USERNAME = "SELECT username FROM User WHERE id=?";
+    private static final String GET_USER = "SELECT * FROM User WHERE userId=?";
+    private static final String GET_USERNAME = "SELECT username FROM User WHERE userId=?";
+    private static final String GET_ACCOUNT_TYPE = "SELECT userRole FROM User WHERE userId=?";
+    private static final String GET_ORGANISATIONAL_UNIT = "SELECT userRole FROM User WHERE userId=?";
 
-//    private PreparedStatement addOrganisationalUnit;
+    private PreparedStatement getUser;
     private PreparedStatement getUsername;
+    private PreparedStatement getAccountType;
+    private PreparedStatement getOrganisationalUnit;
 
     private Connection connection;
 
     private int userId;
+    private String username;
+    private AccountType accountType;
+    private OrganisationalUnit organisationalUnit;
 
     public JDBCUserDataSource(int userId, Connection connection){
         this.connection = connection;
         this.userId = userId;
 
         try {
-            Statement st = connection.createStatement();
-
             // Preparing Statements
-//            addOrganisationalUnit = connection.prepareStatement(INSERT_ORGANISATIONALUNIT);
-            getUsername = connection.prepareStatement(GET_USERNAME);
+            getUser = connection.prepareStatement(GET_USER);
+
+            getUser.setInt(1, userId);
+            ResultSet rs = getUser.executeQuery();
+
+            if (rs.next()) {
+                username = rs.getString("username");
+                accountType = AccountType.getType(rs.getInt("userRole"));
+                int orgId = rs.getInt("organisationalUnitId");
+                organisationalUnit = new JDBCOrganisationalUnit(orgId, connection).getOrganisationalUnit();
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -37,29 +50,17 @@ public class JDBCUserDataSource implements UserDataSource {
 
     @Override
     public String getUsername() {
-        try {
-            getUsername.clearParameters();
-            getUsername.setInt(1, userId);
-            ResultSet rs = getUsername.executeQuery();
-
-            if (rs.next())
-                return rs.getString(1);
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return null;
+        return username;
     }
 
     @Override
     public AccountType getAccountType() {
-        return null;
+        return accountType;
     }
 
     @Override
     public OrganisationalUnit getOrganisationalUnit() {
-        return null;
+        return organisationalUnit;
     }
 
     @Override
