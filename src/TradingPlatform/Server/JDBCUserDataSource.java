@@ -8,26 +8,40 @@ import java.sql.*;
 
 public class JDBCUserDataSource implements UserDataSource {
 
+    private static final String GET_USER = "SELECT * FROM User WHERE userId=?";
     private static final String GET_USERNAME = "SELECT username FROM User WHERE userId=?";
-    private static final String GET_ACOUNTTYPE = "SELECT userRole FROM User WHERE userId=?";
+    private static final String GET_ACCOUNT_TYPE = "SELECT userRole FROM User WHERE userId=?";
+    private static final String GET_ORGANISATIONAL_UNIT = "SELECT userRole FROM User WHERE userId=?";
 
+    private PreparedStatement getUser;
     private PreparedStatement getUsername;
     private PreparedStatement getAccountType;
+    private PreparedStatement getOrganisationalUnit;
 
     private Connection connection;
 
     private int userId;
+    private String username;
+    private AccountType accountType;
+    private OrganisationalUnit organisationalUnit;
 
     public JDBCUserDataSource(int userId, Connection connection){
         this.connection = connection;
         this.userId = userId;
 
         try {
-            Statement st = connection.createStatement();
-
             // Preparing Statements
-            getUsername = connection.prepareStatement(GET_USERNAME);
-            getAccountType = connection.prepareStatement(GET_ACOUNTTYPE);
+            getUser = connection.prepareStatement(GET_USER);
+
+            getUser.setInt(1, userId);
+            ResultSet rs = getUsername.executeQuery();
+
+            if (rs.next()) {
+                username = rs.getString("username");
+                AccountType.getType(rs.getInt("userRole"));
+                int orgId = rs.getInt("organisationUnitId");
+                organisationalUnit = new JDBCOrganisationalUnit(orgId, connection).getOrganisationalUnit();
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -36,43 +50,17 @@ public class JDBCUserDataSource implements UserDataSource {
 
     @Override
     public String getUsername() {
-        try {
-            getUsername.clearParameters();
-            getUsername.setInt(1, userId);
-            ResultSet rs = getUsername.executeQuery();
-
-            if (rs.next())
-                return rs.getString("username");
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return null;
+        return username;
     }
 
     @Override
     public AccountType getAccountType() {
-        try {
-            getAccountType.clearParameters();
-            getAccountType.setInt(1, userId);
-            ResultSet rs = getAccountType.executeQuery();
-
-            if (rs.next()) {
-                int typeInt = rs.getInt("userRole");
-                return AccountType.getType(typeInt);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return null;
+        return accountType;
     }
 
     @Override
     public OrganisationalUnit getOrganisationalUnit() {
-        return null;
+        return organisationalUnit;
     }
 
     @Override
