@@ -85,7 +85,7 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     }
 
     private void createGUI() {
-        setSize(width, height);
+        setSize(width / 2, height / 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
