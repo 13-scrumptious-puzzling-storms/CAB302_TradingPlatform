@@ -34,12 +34,12 @@ public class JDBCUserDataSource implements UserDataSource {
             getUser = connection.prepareStatement(GET_USER);
 
             getUser.setInt(1, userId);
-            ResultSet rs = getUsername.executeQuery();
+            ResultSet rs = getUser.executeQuery();
 
             if (rs.next()) {
                 username = rs.getString("username");
-                AccountType.getType(rs.getInt("userRole"));
-                int orgId = rs.getInt("organisationUnitId");
+                accountType = AccountType.getType(rs.getInt("userRole"));
+                int orgId = rs.getInt("organisationalUnitId");
                 organisationalUnit = new JDBCOrganisationalUnit(orgId, connection).getOrganisationalUnit();
             }
 

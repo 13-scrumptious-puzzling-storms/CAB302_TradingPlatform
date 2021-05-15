@@ -27,4 +27,11 @@ public class UserTests {
         JDBCUserDataSource user = new JDBCUserDataSource(1, connection);
         assert(user.getAccountType() != null);
     }
+
+    @Test
+    public void TestGetOrganisationalUnit(){
+        JDBCUserDataSource user = new JDBCUserDataSource(1, connection);
+        var orgUnit = user.getOrganisationalUnit();
+        assert(orgUnit != null);
+    }
 }
