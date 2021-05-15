@@ -1,4 +1,4 @@
-package TradingPlatform.Server;
+package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.Interfaces.OrganisationalUnitSource;
 import TradingPlatform.OrganisationalUnit;

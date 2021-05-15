@@ -4,7 +4,7 @@ import TradingPlatform.AccountType;
 import TradingPlatform.OrganisationalUnit;
 
 public interface UserDataSource {
-       /**
+    /**
      * @return User's username, or null on error or if not found.
      */
     String getUsername();

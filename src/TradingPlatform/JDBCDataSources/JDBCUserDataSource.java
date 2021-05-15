@@ -1,4 +1,4 @@
-package TradingPlatform.Server;
+package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.AccountType;
 import TradingPlatform.Interfaces.UserDataSource;

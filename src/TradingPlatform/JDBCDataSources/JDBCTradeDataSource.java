@@ -1,4 +1,4 @@
-package TradingPlatform.Server;
+package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.Asset;
 import TradingPlatform.Interfaces.TradeDataSource;
