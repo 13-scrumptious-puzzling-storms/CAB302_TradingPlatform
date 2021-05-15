@@ -19,6 +19,12 @@ public class UserTests {
     @Test
     public void TestGetUsername(){
         JDBCUserDataSource user = new JDBCUserDataSource(1, connection);
-        System.out.println(user.getUsername());
+        assert (user.getUsername() != null);
+    }
+
+    @Test
+    public void TestGetAccountType(){
+        JDBCUserDataSource user = new JDBCUserDataSource(1, connection);
+        assert(user.getAccountType() != null);
     }
 }

@@ -1,5 +1,8 @@
 package TradingPlatform;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Enum of the different account types.
  */
@@ -14,6 +17,7 @@ public enum AccountType {
     ADMINISTRATOR(1);
 
     private final int value;
+    private static final Map<Integer, AccountType> map = new HashMap<>();
 
     /**
      * Sets the enum value
@@ -31,5 +35,16 @@ public enum AccountType {
      */
     public int getValue() {
         return value;
+    }
+
+    public static AccountType getType(int value){
+        return map.get(value);
+    }
+    
+    // Initialises the enum map
+    static {
+        for (AccountType typeEnum : AccountType.values()) {
+            map.put(typeEnum.value, typeEnum);
+        }
     }
 }

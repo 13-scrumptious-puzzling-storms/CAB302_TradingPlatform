@@ -2,18 +2,17 @@ package TradingPlatform.Server;
 
 import TradingPlatform.AccountType;
 import TradingPlatform.Interfaces.UserDataSource;
-import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.OrganisationalUnit;
 
 import java.sql.*;
 
 public class JDBCUserDataSource implements UserDataSource {
 
-//    private static final String INSERT_ORGANISATIONALUNIT = "INSERT INTO organisationalunit (name, credits) VALUES (?, ?);";
     private static final String GET_USERNAME = "SELECT username FROM User WHERE userId=?";
+    private static final String GET_ACOUNTTYPE = "SELECT userRole FROM User WHERE userId=?";
 
-//    private PreparedStatement addOrganisationalUnit;
     private PreparedStatement getUsername;
+    private PreparedStatement getAccountType;
 
     private Connection connection;
 
@@ -27,8 +26,8 @@ public class JDBCUserDataSource implements UserDataSource {
             Statement st = connection.createStatement();
 
             // Preparing Statements
-//            addOrganisationalUnit = connection.prepareStatement(INSERT_ORGANISATIONALUNIT);
             getUsername = connection.prepareStatement(GET_USERNAME);
+            getAccountType = connection.prepareStatement(GET_ACOUNTTYPE);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -43,7 +42,7 @@ public class JDBCUserDataSource implements UserDataSource {
             ResultSet rs = getUsername.executeQuery();
 
             if (rs.next())
-                return rs.getString(1);
+                return rs.getString("username");
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -54,6 +53,20 @@ public class JDBCUserDataSource implements UserDataSource {
 
     @Override
     public AccountType getAccountType() {
+        try {
+            getAccountType.clearParameters();
+            getAccountType.setInt(1, userId);
+            ResultSet rs = getAccountType.executeQuery();
+
+            if (rs.next()) {
+                int typeInt = rs.getInt("userRole");
+                return AccountType.getType(typeInt);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
         return null;
     }
 
