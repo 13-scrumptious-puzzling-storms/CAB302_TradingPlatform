@@ -10,7 +10,7 @@ import java.sql.*;
 public class JDBCUserDataSource implements UserDataSource {
 
 //    private static final String INSERT_ORGANISATIONALUNIT = "INSERT INTO organisationalunit (name, credits) VALUES (?, ?);";
-    private static final String GET_USERNAME = "SELECT username FROM User WHERE id=?";
+    private static final String GET_USERNAME = "SELECT username FROM User WHERE userId=?";
 
 //    private PreparedStatement addOrganisationalUnit;
     private PreparedStatement getUsername;
