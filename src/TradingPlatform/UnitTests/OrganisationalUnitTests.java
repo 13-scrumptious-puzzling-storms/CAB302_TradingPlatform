@@ -35,8 +35,9 @@ public class OrganisationalUnitTests {
     }
 
     @Test
-    public void testSetID(){
-
+    public void DataBaseConnection(){
+        org2 = new OrganisationalUnit("Shanelle", 200);
+        System.out.println(org2.getID());
     }
 
 }
