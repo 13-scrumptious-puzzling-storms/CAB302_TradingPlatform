@@ -12,9 +12,13 @@ public class JDBCTradeDataSource implements TradeDataSource {
 
     private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_TYPE = "SELECT type FROM TradeOrders Where tradeOrderID=?";
+    private static final String GET_QUANTITY = "SELECT quantity FROM TradeOrders Where tradeOrderID=?";
+    private static final String GET_ASSET = "SELECT organisationAssetID FROM TradeOrders Where tradeOrderID=?";
 
     private PreparedStatement getValue;
     private PreparedStatement getType;
+    private PreparedStatement getQuantity;
+    private PreparedStatement getAsset;
 
     private Connection connection;
 
@@ -28,6 +32,9 @@ public class JDBCTradeDataSource implements TradeDataSource {
             Statement st = connection.createStatement();
 
             getValue = connection.prepareStatement(GET_VALUE);
+            getType = connection.prepareStatement(GET_TYPE);
+            getQuantity = connection.prepareStatement(GET_QUANTITY);
+            getAsset = connection.prepareStatement(GET_ASSET);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
