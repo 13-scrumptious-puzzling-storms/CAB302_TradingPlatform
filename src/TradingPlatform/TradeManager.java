@@ -12,7 +12,7 @@ public class TradeManager {
      * @param asset The asset to get the buy orders for.
      * @return buyOrders
      */
-    public Map<Asset, Integer> getBuyOrders(Asset asset){
+    public Map<AssetType, Integer> getBuyOrders(AssetType asset){
         return null;
     }
 
@@ -21,7 +21,7 @@ public class TradeManager {
      * @param asset The asset to get the sell orders for.
      * @return sellOrders
      */
-    public Map<Asset, Integer> getSellOrders(Asset asset){
+    public Map<AssetType, Integer> getSellOrders(AssetType asset){
         return null;
     }
 

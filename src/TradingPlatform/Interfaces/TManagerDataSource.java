@@ -1,6 +1,6 @@
 package TradingPlatform.Interfaces;
 
-import TradingPlatform.Asset;
+import TradingPlatform.AssetType;
 
 import java.util.Map;
 
@@ -10,14 +10,14 @@ public interface TManagerDataSource {
      * @param asset The asset to get the buy orders for.
      * @return buyOrders
      */
-     Map<Asset, Integer> getBuyOrders(Asset asset);
+     Map<AssetType, Integer> getBuyOrders(AssetType asset);
 
     /**
      * gets the current SELL orders for an asset.
      * @param asset The asset to get the sell orders for.
      * @return sellOrders
      */
-     Map<Asset, Integer> getSellOrders(Asset asset);
+     Map<AssetType, Integer> getSellOrders(AssetType asset);
 
     /**
      * Determines what SELL orders to BUY from if the trade

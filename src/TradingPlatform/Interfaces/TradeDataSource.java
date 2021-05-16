@@ -1,6 +1,6 @@
 package TradingPlatform.Interfaces;
 
-import TradingPlatform.Asset;
+import TradingPlatform.AssetType;
 
 public interface TradeDataSource {
     /**
@@ -27,13 +27,13 @@ public interface TradeDataSource {
      * Sets the asset used for the trade
      * @param asset The asset the trade will be for.
      */
-    void setAsset(Asset asset);
+    void setAsset(AssetType asset);
 
     /**
      * Gets the asset from the trade
      * @return asset
      */
-    Asset getAsset();
+    AssetType getAsset();
 
     /**
      * Sets the quantity of assets in the trade

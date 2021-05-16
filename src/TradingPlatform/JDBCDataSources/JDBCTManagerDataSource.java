@@ -1,13 +1,12 @@
 package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.AccountType;
-import TradingPlatform.Asset;
+import TradingPlatform.AssetType;
 import TradingPlatform.Interfaces.TManagerDataSource;
 import TradingPlatform.OrganisationalUnit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -40,12 +39,12 @@ public class JDBCTManagerDataSource implements TManagerDataSource {
     }
 
     @Override
-    public Map<Asset, Integer> getBuyOrders(Asset asset) {
+    public Map<AssetType, Integer> getBuyOrders(AssetType asset) {
         return null;
     }
 
     @Override
-    public Map<Asset, Integer> getSellOrders(Asset asset) {
+    public Map<AssetType, Integer> getSellOrders(AssetType asset) {
         return null;
     }
 

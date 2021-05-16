@@ -6,7 +6,7 @@ package TradingPlatform;
 public class Trade{
 
     private boolean type;
-    private Asset asset;
+    private AssetType asset;
     private int quantity;
     private int organisation;
 
@@ -17,7 +17,7 @@ public class Trade{
      * @param quantity The quantity of the asset for the trade.
      * @param organisationId The organisation initiating the trade order.
      */
-    public Trade(boolean type, Asset asset, int quantity, int organisationId){
+    public Trade(boolean type, AssetType asset, int quantity, int organisationId){
         this.type = type;
         this.asset = asset;
         this.quantity = quantity;
@@ -54,7 +54,7 @@ public class Trade{
      * Sets the asset used for the trade
      * @param asset The asset the trade will be for.
      */
-    public void setAsset(Asset asset){
+    public void setAsset(AssetType asset){
 
     }
 
@@ -62,7 +62,7 @@ public class Trade{
      * Gets the asset from the trade
      * @return asset
      */
-    public Asset getAsset(){
+    public AssetType getAsset(){
         return null;
     }
 

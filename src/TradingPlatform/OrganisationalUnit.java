@@ -14,7 +14,6 @@ public class OrganisationalUnit{
     String organisationName;
     int organisationCredit;
     int organisationID;
-    static int nextID;
     HashMap<Object, Integer> assetCollection;
 
     /**
@@ -25,7 +24,6 @@ public class OrganisationalUnit{
     public OrganisationalUnit(String organisationName, int organisationCredit) {
         this.organisationName = organisationName;
         this.organisationCredit = organisationCredit;
-        this.organisationID = assignID();
     }
 
 //    /**
@@ -41,13 +39,8 @@ public class OrganisationalUnit{
     public OrganisationalUnit() {
         this.organisationName = "";
         this.organisationCredit = 0;
-        this.organisationID = assignID();
     }
 
-    private int assignID() {
-        nextID = nextID + 1;
-        return nextID;
-    }
 
     public int getID(){
         return organisationID;
@@ -76,7 +69,7 @@ public class OrganisationalUnit{
      *
      * @return  name of the Organisational Unit
      */
-    public String getName(String name) {
+    public String getName(int orgID) {
         return organisationName;
     }
 
@@ -91,11 +84,27 @@ public class OrganisationalUnit{
 
     /**
      * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
-     * @param organisationID Organisational unit's unique ID
      * @param asset Asset object type to  added to organisational unit
      * @param quantity Quantity of asset to be added under organisational unit
+     * @param addition Boolean variable to hold whether the asset will be added (True) or subtracted (False)
      */
-    public void addAsset(int organisationID, Object asset, int quantity){
+    public void changeAssetBalance(Object asset, int quantity, boolean addition){
+        if (assetCollection.containsKey(asset)){
+            // add or subtract quantity
+            int currentValue = assetCollection.get(asset);
+            if(addition){
+                assetCollection.replace(asset, currentValue, currentValue + quantity);
+            }
+            else { //subtract
+                if(currentValue >= quantity) {
+                    assetCollection.replace(asset, currentValue, currentValue - quantity);
+                }
+            }
+        }
+        else{
+            assetCollection.put(asset, quantity);
+        }
+
     }
 
     /**

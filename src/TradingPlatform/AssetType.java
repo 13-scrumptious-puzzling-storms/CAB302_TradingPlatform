@@ -3,7 +3,7 @@ package TradingPlatform;
 /**
  * Creates a new instance of an asset
  */
-public class Asset {
+public class AssetType {
 
     private int assetId;
     private String assetName;
@@ -12,7 +12,7 @@ public class Asset {
      * creates a new instance of an asset from the assetName
      * @param assetName The name of the asset
      */
-    public Asset(String assetName){
+    public AssetType(String assetName){
         this.assetName = assetName;
     }
 
@@ -20,7 +20,7 @@ public class Asset {
      * grabs the asset from the db
      * @param assetId The assetID of the asset.
      */
-    public Asset(int assetId){
+    public AssetType(int assetId){
         this.assetId = assetId;
     }
 
