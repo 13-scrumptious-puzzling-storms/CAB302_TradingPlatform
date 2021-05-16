@@ -11,8 +11,10 @@ import java.sql.Statement;
 public class JDBCTradeDataSource implements TradeDataSource {
 
     private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE tradeOrderID=?";
+    private static final String GET_TYPE = "SELECT type FROM TradeOrders Where tradeOrderID=?";
 
     private PreparedStatement getValue;
+    private PreparedStatement getType;
 
     private Connection connection;
 
