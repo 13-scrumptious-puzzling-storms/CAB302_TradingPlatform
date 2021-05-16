@@ -59,7 +59,7 @@ public class OrganisationalUnit{
      * @param id the id of the Organisational Unit
      */
     public void setId(int id) {
-        this.organisationID = id;
+        organisationID = id;
     }
 
     /**
@@ -68,7 +68,16 @@ public class OrganisationalUnit{
      * @param name the name of the Organisational Unit
      */
     public void setName(String name) {
-        this.organisationName = name;
+        organisationName = name;
+    }
+
+    /**
+     * Returns the OrganisationalUnit's name
+     *
+     * @return  name of the Organisational Unit
+     */
+    public String getName(String name) {
+        return organisationName;
     }
 
     /**
