@@ -1,8 +1,7 @@
 package TradingPlatform.UnitTests;
 
-import TradingPlatform.Interfaces.UserDataSource;
 import TradingPlatform.NetworkProtocol.DBConnection;
-import TradingPlatform.Server.JDBCUserDataSource;
+import TradingPlatform.JDBCDataSources.JDBCUserDataSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

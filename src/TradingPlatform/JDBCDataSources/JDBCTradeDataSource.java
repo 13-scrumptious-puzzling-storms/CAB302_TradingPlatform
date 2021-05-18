@@ -1,6 +1,6 @@
-package TradingPlatform.Server;
+package TradingPlatform.JDBCDataSources;
 
-import TradingPlatform.Asset;
+import TradingPlatform.AssetType;
 import TradingPlatform.Interfaces.TradeDataSource;
 
 import java.sql.Connection;
@@ -10,9 +10,15 @@ import java.sql.Statement;
 
 public class JDBCTradeDataSource implements TradeDataSource {
 
-    private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE id=?";
+    private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE tradeOrderID=?";
+    private static final String GET_TYPE = "SELECT type FROM TradeOrders Where tradeOrderID=?";
+    private static final String GET_QUANTITY = "SELECT quantity FROM TradeOrders Where tradeOrderID=?";
+    private static final String GET_ASSET = "SELECT organisationAssetID FROM TradeOrders Where tradeOrderID=?";
 
     private PreparedStatement getValue;
+    private PreparedStatement getType;
+    private PreparedStatement getQuantity;
+    private PreparedStatement getAsset;
 
     private Connection connection;
 
@@ -26,76 +32,51 @@ public class JDBCTradeDataSource implements TradeDataSource {
             Statement st = connection.createStatement();
 
             getValue = connection.prepareStatement(GET_VALUE);
+            getType = connection.prepareStatement(GET_TYPE);
+            getQuantity = connection.prepareStatement(GET_QUANTITY);
+            getAsset = connection.prepareStatement(GET_ASSET);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-
+    @Override
     public float value(String asset, int quantity) {
         return 0;
     }
 
-    /**
-     * Sets the type of a trade to either BUY or SELL
-     *
-     * @param type True for buy, false for sell.
-     */
+    @Override
     public void setType(boolean type) {
 
     }
 
-    /**
-     * Gets the type of Trade, either BUY or SELL
-     *
-     * @return type
-     */
+    @Override
     public String GetType() {
         return null;
     }
 
-    /**
-     * Sets the asset used for the trade
-     *
-     * @param asset The asset the trade will be for.
-     */
-    public void setAsset(Asset asset) {
+    @Override
+    public void setAsset(AssetType asset) {
 
     }
 
-    /**
-     * Gets the asset from the trade
-     *
-     * @return asset
-     */
-    public Asset getAsset() {
+    @Override
+    public AssetType getAsset() {
         return null;
     }
 
-    /**
-     * Sets the quantity of assets in the trade
-     *
-     * @param quantity The quantity of assets in the trade
-     */
+    @Override
     public void setQuantity(int quantity) {
 
     }
 
-    /**
-     * Gets the quantity of assets in the trade
-     *
-     * @return quantity
-     */
+    @Override
     public int getQuantity() {
         return 0;
     }
 
-    /**
-     * Returns the organisation linked to the current trade
-     *
-     * @return organisation
-     */
+    @Override
     public String getOrganisation() {
         return null;
     }

@@ -1,4 +1,4 @@
-package TradingPlatform.Server;
+package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.AccountType;
 import TradingPlatform.Interfaces.UserDataSource;
@@ -39,7 +39,7 @@ public class JDBCUserDataSource implements UserDataSource {
             if (rs.next()) {
                 username = rs.getString("username");
                 accountType = AccountType.getType(rs.getInt("userRole"));
-                int orgId = rs.getInt("organisationalUnitId");
+                int orgId = rs.getInt("organisationUnitId");
                 organisationalUnit = new JDBCOrganisationalUnit(orgId, connection).getOrganisationalUnit();
             }
 

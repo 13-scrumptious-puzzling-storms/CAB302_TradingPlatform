@@ -1,45 +1,35 @@
-package TradingPlatform;
+package TradingPlatform.Interfaces;
+
+import TradingPlatform.AssetType;
 
 import java.util.Map;
 
-/**
- * TradeManager executes and manages the listed trades
- */
-public class TradeManager {
-
+public interface TManagerDataSource {
     /**
      * gets the current BUY orders for an asset.
      * @param asset The asset to get the buy orders for.
      * @return buyOrders
      */
-    public Map<AssetType, Integer> getBuyOrders(AssetType asset){
-        return null;
-    }
+     Map<AssetType, Integer> getBuyOrders(AssetType asset);
 
     /**
      * gets the current SELL orders for an asset.
      * @param asset The asset to get the sell orders for.
      * @return sellOrders
      */
-    public Map<AssetType, Integer> getSellOrders(AssetType asset){
-        return null;
-    }
+     Map<AssetType, Integer> getSellOrders(AssetType asset);
 
     /**
      * Determines what SELL orders to BUY from if the trade
      * is valid, and calls updateDatabase.
      */
-    public void executeTrade(){
-
-    }
+    void executeTrade();
 
     /**
      * returns true if the trade can be executed
      * @return isValid
      */
-    public Boolean validTrade(){
-        return null;
-    }
+    Boolean validTrade();
 
     /**
      * Talks to the server(?) to update organisation's credits and assets
@@ -47,7 +37,5 @@ public class TradeManager {
      * @param sellOrg The org selling an asset.
      * @param buyOrg The org buying an asset.
      */
-    public void updateDatabase(int sellOrg, int buyOrg){
-
-    }
+    void updateDatabase(int sellOrg, int buyOrg);
 }

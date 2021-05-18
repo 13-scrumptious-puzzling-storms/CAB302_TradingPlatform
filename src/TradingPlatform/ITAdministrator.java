@@ -48,7 +48,7 @@ public class ITAdministrator extends User {
      * @param asset The unit asset to be edited.
      * @param numAsset The new number of the asset that the organisation unit will have.
      */
-    public void EditOrganisationalAsset(OrganisationalUnit unit, Asset asset, int numAsset){
+    public void EditOrganisationalAsset(OrganisationalUnit unit, AssetType asset, int numAsset){
     }
 
     /**

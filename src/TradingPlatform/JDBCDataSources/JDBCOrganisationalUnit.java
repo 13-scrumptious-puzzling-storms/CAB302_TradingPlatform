@@ -1,4 +1,4 @@
-package TradingPlatform.Server;
+package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.Interfaces.OrganisationalUnitSource;
 import TradingPlatform.OrganisationalUnit;
@@ -7,9 +7,9 @@ import java.sql.*;
 import java.util.HashMap;
 
 public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
-    private static final String INSERT_ORGANISATIONALUNIT = "INSERT INTO organisationalunit (name, credits) VALUES (?, ?);";
-    private static final String GET_ORGANISATIONALUNITNAME = "SELECT name FROM organisationalunit WHERE organisationalunitid=?";
-    private static final String GET_ORGANISATIONALUNIT = "SELECT * FROM organisationalunit WHERE organisationalunitid=?";
+    private static final String INSERT_ORGANISATIONALUNIT = "INSERT INTO OrganisationUnit (name, credits) VALUES (?, ?);";
+    private static final String GET_ORGANISATIONALUNITNAME = "SELECT name FROM OrganisationUnit WHERE OrganisationUnitID=?";
+    private static final String GET_ORGANISATIONALUNIT = "SELECT * FROM OrganisationUnit WHERE OrganisationUnitID=?";
 
     private PreparedStatement addOrganisationalUnit;
     private PreparedStatement getOrganisationalUnit;
@@ -40,17 +40,16 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         try {
             getOrganisationalUnitName.clearParameters();
             getOrganisationalUnitName.setInt(1, OrgUnitId);
+            getOrganisationalUnitName.executeUpdate();
             ResultSet rs = getOrganisationalUnitName.executeQuery();
 
             if (rs.next()) {
-                var orgName = rs.getString("name");
-                return rs.getString(1);
+                String orgName = rs.getString("name");
+                return orgName;
             }
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         return null;
     }
 
@@ -65,7 +64,6 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
                 orgUnit.setId(OrgUnitId);
                 orgUnit.setName(rs.getString("name"));
                 orgUnit.setCredits(rs.getInt("credits"));
-
                 return orgUnit;
             }
 
@@ -75,6 +73,29 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
         return null;
     }
+
+    public void addOrganisationalUnit(int orgunitID) {
+        try {
+            addOrganisationalUnit.clearParameters();
+            //addOrganisationalUnit.setInt(1, OrganisationalUnit.getName(orgunitID));
+            //addOrganisationalUnit.setInt(1, orgunit.getName());
+
+            ResultSet rs = getOrganisationalUnit.executeQuery();
+
+            if (rs.next()) {
+                var orgUnit = new OrganisationalUnit();
+                orgUnit.setId(OrgUnitId);
+                orgUnit.setName(rs.getString("name"));
+                orgUnit.setCredits(rs.getInt("credits"));
+
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
 
     @Override
     public int assignID() {
@@ -88,12 +109,10 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
     @Override
     public void setId(int id) {
-
     }
 
     @Override
     public void setName(String name) {
-
     }
 
     @Override

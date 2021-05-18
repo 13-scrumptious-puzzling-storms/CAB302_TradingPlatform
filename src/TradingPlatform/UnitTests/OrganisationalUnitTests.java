@@ -1,13 +1,25 @@
 package TradingPlatform.UnitTests;
 
+import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
+import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.OrganisationalUnit;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Connection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 //
 public class OrganisationalUnitTests {
+
+    static Connection connection;
+
+    @BeforeAll
+    public static void init(){
+        connection = DBConnection.getInstance();
+    }
 
     OrganisationalUnit org1;
     OrganisationalUnit org2;
@@ -38,6 +50,18 @@ public class OrganisationalUnitTests {
     public void DataBaseConnection(){
         org2 = new OrganisationalUnit("Shanelle", 200);
         System.out.println(org2.getID());
+    }
+
+    @Test
+    public void ServerGetOrganisationalUnitName(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
+        assert (unit.getOrganisationalUnitName() == "test");
+    }
+
+    @Test
+    public void ServerGetOrganisationalUnit(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
+        assert (unit.getOrganisationalUnit() != null);
     }
 
 }
