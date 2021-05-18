@@ -1,6 +1,8 @@
 package TradingPlatform.NetworkProtocol;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,39 +13,29 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     private static int width;
     private static int height;
 
+    // Colours
+    private static final Color cust1 = new Color(38,139,133);
+    private static final Color cust2 = new Color(51,61,68);
+    private static final Color cust3 = new Color(72,191,146);
+
     // GUI Panels
-    private JPanel row1;
-    private JPanel row2;
-    private JPanel row3;
-    private JPanel row4;
-    private JPanel row5;
-    private JPanel row6;
+    private JPanel pnlDisplay;
+    private JPanel pnlTwo;
+    private JPanel pnlThree;
+    private JPanel pnlFour;
+    private JPanel pnlBtn;
 
     // GUI Buttons
-    private JButton btnChange;
-    private JButton btnEditSchema;
-    private JButton btnEditUser;
-    private JButton btnEditPass;
-    private JButton btnShutdown;
+    private JButton btnMount;
+    private JButton btnUnmount;
+    private JButton btnFind;
+    private JButton btnSwitch;
 
     // Text headings and fields
-    private JTextArea headStatus;
-    private JTextArea status;
-
-    private JTextArea headFileName;
-    private JTextArea fileName;
-
-    private JTextArea headSchema;
-    private JTextArea schema;
-
-    private JTextArea headUser;
-    private JTextArea username;
-
-    private JTextArea headPass;
-    private JTextArea password;
-
-    private JTextArea headServerControl;
-    private JTextArea serverControl;
+    private JTextArea header;
+    private JTextArea row1;
+    private JTextArea row2;
+    private JTextArea areDisplay;
 
     public UIManager(String title) throws HeadlessException {
         super(title);
@@ -55,18 +47,12 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
         Object src = e.getSource();
         if (src instanceof JButton) {
             JButton btn = ((JButton) src);
-            if (btn == btnChange) {
-                // Change file for props
-            } else if (btn == btnEditSchema) {
-                // change name of schema
-            } else if (btn == btnEditUser) {
-                // change username
-            } else if (btn == btnEditPass) {
-                // change password
-            } else if (btn == btnShutdown) {
-                // shutdown server
+            if (btn == btnSwitch) {
+                JOptionPane.showMessageDialog(this, "idiots");
+            } else if (btn == btnFind) {
+                JOptionPane.showMessageDialog(this, "silly willy");
             } else {
-                JOptionPane.showMessageDialog(this, "Something unexpected has occurred!", "Trading Platform Server: Warning", JOptionPane.WARNING_MESSAGE);
+                areDisplay.setText(btn.getText().trim());
             }
         }
     }
@@ -81,43 +67,65 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
 
         // Create GUI
         createGUI();
-        //layoutButtonPanel();
+        layoutButtonPanel();
     }
 
     private void createGUI() {
         setSize(width / 2, height / 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("SPS Trading Server");
         setLayout(new BorderLayout());
 
-        row1 = createPanel(Color.white);
-        row1 = createPanel(Color.GREEN);
-        row1 = createPanel(Color.white);
-        row1 = createPanel(Color.GREEN);
-        row1 = createPanel(Color.white);
-        row1 = createPanel(Color.GREEN);
+        pnlDisplay = createPanel(Color.WHITE);
+        pnlTwo = createPanel(Color.RED);
+        pnlThree = createPanel(cust2);
+        pnlFour = createPanel(cust2); // Setting colour here does't do anythin since this panel gtes filled with text. that text background will be what ditctaes panel backhround
+        pnlBtn = createPanel(Color.PINK);
 
-        btnChange = createButton("Change");
-        btnEditSchema = createButton("Edit");
-        btnEditUser = createButton("Edit");
-        btnEditPass = createButton("Edit");
-        btnShutdown = createButton("Shut down");
+        btnMount = createButton("Mount");
+        btnUnmount = createButton("Unmount");
+        btnFind = createButton("Find");
+        btnSwitch = createButton("Switch");
 
-        headStatus = createDisplay();
-        status = createDisplay();
-        headFileName = createDisplay();
-        fileName = createDisplay();
-        headSchema = createDisplay();
-        schema = createDisplay();
-        headUser = createDisplay();
-        username = createDisplay();
-        headPass = createDisplay();
-        password = createDisplay();
-        headServerControl = createDisplay();
-        serverControl = createDisplay();
+        areDisplay = createDisplay(24);
+        header = createDisplay(24);
+        row1 = createDisplay(16);
+        row2 = createDisplay(16);
 
-        row1.setLayout(new BorderLayout());
-        row1.add(headStatus, BorderLayout.WEST);
-        row1.add(status, BorderLayout.EAST);
+        pnlDisplay.setLayout(new BorderLayout());
+        pnlDisplay.add(areDisplay, BorderLayout.CENTER);
+        pnlDisplay.add(pnlFour, BorderLayout.NORTH);
+
+        pnlFour.setLayout(new BorderLayout());
+        pnlFour.add(header, BorderLayout.CENTER);
+        pnlFour.add(pnlTwo, BorderLayout.SOUTH);
+
+        pnlTwo.setLayout(new BorderLayout());
+        pnlTwo.add(row1, BorderLayout.CENTER);
+        pnlTwo.add(pnlThree, BorderLayout.SOUTH);
+
+        pnlThree.setLayout(new BorderLayout());
+        pnlThree.add(row2, BorderLayout.CENTER);
+
+        // Add panels to frame
+        getContentPane().add(pnlDisplay,BorderLayout.CENTER);
+        getContentPane().add(pnlBtn,BorderLayout.SOUTH);
+
+        header.setForeground(cust1);
+        header.setBackground(cust2);
+        header.setText(" SPS Trading (Server)");
+
+        row1.setForeground(Color.lightGray);
+        row1.setBackground(cust2);
+        row1.setText(" Props File: '/sdfsdfd/sdf.db'");
+
+        row2.setForeground(cust3);
+        row2.setBackground(cust2);
+        row2.setText(" SHUTDOWN");
+
+        row1.setBorder(null);
+        row2.setBorder(null);
+        header.setBorder(null);
 
         // Repaint the GUI now that we've updated the elements
         repaint();
@@ -151,13 +159,41 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
         return button;
     }
 
-    private JTextArea createDisplay() {
+    private JTextArea createDisplay(int font_size) {
         JTextArea display = new JTextArea();
         display.setEditable(false);
         display.setLineWrap(true);
-        display.setFont(new Font("Arial", Font.BOLD, FONT_SIZE));
+        display.setFont(new Font("Arial", Font.BOLD, font_size));
         display.setBorder(BorderFactory.createEtchedBorder());
         return display;
+    }
+
+    private void layoutButtonPanel() {
+        GridBagLayout layout = new GridBagLayout();
+        pnlBtn.setLayout(layout);
+        // Main pooper code
+
+        // Add components to the grid
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        // Defaults
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.weightx = 100;
+        constraints.weighty = 100;
+
+        addToPanel(pnlBtn, btnMount, constraints, 0, 0, 2, 1);
+        addToPanel(pnlBtn, btnUnmount, constraints, 3, 0, 2, 1);
+        addToPanel(pnlBtn, btnFind, constraints, 0, 2, 2, 1);
+        addToPanel(pnlBtn, btnSwitch, constraints, 3, 2, 2, 1);
+    }
+
+    private void addToPanel(JPanel jp, Component c, GridBagConstraints constraints, int x, int y, int w, int h) {
+        constraints.gridx = x;
+        constraints.gridy = y;
+        constraints.gridwidth = w;
+        constraints.gridheight = h;
+        jp.add(c, constraints);
     }
 
     public static void main(String[] args)

@@ -1,6 +1,6 @@
 package TradingPlatform.JDBCDataSources;
 
-import TradingPlatform.Asset;
+import TradingPlatform.AssetType;
 import TradingPlatform.Interfaces.TradeDataSource;
 
 import java.sql.Connection;
@@ -57,12 +57,12 @@ public class JDBCTradeDataSource implements TradeDataSource {
     }
 
     @Override
-    public void setAsset(Asset asset) {
+    public void setAsset(AssetType asset) {
 
     }
 
     @Override
-    public Asset getAsset() {
+    public AssetType getAsset() {
         return null;
     }
 
