@@ -4,12 +4,9 @@ import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
 import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.OrganisationalUnit;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 //
 public class OrganisationalUnitTests {
@@ -55,7 +52,7 @@ public class OrganisationalUnitTests {
     @Test
     public void ServerGetOrganisationalUnitName(){
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
-        assert (unit.getOrganisationalUnitName() == "test");
+        assert (unit.getOrganisationalUnitName() == "Test");
     }
 
     @Test

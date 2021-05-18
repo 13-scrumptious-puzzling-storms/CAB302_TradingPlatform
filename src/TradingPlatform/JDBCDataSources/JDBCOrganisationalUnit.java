@@ -40,7 +40,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         try {
             getOrganisationalUnitName.clearParameters();
             getOrganisationalUnitName.setInt(1, OrgUnitId);
-            getOrganisationalUnitName.executeUpdate();
+//            getOrganisationalUnitName.executeUpdate();
             ResultSet rs = getOrganisationalUnitName.executeQuery();
 
             if (rs.next()) {
