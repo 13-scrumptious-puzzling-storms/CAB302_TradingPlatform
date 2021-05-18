@@ -75,7 +75,7 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     }
 
     private void createGUI() {
-        setSize(width / 4, height / 2);
+        setSize(width / 3, height / 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("SPS Trading Server");
         setLayout(new BorderLayout());
