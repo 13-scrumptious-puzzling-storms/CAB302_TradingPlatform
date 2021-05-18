@@ -22,7 +22,9 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     private JPanel pnlDisplay;
     private JPanel pnlTwo;
     private JPanel pnlThree;
+    private JPanel pnlFive;
     private JPanel pnlFour;
+    private JPanel pnlSix;
     private JPanel pnlBtn;
 
     // GUI Buttons
@@ -30,11 +32,13 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     private JButton btnUnmount;
     private JButton btnFind;
     private JButton btnSwitch;
+    private JButton btnShutdown;
 
     // Text headings and fields
     private JTextArea header;
     private JTextArea row1;
     private JTextArea row2;
+    private JTextArea row3;
     private JTextArea areDisplay;
 
     public UIManager(String title) throws HeadlessException {
@@ -47,8 +51,8 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
         Object src = e.getSource();
         if (src instanceof JButton) {
             JButton btn = ((JButton) src);
-            if (btn == btnSwitch) {
-                JOptionPane.showMessageDialog(this, "idiots");
+            if (btn == btnShutdown) {
+                JOptionPane.showMessageDialog(this, "shutting down");
             } else if (btn == btnFind) {
                 JOptionPane.showMessageDialog(this, "silly willy");
             } else {
@@ -71,7 +75,7 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     }
 
     private void createGUI() {
-        setSize(width / 2, height / 2);
+        setSize(width / 4, height / 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("SPS Trading Server");
         setLayout(new BorderLayout());
@@ -79,18 +83,22 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
         pnlDisplay = createPanel(Color.WHITE);
         pnlTwo = createPanel(Color.RED);
         pnlThree = createPanel(cust2);
+        pnlFive = createPanel(cust2);
+        pnlSix = createPanel(cust2);
         pnlFour = createPanel(cust2); // Setting colour here does't do anythin since this panel gtes filled with text. that text background will be what ditctaes panel backhround
-        pnlBtn = createPanel(Color.PINK);
+        //pnlBtn = createPanel(Color.PINK);
 
         btnMount = createButton("Mount");
         btnUnmount = createButton("Unmount");
         btnFind = createButton("Find");
         btnSwitch = createButton("Switch");
+        btnShutdown = createButton("Shutdown");
 
         areDisplay = createDisplay(24);
         header = createDisplay(24);
         row1 = createDisplay(16);
         row2 = createDisplay(16);
+        row3 = createDisplay(16);
 
         pnlDisplay.setLayout(new BorderLayout());
         pnlDisplay.add(areDisplay, BorderLayout.CENTER);
@@ -106,10 +114,14 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
 
         pnlThree.setLayout(new BorderLayout());
         pnlThree.add(row2, BorderLayout.CENTER);
+        pnlThree.add(pnlFive, BorderLayout.SOUTH);
+
+        pnlFive.setLayout(new BorderLayout());
+        pnlFive.add(row3, BorderLayout.CENTER);
+        pnlFive.add(pnlSix, BorderLayout.SOUTH);
 
         // Add panels to frame
         getContentPane().add(pnlDisplay,BorderLayout.CENTER);
-        getContentPane().add(pnlBtn,BorderLayout.SOUTH);
 
         header.setForeground(cust1);
         header.setBackground(cust2);
@@ -117,14 +129,19 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
 
         row1.setForeground(Color.lightGray);
         row1.setBackground(cust2);
-        row1.setText(" Props File: '/sdfsdfd/sdf.db'");
+        row1.setText(" DB Props File:    './db.props'");
 
-        row2.setForeground(cust3);
+        row2.setForeground(Color.lightGray);
         row2.setBackground(cust2);
-        row2.setText(" SHUTDOWN");
+        row2.setText(" DB URL:    'jdbc:sqlite:SPS-TradingPlatform.db'");
+
+        row3.setForeground(cust3);
+        row3.setBackground(cust2);
+        row3.setText(" Server Control");
 
         row1.setBorder(null);
         row2.setBorder(null);
+        row3.setBorder(null);
         header.setBorder(null);
 
         // Repaint the GUI now that we've updated the elements
@@ -170,7 +187,8 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
 
     private void layoutButtonPanel() {
         GridBagLayout layout = new GridBagLayout();
-        pnlBtn.setLayout(layout);
+        //pnlBtn.setLayout(layout);
+        pnlSix.setLayout(layout);
         // Main pooper code
 
         // Add components to the grid
@@ -182,10 +200,11 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
         constraints.weightx = 100;
         constraints.weighty = 100;
 
-        addToPanel(pnlBtn, btnMount, constraints, 0, 0, 2, 1);
-        addToPanel(pnlBtn, btnUnmount, constraints, 3, 0, 2, 1);
-        addToPanel(pnlBtn, btnFind, constraints, 0, 2, 2, 1);
-        addToPanel(pnlBtn, btnSwitch, constraints, 3, 2, 2, 1);
+        //addToPanel(pnlBtn, btnMount, constraints, 0, 0, 2, 1);
+        //addToPanel(pnlBtn, btnUnmount, constraints, 3, 0, 2, 1);
+        //addToPanel(pnlBtn, btnFind, constraints, 0, 2, 2, 1);
+        //addToPanel(pnlBtn, btnSwitch, constraints, 3, 2, 2, 1);
+        addToPanel(pnlSix, btnShutdown, constraints, 0, 0, 0, 0);
     }
 
     private void addToPanel(JPanel jp, Component c, GridBagConstraints constraints, int x, int y, int w, int h) {
