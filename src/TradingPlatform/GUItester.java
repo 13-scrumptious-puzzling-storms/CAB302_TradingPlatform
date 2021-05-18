@@ -57,6 +57,8 @@ public class GUItester extends JFrame {
         panel2.setBackground(cust2);
         panel2.setForeground(Color.LIGHT_GRAY);
 
+        pane2.setPreferredSize(new Dimension(300, 100));
+
         panel3.setBackground(cust2);
         panel3.setForeground(Color.LIGHT_GRAY);
         setBackground(cust2);
