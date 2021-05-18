@@ -1,7 +1,6 @@
 package TradingPlatform;
 
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,6 +14,11 @@ public class GUItester extends JFrame {
      *
      */
     private static final long serialVersionUID = 692675871418401803L;
+
+    // Colours
+    private static final Color cust1 = new Color(38,139,133);
+    private static final Color cust2 = new Color(51,61,68);
+    private static final Color cust3 = new Color(72,191,146);
 
     public GUItester() {
         super("SPS Trading");
@@ -43,6 +47,20 @@ public class GUItester extends JFrame {
         setLocation(new Point(100, 100));
         pack();
         setVisible(true);
+
+        pane.setBackground(cust1);
+        pane.setForeground(Color.WHITE);
+
+        panel1.setBackground(cust2);
+        panel1.setForeground(Color.WHITE);
+
+        panel2.setBackground(cust2);
+        panel2.setForeground(Color.LIGHT_GRAY);
+
+        panel3.setBackground(cust2);
+        panel3.setForeground(Color.LIGHT_GRAY);
+        setBackground(cust2);
+
     }
 
     public static void main(String[] args) {
