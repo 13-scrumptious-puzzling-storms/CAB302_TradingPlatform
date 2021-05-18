@@ -75,12 +75,12 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     }
 
     private void createGUI() {
-        setSize(width / 4, height / 2);
+        setSize(width / 3, height / 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("SPS Trading Server");
         setLayout(new BorderLayout());
 
-        pnlDisplay = createPanel(Color.WHITE);
+        pnlDisplay = createPanel(cust2);
         pnlTwo = createPanel(Color.RED);
         pnlThree = createPanel(cust2);
         pnlFive = createPanel(cust2);
@@ -94,14 +94,14 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
         btnSwitch = createButton("Switch");
         btnShutdown = createButton("Shutdown");
 
-        areDisplay = createDisplay(24);
+        //areDisplay = createDisplay(24);
         header = createDisplay(24);
         row1 = createDisplay(16);
         row2 = createDisplay(16);
         row3 = createDisplay(16);
 
         pnlDisplay.setLayout(new BorderLayout());
-        pnlDisplay.add(areDisplay, BorderLayout.CENTER);
+        //pnlDisplay.add(areDisplay, BorderLayout.CENTER);
         pnlDisplay.add(pnlFour, BorderLayout.NORTH);
 
         pnlFour.setLayout(new BorderLayout());
