@@ -1,5 +1,6 @@
 package TradingPlatform;
 
+import java.io.Serializable;
 import java.util.*;
 
 //Testing push 2
@@ -7,7 +8,9 @@ import java.util.*;
 /**
  * Creates a new instance of an organisational unit.
  */
-public class OrganisationalUnit{
+public class OrganisationalUnit implements Serializable {
+    private static final long serialVersionUID = 541955199052575340L;
+
     String organisationName;
     int organisationCredit;
     int organisationID;
@@ -37,7 +40,6 @@ public class OrganisationalUnit{
         this.organisationName = "";
         this.organisationCredit = 0;
     }
-
 
     public int getID(){
         return organisationID;
@@ -78,6 +80,11 @@ public class OrganisationalUnit{
     public void setCredits(int credits) {
         this.organisationCredit = credits;
     }
+
+    /**
+     * Gets the OrganisationalUnit's organisationCredit
+     */
+    public int getCredits() { return organisationCredit; }
 
     /**
      * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
