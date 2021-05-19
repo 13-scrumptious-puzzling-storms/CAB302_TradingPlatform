@@ -14,7 +14,8 @@ import java.util.HashMap;
 public class OrganisationalUnitServer implements Serializable {
     private static final long serialVersionUID = 541955199052575340L;
 
-    String organisationName;
+    // I DONT KNOW IF THESE FIELDS SHOULD BE STATIC
+    static String organisationName;
     int organisationCredit;
     int organisationID;
     ArrayList<OrganisationAsset> assetCollection;
@@ -72,7 +73,7 @@ public class OrganisationalUnitServer implements Serializable {
      *
      * @return  name of the Organisational Unit
      */
-    public String getName(int orgID) {
+    public static String getName(int orgID) {
         return organisationName;
     }
 
