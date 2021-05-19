@@ -1,20 +1,31 @@
 package TradingPlatform;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.*;
 
 //Testing push 2
 
 /**
  * Creates a new instance of an organisational unit.
  */
-public class OrganisationalUnit{
+public class OrganisationalUnit implements Serializable {
+    private static final long serialVersionUID = 541955199052575340L;
+
+    private static ClientSend clientSend;
+
+    static {
+        try {
+            clientSend = new ClientSend();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     String organisationName;
     int organisationCredit;
     int organisationID;
-    HashMap<Object, Integer> assetCollection;
+    ArrayList<OrganisationAsset> assetCollection;
 
     /**
      * Creates new instance of an organisational unit
@@ -40,7 +51,6 @@ public class OrganisationalUnit{
         this.organisationName = "";
         this.organisationCredit = 0;
     }
-
 
     public int getID(){
         return organisationID;
@@ -69,8 +79,10 @@ public class OrganisationalUnit{
      *
      * @return  name of the Organisational Unit
      */
-    public String getName(int orgID) {
-        return organisationName;
+    public String getName(int orgID) throws IOException {
+        clientSend.SendRequest("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
+        // Need to implement Server Send
+        return "";
     }
 
     /**
@@ -83,28 +95,33 @@ public class OrganisationalUnit{
     }
 
     /**
+     * Gets the OrganisationalUnit's organisationCredit
+     */
+    public int getCredits() { return organisationCredit; }
+
+    /**
      * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
      * @param asset Asset object type to  added to organisational unit
      * @param quantity Quantity of asset to be added under organisational unit
      * @param addition Boolean variable to hold whether the asset will be added (True) or subtracted (False)
      */
     public void changeAssetBalance(Object asset, int quantity, boolean addition){
-        if (assetCollection.containsKey(asset)){
-            // add or subtract quantity
-            int currentValue = assetCollection.get(asset);
-            if(addition){
-                assetCollection.replace(asset, currentValue, currentValue + quantity);
-            }
-            else { //subtract
-                if(currentValue >= quantity) {
-                    assetCollection.replace(asset, currentValue, currentValue - quantity);
-                }
-            }
-        }
-        else{
-            assetCollection.put(asset, quantity);
-        }
-
+//        if (assetCollection.containsKey(asset)){
+//            // add or subtract quantity
+//            int currentValue = assetCollection.get(asset);
+//            if(addition){
+//                assetCollection.replace(asset, currentValue, currentValue + quantity);
+//            }
+//            else { //subtract
+//                if(currentValue >= quantity) {
+//                    assetCollection.replace(asset, currentValue, currentValue - quantity);
+//                }
+//            }
+//        }
+//        else{
+//            assetCollection.put(asset, quantity);
+//        }
+        throw(new UnsupportedOperationException("Not yet implemented"));
     }
 
     /**
@@ -112,7 +129,7 @@ public class OrganisationalUnit{
      * @param organisationID Organisational Unit's unique ID
      * @return allAssets
      */
-    public HashMap getAssets(int organisationID){
+    public ArrayList<OrganisationAsset> getAssets(int organisationID){
         return assetCollection;
     }
 
@@ -122,7 +139,8 @@ public class OrganisationalUnit{
      * @return buyAssets
      */
     public HashMap getCurrentBuyOrders(int organisationID){
-        return assetCollection;
+        // return assetCollection;
+        throw(new UnsupportedOperationException("Not yet implemented"));
     }
 
     /**
@@ -131,7 +149,8 @@ public class OrganisationalUnit{
      * @return sellAssets
      */
     public HashMap getCurrentSellOrders(int organisationID){
-        return assetCollection;
+        throw(new UnsupportedOperationException("Not yet implemented"));
+//        return assetCollection;
     }
 
 }
