@@ -81,6 +81,7 @@ public class OrganisationalUnit implements Serializable {
      */
     public String getName(int orgID) throws IOException {
         clientSend.SendRequest("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
+
         // Need to implement Server Send
         return "";
     }
