@@ -70,7 +70,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return null;
+        return 0;
     }
 
     public void UpdateOrganisationalunitCredits(int orgUnitId, int updatedCredits){
