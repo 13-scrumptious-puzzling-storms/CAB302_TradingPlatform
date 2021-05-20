@@ -8,21 +8,25 @@ public class ClientSend {
     private static final int PORT = 2197;
 
     private static Socket socket;
-    private static ClientRequest clientRequest;
 
     public ClientSend() throws IOException {
-        Socket socket = new Socket(HOST_ADDRESS, PORT);
+        System.out.println("Attempting Connection to: " + HOST_ADDRESS + ":" + PORT);
+        socket = new Socket(HOST_ADDRESS, PORT);
     }
 
     public static void SendRequest(String className, String methodName) throws IOException {
-        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));) {
-            objectOutputStream.writeObject(new ClientRequest(className, methodName));
-        }
+        System.out.println("Constructing Request: " + className + " : " + methodName);
+        transmit(new Request(className, methodName));
     }
 
     public static void SendRequest(String className, String methodName, String[] arguments) throws IOException {
+        System.out.println("Constructing Request: " + className + " : " + methodName + " : " + arguments);
+        transmit(new Request(className, methodName, arguments));
+    }
+
+    private static void transmit(Request request) throws IOException {
         try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));) {
-            objectOutputStream.writeObject(new ClientRequest(className, methodName, arguments));
+            objectOutputStream.writeObject(request);
         }
     }
 }
