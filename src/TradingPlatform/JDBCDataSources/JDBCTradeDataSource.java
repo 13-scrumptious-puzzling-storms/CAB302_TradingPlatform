@@ -15,7 +15,6 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private static final String GET_TYPE = "SELECT type FROM TradeOrders Where tradeOrderID=?";
     private static final String GET_QUANTITY = "SELECT quantity FROM TradeOrders Where tradeOrderID=?";
     private static final String GET_ASSET = "SELECT organisationAssetID FROM TradeOrders Where tradeOrderID=?";
-    private static final String GET_PRICE = "SELECT price FROM TradeOrders WHERE =?";
 
     private PreparedStatement addTrade;
     private PreparedStatement getTrade;
@@ -68,7 +67,19 @@ public class JDBCTradeDataSource implements TradeDataSource {
     }
 
     @Override
-    public float value(String asset, int quantity) {
+    public float value() {
+        try {
+            getValue.clearParameters();
+            getValue.setInt(1, TradeId);
+            ResultSet rs = getValue.executeQuery();
+
+            if (rs.next()) {
+                int price = rs.getInt("price");
+                return price;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return 0;
     }
 

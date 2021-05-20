@@ -12,7 +12,7 @@ public interface TradeDataSource {
      * @param quantity The number of assets
      * @return price
      */
-    float value(String asset, int quantity);
+    float value();
 
     /**
      * Sets the type of a trade to either BUY or SELL
