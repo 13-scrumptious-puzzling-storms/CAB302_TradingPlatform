@@ -17,6 +17,12 @@ public class TradeTests {
     }
 
     @Test
+    public void testAddTrade(){
+        JDBCTradeDataSource trade = new JDBCTradeDataSource(1, connection);
+        trade.addTradeOrder(1, 10, 0, 2);
+    }
+
+    @Test
     public void testGetValue(){
         JDBCTradeDataSource val = new JDBCTradeDataSource(1, connection);
         assert (val.value(" ", 1) != 0);

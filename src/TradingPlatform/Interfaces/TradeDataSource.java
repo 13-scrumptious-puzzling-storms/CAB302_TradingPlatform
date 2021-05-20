@@ -3,6 +3,9 @@ package TradingPlatform.Interfaces;
 import TradingPlatform.AssetType;
 
 public interface TradeDataSource {
+
+    void addTradeOrder(int orgAssetId, int quantity, int type, int price);
+
     /**
      * returns the amount of credits needed for a trade
      * @param asset The trade asset
