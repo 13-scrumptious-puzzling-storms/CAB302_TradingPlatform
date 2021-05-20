@@ -4,15 +4,17 @@ import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
 import TradingPlatform.Request;
 
 import java.io.*;
-import java.lang.invoke.VarHandle;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 
-public class ServerHandle extends Thread {
+public class ServerHandle implements Runnable {
     private static final int PORT = 2197;
     private static final int BACKLOG = 25;
 
+    private static volatile Boolean stopFlag = false;
+
+    // Should this be here? Idk should it be static? Idk
     private static Connection connection;
 
     @Override
@@ -28,14 +30,10 @@ public class ServerHandle extends Thread {
     private static void getRequests() throws IOException, ClassNotFoundException {
         try (ServerSocket serverSocket = new ServerSocket(PORT, BACKLOG);){
             // Staying around for multiple connections
-            for (;;) {
+            while (!stopFlag) {
                 Socket socket = serverSocket.accept();
                 try(ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));) {
-                    Object serialData = objectInputStream.readObject();
-                    Request clientRequest = (Request) serialData;
-                    System.out.println("serialData's ID: " + clientRequest.getClassName());
-                    System.out.println("serialData's Credits: " + clientRequest.getMethodName());
-                    System.out.println("serialData's Credits: " + clientRequest.getArguments()[0]);
+                    Request clientRequest = (Request) objectInputStream.readObject();
                     handleRequest(clientRequest.getClassName(), clientRequest.getMethodName(), clientRequest.getArguments());
                 }
             }
@@ -79,6 +77,10 @@ public class ServerHandle extends Thread {
                 System.out.println("Invalid Class");
                 break;
         }
+    }
+
+    public static void end() {
+        stopFlag = true;
     }
 
     private static void testRead() throws IOException {
