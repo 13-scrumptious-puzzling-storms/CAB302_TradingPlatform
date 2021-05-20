@@ -137,7 +137,7 @@ public class OrganisationalUnit implements Serializable {
     /**
      * Returns current asset orders placed for organisation
      * @param organisationID Organisational Unit's unique ID
-     * @return buyAssets
+     * @return buyAsset
      */
     public HashMap getCurrentBuyOrders(int organisationID){
         // return assetCollection;

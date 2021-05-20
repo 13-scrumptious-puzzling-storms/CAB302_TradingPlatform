@@ -8,10 +8,12 @@ import java.util.HashMap;
 
 public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private static final String INSERT_ORGANISATIONALUNIT = "INSERT INTO OrganisationUnit (name, credits) VALUES (?, ?);";
-    private static final String GET_ORGANISATIONALUNITNAME = "SELECT name FROM OrganisationUnit WHERE OrganisationUnitID=?";
+    private static final String UPDATE_ORGANISATIONALUNIT_CREDITS = "UPDATE OrganisationUnit SET credits=? WHERE  OrganisationUnitID=?;";
+    private static final String GET_ORGANISATIONALUNIT_NAME = "SELECT name FROM OrganisationUnit WHERE OrganisationUnitID=?";
     private static final String GET_ORGANISATIONALUNIT = "SELECT * FROM OrganisationUnit WHERE OrganisationUnitID=?";
 
     private PreparedStatement addOrganisationalUnit;
+    private PreparedStatement updateOrganisationalUnitCredits;
     private PreparedStatement getOrganisationalUnit;
     private PreparedStatement getOrganisationalUnitName;
 
@@ -26,9 +28,10 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
         try {
             // Preparing Statements
-//          addOrganisationalUnit = connection.prepareStatement(INSERT_ORGANISATIONALUNIT);
+            addOrganisationalUnit = connection.prepareStatement(INSERT_ORGANISATIONALUNIT);
+            updateOrganisationalUnitCredits = connection.prepareStatement(UPDATE_ORGANISATIONALUNIT_CREDITS);
             getOrganisationalUnit = connection.prepareStatement(GET_ORGANISATIONALUNIT);
-            getOrganisationalUnitName = connection.prepareStatement(GET_ORGANISATIONALUNITNAME);
+            getOrganisationalUnitName = connection.prepareStatement(GET_ORGANISATIONALUNIT_NAME);
 
 
         } catch (SQLException ex) {
@@ -51,6 +54,17 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
             throwables.printStackTrace();
         }
         return null;
+    }
+
+    public void UpdateOrganisationalunitCredits(int orgUnitId, int updatedCredits){
+        try{
+            updateOrganisationalUnitCredits.clearParameters();
+            updateOrganisationalUnitCredits.setInt(1, updatedCredits);
+            updateOrganisationalUnitCredits.setInt(2, orgUnitId);
+            updateOrganisationalUnitCredits.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public OrganisationalUnit getOrganisationalUnit() {
