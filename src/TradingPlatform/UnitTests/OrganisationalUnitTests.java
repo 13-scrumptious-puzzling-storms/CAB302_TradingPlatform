@@ -61,6 +61,18 @@ public class OrganisationalUnitTests {
         assert (unit.getOrganisationalUnit() != null);
     }
 
+    //Assert no exceptions?
+    @Test
+    public void UpdateOrganisationalUnitCredits1(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
+        unit.UpdateOrganisationalunitCredits(4, 1276);
+    }
 
-    //UpdateOrganisationalunitCredits
+    //Assert no exceptions?
+    @Test
+    public void UpdateOrganisationalUnitCredits2(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
+        unit.UpdateOrganisationalunitCredits(1, 400);
+    }
+
 }

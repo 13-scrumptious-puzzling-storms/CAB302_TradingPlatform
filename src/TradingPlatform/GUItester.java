@@ -82,11 +82,11 @@ public class GUItester extends JFrame {
     }
 
     public void orgTrades(JPanel panel){
-
+        //whatever goes into the trades panel
     }
 
     public void orgAssets(JPanel panel){
-
+        //whatever goes into the assets panel
     }
 
     public void profilePanel(JPanel panel3){
