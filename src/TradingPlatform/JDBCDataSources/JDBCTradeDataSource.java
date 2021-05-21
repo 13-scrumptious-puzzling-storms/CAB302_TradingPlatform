@@ -3,21 +3,18 @@ package TradingPlatform.JDBCDataSources;
 import TradingPlatform.AssetType;
 import TradingPlatform.Interfaces.TradeDataSource;
 
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class JDBCTradeDataSource implements TradeDataSource {
 
-    private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, type, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String GET_TRADE = "SELECT * FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_TYPE = "SELECT type FROM TradeOrders Where tradeOrderID=?";
     private static final String GET_QUANTITY = "SELECT quantity FROM TradeOrders Where tradeOrderID=?";
     private static final String GET_ASSET = "SELECT organisationAssetID FROM TradeOrders Where tradeOrderID=?";
 
-    private PreparedStatement addTrade;
-    private PreparedStatement getTrade;
     private PreparedStatement getValue;
     private PreparedStatement getType;
     private PreparedStatement getQuantity;
@@ -34,8 +31,6 @@ public class JDBCTradeDataSource implements TradeDataSource {
         try {
             Statement st = connection.createStatement();
 
-            addTrade = connection.prepareStatement(INSERT_TRADE);
-            getTrade = connection.prepareStatement(GET_TRADE);
             getValue = connection.prepareStatement(GET_VALUE);
             getType = connection.prepareStatement(GET_TYPE);
             getQuantity = connection.prepareStatement(GET_QUANTITY);
@@ -47,39 +42,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
     }
 
     @Override
-    public void addTradeOrder(int orgAssetId, int quantity, int type, int price){
-        try {
-            addTrade.clearParameters();
-            addTrade.setInt(1, orgAssetId);
-            addTrade.setInt(2, quantity);
-            addTrade.setInt(3, quantity);
-            addTrade.setInt(4, type);
-            addTrade.setInt(5, price);
-            addTrade.setBoolean(6, false);
-//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss[.fffffffff]");
-            LocalDateTime now = LocalDateTime.now();
-
-            addTrade.setTimestamp(7, Timestamp.valueOf(now));
-            addTrade.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-    @Override
-    public float value() {
-        try {
-            getValue.clearParameters();
-            getValue.setInt(1, TradeId);
-            ResultSet rs = getValue.executeQuery();
-
-            if (rs.next()) {
-                int price = rs.getInt("price");
-                return price;
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    public float value(String asset, int quantity) {
         return 0;
     }
 
