@@ -1,16 +1,23 @@
 package TradingPlatform.NetworkProtocol;
 
+import TradingPlatform.Request;
+
 import java.io.*;
+import java.net.Socket;
 
-public class ServerSend {
-    public static void main(String[] args) throws IOException {
-        OrganisationalUnitServer serialData = new OrganisationalUnitServer();
-        serialData.setCredits(13);
-        serialData.setId(14);
+public class ServerSend implements Runnable {
+    @Override
+    public void run() {
 
-        File filename = new File("mySerialData");
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
-            objectOutputStream.writeObject(serialData);
-        }
     }
+
+    public static void Transmit(Socket socket, Request request) throws IOException {
+        System.out.println("Request required response. Sending response ...");
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()))) {
+            objectOutputStream.writeObject(request);
+            objectOutputStream.flush();
+        }
+        System.out.println("Connection closed.");
+    }
+
 }
