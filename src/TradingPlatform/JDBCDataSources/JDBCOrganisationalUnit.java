@@ -35,7 +35,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
         try {
             // Preparing Statements
-            addOrganisationalUnit = connection.prepareStatement(INSERT_ORGANISATIONALUNIT); //Statement.RETURN_GENERATED_KEYS
+            addOrganisationalUnit = connection.prepareStatement(INSERT_ORGANISATIONALUNIT, Statement.RETURN_GENERATED_KEYS);
             updateOrganisationalUnitCredits = connection.prepareStatement(UPDATE_ORGANISATIONALUNIT_CREDITS);
             getOrganisationalUnit = connection.prepareStatement(GET_ORGANISATIONALUNIT);
             getOrganisationalUnitName = connection.prepareStatement(GET_ORGANISATIONALUNIT_NAME);
@@ -52,13 +52,19 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
             addOrganisationalUnit.clearParameters();
             addOrganisationalUnit.setString(1, orgName);
             addOrganisationalUnit.setInt(2, orgCredits);
-            addOrganisationalUnit.executeUpdate();
-            getNewOrganisationalUnitID.clearParameters();
-            getNewOrganisationalUnitID.setString(1, orgName);
-            ResultSet rs = getNewOrganisationalUnitID.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(ORGID_HEADING);
+            int affectedRows = addOrganisationalUnit.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("JDBCOrganisationalUnit unable to retrieve ID: no affected rows");
             }
+            ResultSet generatedKeys = addOrganisationalUnit.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
+            else {
+                throw new SQLException("JDBCOrganisationalUnit unable to retrieve ID");
+            }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
