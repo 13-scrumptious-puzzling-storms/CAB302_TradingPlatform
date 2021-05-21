@@ -12,15 +12,7 @@ import java.util.*;
 public class OrganisationalUnit implements Serializable {
     private static final long serialVersionUID = 541955199052575340L;
 
-    private static ClientSend clientSend;
-
-    static {
-        try {
-            clientSend = new ClientSend();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private static NetworkManager networkManager = ClientApp.networkManager;
 
     String organisationName;
     int organisationCredit;
@@ -79,11 +71,9 @@ public class OrganisationalUnit implements Serializable {
      *
      * @return  name of the Organisational Unit
      */
-    public String getName(int orgID) throws IOException {
-        clientSend.SendRequest("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
-
-        // Need to implement Server Send
-        return "";
+    public String getName(int orgID) throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
+        return response.getArguments()[0];
     }
 
     /**
