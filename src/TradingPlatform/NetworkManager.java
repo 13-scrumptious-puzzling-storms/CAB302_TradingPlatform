@@ -4,12 +4,17 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class NetworkManager {
+public class NetworkManager implements Runnable {
     private static final String HOST_ADDRESS = "127.0.0.1";
     private static final int PORT = 2197;
 
     private static Socket socket;
     private static Boolean receive = false;
+
+    @Override
+    public void run() {
+
+    }
 
     public static void SendRequest(String className, String methodName) throws IOException {
         transmit(new Request(className, methodName));
