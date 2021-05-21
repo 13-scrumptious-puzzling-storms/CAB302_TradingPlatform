@@ -40,6 +40,7 @@ public class NetworkManager {
         objectOutputStream.flush();
         if (!receive) {
             objectOutputStream.close();
+            System.out.println("Connection closed.\n");
         }
     }
 
@@ -48,6 +49,7 @@ public class NetworkManager {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()))) {
             Request response = (Request) objectInputStream.readObject();
             System.out.println("Response received! Class: '" + response.getClassName() + "' Method: '" + response.getMethodName() + "' Arguments: '" + response.getArguments() + "'");
+            System.out.println("Connection closed.\n");
             return response;
         }
     }
