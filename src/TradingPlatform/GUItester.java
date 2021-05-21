@@ -18,6 +18,7 @@ public class GUItester extends JFrame {
 
     public GUItester() {
         super("SPS Trading");
+        JFrame.setDefaultLookAndFeelDecorated(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JTabbedPane pane = new JTabbedPane();
@@ -58,11 +59,6 @@ public class GUItester extends JFrame {
 
     }
 
-    public static void main(String[] args) {
-        JFrame.setDefaultLookAndFeelDecorated(false);
-        new GUItester();
-    }
-
     public void homePanel(JPanel panel){
         panel.add(new JLabel("Tab 1"));
     }
@@ -82,15 +78,17 @@ public class GUItester extends JFrame {
     }
 
     public void orgTrades(JPanel panel){
-        //whatever goes into the trades panel
+
     }
 
     public void orgAssets(JPanel panel){
-        //whatever goes into the assets panel
+
     }
 
     public void profilePanel(JPanel panel3){
         panel3.add(new JButton("Tab 2"));
     }
+
+
 
 }

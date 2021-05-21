@@ -16,11 +16,15 @@ public class ServerHandle implements Runnable {
 
     // Should this be here? Idk should it be static? Idk
     private static Connection connection;
+    private static Socket socket;
+    private static ServerSend serverSendRunnable;
 
     @Override
     public void run() {
         try {
             connection = DBConnection.getInstance();
+            System.out.println("Connection to database successful!");
+            serverSendRunnable = ServerApp.serverSendRunnable;
             getRequests();
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,26 +33,31 @@ public class ServerHandle implements Runnable {
 
     private static void getRequests() throws IOException, ClassNotFoundException {
         try (ServerSocket serverSocket = new ServerSocket(PORT, BACKLOG);){
+            System.out.println("Awaiting connections on port " + PORT + " ...");
             // Staying around for multiple connections
             while (!stopFlag) {
-                Socket socket = serverSocket.accept();
-                try(ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));) {
-                    Request clientRequest = (Request) objectInputStream.readObject();
-                    handleRequest(clientRequest.getClassName(), clientRequest.getMethodName(), clientRequest.getArguments());
+                socket = serverSocket.accept();
+                System.out.println("\nIncoming connection from " + socket.getInetAddress() + ":" + socket.getPort());
+                ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+                Request clientRequest = (Request) objectInputStream.readObject();
+                System.out.println("Request received! Class: '" + clientRequest.getClassName() + "' Method: '" + clientRequest.getMethodName() + "' Arguments: '" + clientRequest.getArguments() + "'");
+                if (clientRequest.getResponse() == false) {
+                    System.out.println("Connection does not request a response. Closing socket.\nConnection Closed.");
+                    objectInputStream.close();
                 }
+                handleRequest(clientRequest.getClassName(), clientRequest.getMethodName(), clientRequest.getArguments());
             }
         }
     }
 
-    private static void handleRequest(String className, String methodName, String[] arguments) {
-        System.out.println("Got request: " + className + " " + methodName + " " + arguments);
+    private static void handleRequest(String className, String methodName, String[] arguments) throws IOException {
         switch (className) {
             case "OrganisationalUnitServer":
                 switch (methodName) {
                     case "getName":
                         // need to get Server Send working
-                        JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit( connection);
-                        System.out.println(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])));
+                        JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(Integer.parseInt(arguments[0]), connection);
+                        serverSendRunnable.Transmit(socket, new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationalUnitName())}));
                         //ServerSend(OrganisationalUnitServer.getName(Integer.parseInt(arguments[0])));
                         //ServerSend ...;
                         break;

@@ -8,51 +8,37 @@ public interface TradeDataSource {
 
     /**
      * returns the amount of credits needed for a trade
-     * @param asset The trade asset
-     * @param quantity The number of assets
      * @return price
      */
-    float value();
-
-    /**
-     * Sets the type of a trade to either BUY or SELL
-     * @param type True for buy, false for sell.
-     */
-    void setType(boolean type);
+    int value(int tradeId);
 
     /**
      * Gets the type of Trade, either BUY or SELL
      * @return type
      */
-    String GetType();
-
-    /**
-     * Sets the asset used for the trade
-     * @param asset The asset the trade will be for.
-     */
-    void setAsset(AssetType asset);
+    String GetType(int tradeId);
 
     /**
      * Gets the asset from the trade
      * @return asset
      */
-    AssetType getAsset();
-
-    /**
-     * Sets the quantity of assets in the trade
-     * @param quantity The quantity of assets in the trade
-     */
-    void setQuantity(int quantity);
+    int getAsset(int tradeId);
 
     /**
      * Gets the quantity of assets in the trade
      * @return quantity
      */
-    int getQuantity();
+    int getQuantity(int tradeId);
 
     /**
      * Returns the organisation linked to the current trade
      * @return organisation
      */
-    String getOrganisation();
+//    String getOrganisation();
+
+    /**
+     * Sets the amount of assets remaining in the order
+     * @param amount
+     */
+    void setRemaining(int amount);
 }
