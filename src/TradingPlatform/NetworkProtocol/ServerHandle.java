@@ -15,15 +15,12 @@ public class ServerHandle implements Runnable {
     private static volatile Boolean stopFlag = false;
 
     // Should this be here? Idk should it be static? Idk
-    private static Connection connection;
     private static Socket socket;
     private static ServerSend serverSendRunnable;
 
     @Override
     public void run() {
         try {
-            connection = DBConnection.getInstance();
-            System.out.println("Connection to database successful!");
             serverSendRunnable = ServerApp.serverSendRunnable;
             getRequests();
         } catch (Exception e) {
@@ -45,46 +42,8 @@ public class ServerHandle implements Runnable {
                     System.out.println("Connection does not request a response. Closing socket.\nConnection Closed.");
                     objectInputStream.close();
                 }
-                handleRequest(clientRequest.getClassName(), clientRequest.getMethodName(), clientRequest.getArguments());
+                serverSendRunnable.handleRequest(clientRequest.getClassName(), clientRequest.getMethodName(), clientRequest.getArguments(), socket);
             }
-        }
-    }
-
-    private static void handleRequest(String className, String methodName, String[] arguments) throws IOException {
-        switch (className) {
-            case "OrganisationalUnitServer":
-                switch (methodName) {
-                    case "getName":
-                        // need to get Server Send working
-                        JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit( connection);
-                        serverSendRunnable.Transmit(socket, new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
-                        //ServerSend(OrganisationalUnitServer.getName(Integer.parseInt(arguments[0])));
-                        //ServerSend ...;
-                        break;
-                    case "getCredits":
-                        //ServerSend ...;
-                        break;
-                    default:
-                        System.out.println("Invalid Method");
-                        break;
-                }
-                break;
-            case "OrganisationAsset":
-                switch (methodName) {
-                    case "getQuantity":
-                        // ServerSend
-                        break;
-                    case "getAssetType":
-                        // ServerSend
-                        break;
-                    default:
-                        System.out.println("Invalid Method");
-                        break;
-                }
-                break;
-            default:
-                System.out.println("Invalid Class");
-                break;
         }
     }
 
