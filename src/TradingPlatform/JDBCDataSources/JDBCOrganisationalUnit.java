@@ -35,7 +35,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
         try {
             // Preparing Statements
-            addOrganisationalUnit = connection.prepareStatement(INSERT_ORGANISATIONALUNIT);
+            addOrganisationalUnit = connection.prepareStatement(INSERT_ORGANISATIONALUNIT); //Statement.RETURN_GENERATED_KEYS
             updateOrganisationalUnitCredits = connection.prepareStatement(UPDATE_ORGANISATIONALUNIT_CREDITS);
             getOrganisationalUnit = connection.prepareStatement(GET_ORGANISATIONALUNIT);
             getOrganisationalUnitName = connection.prepareStatement(GET_ORGANISATIONALUNIT_NAME);
@@ -62,7 +62,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return 0;
+        return -1;
     }
 
     public String getOrganisationalUnitName(int orgUnitId) {
@@ -94,7 +94,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return 0;
+        return -1;
     }
 
     public OrganisationalUnit getOrganisationalUnit(int orgUnitId) {
