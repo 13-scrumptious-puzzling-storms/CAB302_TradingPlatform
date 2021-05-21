@@ -12,9 +12,10 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, type, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String GET_TRADE = "SELECT * FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE tradeOrderID=?";
-    private static final String GET_TYPE = "SELECT type FROM TradeOrders Where tradeOrderID=?";
-    private static final String GET_QUANTITY = "SELECT quantity FROM TradeOrders Where tradeOrderID=?";
-    private static final String GET_ASSET = "SELECT organisationAssetID FROM TradeOrders Where tradeOrderID=?";
+    private static final String GET_TYPE = "SELECT type FROM TradeOrders WHERE tradeOrderID=?";
+    private static final String GET_QUANTITY = "SELECT quantity FROM TradeOrders WHERE tradeOrderID=?";
+    private static final String GET_ASSET = "SELECT organisationAssetID FROM TradeOrders WHERE tradeOrderID=?";
+    private static final String SET_REMAINING = "UPDATE remainingQuantity WHERE tradeOrderID=?";
 
     private PreparedStatement addTrade;
     private PreparedStatement getTrade;
@@ -22,6 +23,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private PreparedStatement getType;
     private PreparedStatement getQuantity;
     private PreparedStatement getAsset;
+    private PreparedStatement setRemaining;
 
     private Connection connection;
 
@@ -40,6 +42,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             getType = connection.prepareStatement(GET_TYPE);
             getQuantity = connection.prepareStatement(GET_QUANTITY);
             getAsset = connection.prepareStatement(GET_ASSET);
+            setRemaining = connection.prepareStatement(SET_REMAINING);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -67,54 +70,110 @@ public class JDBCTradeDataSource implements TradeDataSource {
     }
 
     @Override
-    public float value() {
+    public int value(int tradeId) {
         try {
             getValue.clearParameters();
-            getValue.setInt(1, TradeId);
+            getValue.setInt(1, tradeId);
             ResultSet rs = getValue.executeQuery();
 
             if (rs.next()) {
                 int price = rs.getInt("price");
                 return price;
             }
-        } catch (SQLException throwables) {
+        }
+        catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return 0;
+        return -1;
     }
 
     @Override
-    public void setType(boolean type) {
+    public String GetType(int tradeId) {
+        try {
+            getType.clearParameters();
+            getType.setInt(1, tradeId);
+            ResultSet rs = getType.executeQuery();
 
-    }
-
-    @Override
-    public String GetType() {
+            if (rs.next()) {
+                int tempType = rs.getInt("type");
+                String type;
+                if(tempType == 0){
+                    type = "sell";
+                }else{
+                    type = "buy";
+                }
+                return type;
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    public void setAsset(AssetType asset) {
+    public int getAsset(int tradeId) {
+        try {
+            getAsset.clearParameters();
+            getAsset.setInt(1, tradeId);
+            ResultSet rs = getAsset.executeQuery();
 
+            if (rs.next()) {
+                int orgAssetId = rs.getInt("organisationAssetId");
+                return orgAssetId;
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return -1;
     }
 
     @Override
-    public AssetType getAsset() {
-        return null;
+    public int getQuantity(int tradeId) {
+        try {
+            getQuantity.clearParameters();
+            getQuantity.setInt(1, tradeId);
+            ResultSet rs = getQuantity.executeQuery();
+
+            if (rs.next()) {
+                int quantity = rs.getInt("quantity");
+                return quantity;
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return -1;
     }
 
     @Override
-    public void setQuantity(int quantity) {
-
+    public void setRemaining(int amount){
+        try {
+            setRemaining.clearParameters();
+            setRemaining.setInt(1, amount);
+            setRemaining.executeUpdate();
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
-    @Override
-    public int getQuantity() {
-        return 0;
-    }
-
-    @Override
-    public String getOrganisation() {
-        return null;
-    }
+//    @Override
+//    public String getOrganisation(int tradeId) {
+//        try {
+//            getOrg.clearParameters();
+//            getOrg.setInt(1, tradeId);
+//            ResultSet rs = getOrg.executeQuery();
+//
+//            if (rs.next()) {
+//                int orgId = rs.getInt("");
+//                return orgId;
+//            }
+//        }
+//        catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//        return null;
+//    }
 }
