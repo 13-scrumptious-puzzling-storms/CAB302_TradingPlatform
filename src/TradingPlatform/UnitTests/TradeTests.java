@@ -21,7 +21,7 @@ public class TradeTests {
     @BeforeEach
     public void newTrade(){
         trade = new JDBCTradeDataSource(1, connection);
-        trade.addTradeOrder(1, 10, 0, 2);
+        trade.addTradeOrder(1, 10, false, 2);
     }
 
     @Test
@@ -42,6 +42,17 @@ public class TradeTests {
     @Test
     public void testGetQuantity(){
         assert (trade.getQuantity(1) == 10);
+    }
+
+    @Test
+    public void testGetBuys(){
+        int[] rs = trade.getBuyOrders(3);
+//        int size = rs.length();
+
+        for (int res : rs) {
+            System.out.println(res);
+        }
+        System.out.println(rs);
     }
 
 //    @Test

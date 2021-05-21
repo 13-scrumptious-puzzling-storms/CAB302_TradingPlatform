@@ -9,17 +9,17 @@ import java.sql.*;
 
 public class JDBCTradeDataSource implements TradeDataSource {
 
-    private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, type, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, ?, datetime('now'))";
+    private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, ?, datetime('now'))";
     private static final String GET_TRADE = "SELECT * FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE tradeOrderID=?";
-    private static final String GET_TYPE = "SELECT type FROM TradeOrders WHERE tradeOrderID=?";
+    private static final String GET_TYPE = "SELECT isSellOrder FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_QUANTITY = "SELECT quantity FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_ASSET = "SELECT organisationAssetID FROM TradeOrders WHERE tradeOrderID=?";
     private static final String SET_REMAINING = "UPDATE TradeOrders SET remainingQuantity=? WHERE tradeOrderID=?";
     private static final String SET_CANCELLED = "UPDATE TradeOrders SET cancelled=? WHERE tradeOrderID=?";
-    private static final String GET_BUY_ASSETS = "SELECT o.*, organisationunitid FROM TradeOrders as o\n" +
+    private static final String GET_BUY_ORDERS = "SELECT o.*, organisationUnitId FROM TradeOrders as o\n" +
             "left join organisationAsset as a on a.organisationAssetID = o.organisationAssetID\n" +
-            "where tradeOrderId = ?";
+            "WHERE assetTypeId=? AND isSellOrder='false'";
 
 
 
@@ -31,6 +31,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private PreparedStatement getAsset;
     private PreparedStatement setRemaining;
     private PreparedStatement setCancelled;
+    private PreparedStatement getBuyOrders;
 
 
     private Connection connection;
@@ -39,7 +40,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
 
     public JDBCTradeDataSource(int TradeID, Connection connection){
         this.connection = connection;
-        this.TradeId = TradeId;
+        this.TradeId = TradeID;
 
         try {
             Statement st = connection.createStatement();
@@ -52,6 +53,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             getAsset = connection.prepareStatement(GET_ASSET);
             setRemaining = connection.prepareStatement(SET_REMAINING);
             setCancelled = connection.prepareStatement(SET_CANCELLED);
+            getBuyOrders = connection.prepareStatement(GET_BUY_ORDERS);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -59,13 +61,13 @@ public class JDBCTradeDataSource implements TradeDataSource {
     }
 
     @Override
-    public void addTradeOrder(int orgAssetId, int quantity, int type, int price){
+    public void addTradeOrder(int orgAssetId, int quantity, boolean type, int price){
         try {
             addTrade.clearParameters();
             addTrade.setInt(1, orgAssetId);
             addTrade.setInt(2, quantity);
             addTrade.setInt(3, quantity);
-            addTrade.setInt(4, type);
+            addTrade.setBoolean(4, type);
             addTrade.setInt(5, price);
             addTrade.setBoolean(6, false);
             addTrade.executeUpdate();
@@ -100,9 +102,9 @@ public class JDBCTradeDataSource implements TradeDataSource {
             ResultSet rs = getType.executeQuery();
 
             if (rs.next()) {
-                int tempType = rs.getInt("type");
+                Boolean tempType = rs.getBoolean("isSellOrder");
                 String type;
-                if(tempType == 0){
+                if(tempType == true){
                     type = "sell";
                 }else{
                     type = "buy";
@@ -178,8 +180,33 @@ public class JDBCTradeDataSource implements TradeDataSource {
         }
     }
 
-    public AssetType[] getBuyOrders(int orgAssetId){
+    public int[] getBuyOrders(int orgAssetId){
+        try {
+            getBuyOrders.clearParameters();
+            getBuyOrders.setInt(1, orgAssetId);
+            ResultSet rs = getBuyOrders.executeQuery();
 
+            //int size = rs.getFetchSize();
+            int i = 0;
+            int size =0;
+            int[] assets = new int[size];
+            if (rs != null)
+            {
+                rs.last();    // moves cursor to the last row
+                size = rs.getRow(); // get row id
+            }
+            while (rs.next()) {
+
+                int thing = rs.getInt("tradeOrderID");
+                System.out.println(thing);
+                assets[i] = thing;
+                i++;
+            }
+            return assets;
+        }
+        catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
         return null;
     }
 

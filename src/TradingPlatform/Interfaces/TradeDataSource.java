@@ -4,7 +4,7 @@ import TradingPlatform.AssetType;
 
 public interface TradeDataSource {
 
-    void addTradeOrder(int orgAssetId, int quantity, int type, int price);
+    void addTradeOrder(int orgAssetId, int quantity, boolean type, int price);
 
     /**
      * returns the amount of credits needed for a trade
@@ -41,4 +41,6 @@ public interface TradeDataSource {
      * @param amount
      */
     void setRemaining(int tradeId, int amount);
+
+    int[] getBuyOrders(int orgAssetId);
 }
