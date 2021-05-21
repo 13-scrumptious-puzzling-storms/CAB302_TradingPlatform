@@ -3,6 +3,7 @@ package TradingPlatform;
 import java.io.IOException;
 
 public class ClientApp {
+
     public static NetworkManager networkManager;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
