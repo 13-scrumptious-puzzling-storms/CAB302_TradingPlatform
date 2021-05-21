@@ -5,13 +5,18 @@ import java.io.*;
 public class ServerApp {
 
     private static ServerHandle serverHandleRunnable;
+    public static ServerSend serverSendRunnable;
 
     public static void main(String[] args) {
         System.out.println("Starting Server ...");
 
         serverHandleRunnable = new ServerHandle();
-        Thread thread = new Thread(serverHandleRunnable);
-        thread.start();
+        Thread threadHandle = new Thread(serverHandleRunnable);
+        threadHandle.start();
+
+        serverSendRunnable = new ServerSend();
+        Thread threadSend = new Thread(serverSendRunnable);
+        threadSend.start();
     }
 
     public static void shutdown() {
