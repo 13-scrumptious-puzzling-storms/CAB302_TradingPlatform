@@ -56,8 +56,8 @@ public class ServerHandle implements Runnable {
                 switch (methodName) {
                     case "getName":
                         // need to get Server Send working
-                        JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(Integer.parseInt(arguments[0]), connection);
-                        serverSendRunnable.Transmit(socket, new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationalUnitName())}));
+                        JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit( connection);
+                        serverSendRunnable.Transmit(socket, new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
                         //ServerSend(OrganisationalUnitServer.getName(Integer.parseInt(arguments[0])));
                         //ServerSend ...;
                         break;
