@@ -85,9 +85,9 @@ public class OrganisationalUnitTests {
 
     @Test
     public void addOrganisationalUnit(){
-        String orgName = "Testing org unit7";
+        String orgName = "Testing org unit18";
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
-        int orgID = unit.addOrganisationalUnit(orgName, 236);
+        int orgID = unit.addOrganisationalUnit(orgName, 237);
         assert((unit.getOrganisationalUnitName(orgID).equals(orgName)));
     }
 

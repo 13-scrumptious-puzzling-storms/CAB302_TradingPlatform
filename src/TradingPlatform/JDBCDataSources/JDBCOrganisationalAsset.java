@@ -8,22 +8,19 @@ import java.sql.SQLException;
 public class JDBCOrganisationalAsset {
     private static final String INSERT_ORGANISATIONASSET = "INSERT INTO OrganisationAsset (organisationUnitID, assetTypeID, Quantity) VALUES (?, ?, ?);";
     private static final String UPDATE_ORGANISATIONASSET_QUANTITY = "UPDATE OrganisationAsset SET Quantity=? WHERE  OrganisationAssetID=?;";
-    private static final String GET_ORGANISATIONASSET_ORGID = "SELECT organisationUnitID FROM OrganisationAsset WHERE OrganisationAssetID=?";
+    private static final String GET_ORGANISATIONASSET_ORGUNITID = "SELECT organisationUnitID FROM OrganisationAsset WHERE OrganisationAssetID=?";
     private static final String GET_ORGANISATIONASSET_ASSETTYPEID = "SELECT assetTypeID FROM OrganisationAsset WHERE OrganisationAssetID=?";
     private static final String GET_ORGANISATIONASSET_QUANTITY = "SELECT Quantity FROM OrganisationAsset WHERE OrganisationAssetID=?";
-    private static final String GET_ORGANISATIONASSET_ID = "SELECT organisationAssetID FROM OrganisationAsset WHERE organisationUnitID=? AND assetTypeID=?";
 
-    private static final String ORGASSETID_HEADING = "organisationAssetID";
     private static final String ORGID_HEADING = "organisationUnitID";
     private static final String ASSETTYPEID_HEADING = "assetTypeID";
     private static final String QUANTITY_HEADING = "Quantity";
 
     private PreparedStatement addOrganisationAsset;
     private PreparedStatement updateOrganisationAssetQuantity;
-    private PreparedStatement getOrganisationAssetOrgID;
+    private PreparedStatement getOrganisationAssetOrgUnitID;
     private PreparedStatement getOrganisationAssetTypeID;
     private PreparedStatement getOrganisationAssetQuantity;
-    private PreparedStatement getOrganisationAssetID;
 
 
     private Connection connection;
@@ -36,21 +33,20 @@ public class JDBCOrganisationalAsset {
             // Preparing Statements
             addOrganisationAsset = connection.prepareStatement(INSERT_ORGANISATIONASSET);
             updateOrganisationAssetQuantity = connection.prepareStatement(UPDATE_ORGANISATIONASSET_QUANTITY);
-            getOrganisationAssetOrgID = connection.prepareStatement(GET_ORGANISATIONASSET_ORGID);
+            getOrganisationAssetOrgUnitID = connection.prepareStatement(GET_ORGANISATIONASSET_ORGUNITID);
             getOrganisationAssetTypeID = connection.prepareStatement(GET_ORGANISATIONASSET_ASSETTYPEID);
             getOrganisationAssetQuantity = connection.prepareStatement(GET_ORGANISATIONASSET_QUANTITY);
-            getOrganisationAssetID = connection.prepareStatement(GET_ORGANISATIONASSET_ID);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    public int getOrganisationAssetOrgID(int orgAssetId) {
+    public int getOrganisationAssetOrgUnitID(int orgAssetId) {
         try {
-            getOrganisationAssetOrgID.clearParameters();
-            getOrganisationAssetOrgID.setInt(1, orgAssetId);
-            ResultSet rs = getOrganisationAssetOrgID.executeQuery();
+            getOrganisationAssetOrgUnitID.clearParameters();
+            getOrganisationAssetOrgUnitID.setInt(1, orgAssetId);
+            ResultSet rs = getOrganisationAssetOrgUnitID.executeQuery();
 
             if (rs.next()) {
                 int orgUnitID = rs.getInt(ORGID_HEADING);
@@ -100,14 +96,20 @@ public class JDBCOrganisationalAsset {
             addOrganisationAsset.setInt(1, orgUnitID);
             addOrganisationAsset.setInt(2, assetTypeID);
             addOrganisationAsset.setInt(3, quantity);
-            addOrganisationAsset.executeUpdate();
-            getOrganisationAssetID.clearParameters();
-            getOrganisationAssetID.setInt(1, orgUnitID);
-            getOrganisationAssetID.setInt(2, assetTypeID);
-            ResultSet rs = getOrganisationAssetID.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(ORGASSETID_HEADING);
+
+            int affectedRows = addOrganisationAsset.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("JDBCOrganisationAsset unable to retrieve ID: no affected rows");
             }
+            ResultSet generatedKeys = addOrganisationAsset.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
+            else {
+                throw new SQLException("JDBCOrganisationAsset unable to retrieve ID");
+            }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
