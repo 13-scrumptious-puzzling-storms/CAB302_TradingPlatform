@@ -2,11 +2,7 @@ package TradingPlatform;
 
 import java.awt.*;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 public class GUItester extends JFrame {
 
@@ -22,20 +18,19 @@ public class GUItester extends JFrame {
 
     public GUItester() {
         super("SPS Trading");
+        JFrame.setDefaultLookAndFeelDecorated(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JTabbedPane pane = new JTabbedPane();
-        JTabbedPane pane2 = new JTabbedPane();
+
         JPanel panel1 = new JPanel();
+        homePanel(panel1);
+
         JPanel panel2 = new JPanel();
-        JPanel panel2_1 = new JPanel();
-        JPanel panel2_2 = new JPanel();
+        orgHomePanel(panel2);
+
         JPanel panel3 = new JPanel();
-        panel2.add(pane2);
-        panel1.add(new JLabel("Tab 1"));
-        panel3.add(new JButton("Tab 2"));
-        pane2.add("assets", panel2_1);
-        pane2.add("trades", panel2_2);
+        profilePanel(panel3);
 
         pane.add("Home", panel1);
         pane.add("Organisation Home", panel2);
@@ -43,8 +38,8 @@ public class GUItester extends JFrame {
         getContentPane().add(pane);
 
         // Display the window.
-        setPreferredSize(new Dimension(500, 200));
-        setLocation(new Point(100, 100));
+        setPreferredSize(new Dimension(500, 400));
+        setLocation(new Point(0, 0));
         pack();
         setVisible(true);
 
@@ -57,16 +52,43 @@ public class GUItester extends JFrame {
         panel2.setBackground(cust2);
         panel2.setForeground(Color.LIGHT_GRAY);
 
-        pane2.setPreferredSize(new Dimension(300, 100));
-
         panel3.setBackground(cust2);
         panel3.setForeground(Color.LIGHT_GRAY);
         setBackground(cust2);
 
+
     }
 
-    public static void main(String[] args) {
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        new GUItester();
+    public void homePanel(JPanel panel){
+        panel.add(new JLabel("Tab 1"));
     }
+
+    public void orgHomePanel(JPanel panel2){
+        JTabbedPane pane2 = new JTabbedPane();
+        JPanel panel2_1 = new JPanel();
+        orgTrades(panel2_1);
+
+        JPanel panel2_2 = new JPanel();
+        orgAssets(panel2_2);
+
+        panel2.add(pane2);
+        pane2.add("assets", panel2_1);
+        pane2.add("trades", panel2_2);
+        pane2.setPreferredSize(new Dimension(300, 100));
+    }
+
+    public void orgTrades(JPanel panel){
+
+    }
+
+    public void orgAssets(JPanel panel){
+
+    }
+
+    public void profilePanel(JPanel panel3){
+        panel3.add(new JButton("Tab 2"));
+    }
+
+
+
 }

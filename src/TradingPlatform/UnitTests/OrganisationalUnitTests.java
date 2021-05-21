@@ -51,16 +51,45 @@ public class OrganisationalUnitTests {
 
     @Test
     public void ServerGetOrganisationalUnitName(){
-        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
-        assert (unit.getOrganisationalUnitName() == "Test");
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert (unit.getOrganisationalUnitName(1).equals("Test"));
     }
 
     @Test
     public void ServerGetOrganisationalUnit(){
-        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
-        assert (unit.getOrganisationalUnit() != null);
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert (unit.getOrganisationalUnit(1) != null);
     }
 
 
-    //UpdateOrganisationalunitCredits
+    @Test
+    public void UpdateOrganisationalUnitCredits1(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        unit.UpdateOrganisationalunitCredits( 1, 1276);
+    }
+
+
+    @Test
+    public void UpdateOrganisationalUnitCredits2(){
+        int credits = 230;
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        unit.UpdateOrganisationalunitCredits( 1, credits);
+        assert(unit.getOrganisationalUnitCredits(1) == credits);
+    }
+
+    @Test
+    public void getOrganisationalUnitCredits(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert(unit.getOrganisationalUnitCredits(1) >= 0);
+    }
+
+    @Test
+    public void addOrganisationalUnit(){
+        String orgName = "Testing org unit7";
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        int orgID = unit.addOrganisationalUnit(orgName, 236);
+        assert((unit.getOrganisationalUnitName(orgID).equals(orgName)));
+    }
+
+
 }

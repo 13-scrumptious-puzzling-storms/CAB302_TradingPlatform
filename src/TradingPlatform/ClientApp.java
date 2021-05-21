@@ -11,6 +11,7 @@ public class ClientApp {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         initialiseClientSend();
         testServerClient();
+        new GUItester();
     }
 
     private static void initialiseClientSend() throws IOException { networkManager = new NetworkManager(); }
