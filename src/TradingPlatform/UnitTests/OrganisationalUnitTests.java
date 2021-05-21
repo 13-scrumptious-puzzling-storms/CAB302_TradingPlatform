@@ -51,28 +51,45 @@ public class OrganisationalUnitTests {
 
     @Test
     public void ServerGetOrganisationalUnitName(){
-        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
-        assert (unit.getOrganisationalUnitName() == "Test");
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert (unit.getOrganisationalUnitName(1).equals("Test"));
     }
 
     @Test
     public void ServerGetOrganisationalUnit(){
-        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
-        assert (unit.getOrganisationalUnit() != null);
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert (unit.getOrganisationalUnit(1) != null);
     }
 
-    //Assert no exceptions?
+
     @Test
     public void UpdateOrganisationalUnitCredits1(){
-        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
-        unit.UpdateOrganisationalunitCredits(4, 1276);
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        unit.UpdateOrganisationalunitCredits( 1, 1276);
     }
 
-    //Assert no exceptions?
+
     @Test
     public void UpdateOrganisationalUnitCredits2(){
-        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(1, connection);
-        unit.UpdateOrganisationalunitCredits(1, 400);
+        int credits = 230;
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        unit.UpdateOrganisationalunitCredits( 1, credits);
+        assert(unit.getOrganisationalUnitCredits(1) == credits);
     }
+
+    @Test
+    public void getOrganisationalUnitCredits(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert(unit.getOrganisationalUnitCredits(1) == 230);
+    }
+
+    @Test
+    public void addOrganisationalUnit(){
+        String orgName = "Testing org unit7";
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        int orgID = unit.addOrganisationalUnit(orgName, 236);
+        assert((unit.getOrganisationalUnitName(orgID).equals(orgName)));
+    }
+
 
 }

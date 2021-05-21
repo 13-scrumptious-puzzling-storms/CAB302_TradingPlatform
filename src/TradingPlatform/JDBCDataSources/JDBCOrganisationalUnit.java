@@ -13,21 +13,25 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private static final String GET_ORGANISATIONALUNIT_NAME = "SELECT name FROM OrganisationUnit WHERE OrganisationUnitID=?";
     private static final String GET_ORGANISATIONALUNIT_CREDITS = "SELECT credits FROM OrganisationUnit WHERE OrganisationUnitID=?";
     private static final String GET_ORGANISATIONALUNIT = "SELECT * FROM OrganisationUnit WHERE OrganisationUnitID=?";
+    private static final String GET_NEW_ORGANISATIONALUNIT_ID = "SELECT * FROM OrganisationUnit WHERE name=?";
+    private static final String ORGID_HEADING = "OrganisationUnitID";
+    private static final String NAME_HEADING = "name";
+    private static final String CREDITS_HEADING = "credits";
 
     private PreparedStatement addOrganisationalUnit;
     private PreparedStatement updateOrganisationalUnitCredits;
     private PreparedStatement getOrganisationalUnitName;
     private PreparedStatement getOrganisationalUnitCredits;
     private PreparedStatement getOrganisationalUnit;
+    private PreparedStatement getNewOrganisationalUnitID;
+
 
 
     private Connection connection;
 
-    private int OrgUnitId;
 
-    public JDBCOrganisationalUnit(int OrgUnitId, Connection connection){
+    public JDBCOrganisationalUnit(Connection connection){
         this.connection = connection;
-        this.OrgUnitId = OrgUnitId;
 
         try {
             // Preparing Statements
@@ -36,19 +40,39 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
             getOrganisationalUnit = connection.prepareStatement(GET_ORGANISATIONALUNIT);
             getOrganisationalUnitName = connection.prepareStatement(GET_ORGANISATIONALUNIT_NAME);
             getOrganisationalUnitCredits = connection.prepareStatement(GET_ORGANISATIONALUNIT_CREDITS);
+            getNewOrganisationalUnitID = connection.prepareStatement(GET_NEW_ORGANISATIONALUNIT_ID);
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    public String getOrganisationalUnitName() {
+    public int addOrganisationalUnit(String orgName, int orgCredits) {
+        try {
+            addOrganisationalUnit.clearParameters();
+            addOrganisationalUnit.setString(1, orgName);
+            addOrganisationalUnit.setInt(2, orgCredits);
+            addOrganisationalUnit.executeUpdate();
+            getNewOrganisationalUnitID.clearParameters();
+            getNewOrganisationalUnitID.setString(1, orgName);
+            ResultSet rs = getNewOrganisationalUnitID.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(ORGID_HEADING);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
+    public String getOrganisationalUnitName(int orgUnitId) {
         try {
             getOrganisationalUnitName.clearParameters();
-            getOrganisationalUnitName.setInt(1, OrgUnitId);
+            getOrganisationalUnitName.setInt(1, orgUnitId);
             ResultSet rs = getOrganisationalUnitName.executeQuery();
 
             if (rs.next()) {
-                String orgName = rs.getString("name");
+                String orgName = rs.getString(NAME_HEADING);
                 return orgName;
             }
         } catch (SQLException throwables) {
@@ -57,14 +81,14 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return null;
     }
 
-    public int getOrganisationalUnitCredits() {
+    public int getOrganisationalUnitCredits(int OrgUnitId) {
         try {
             getOrganisationalUnitCredits.clearParameters();
             getOrganisationalUnitCredits.setInt(1, OrgUnitId);
-            ResultSet rs = getOrganisationalUnitName.executeQuery();
+            ResultSet rs = getOrganisationalUnitCredits.executeQuery();
 
             if (rs.next()) {
-                int orgCredits = rs.getInt("credits");
+                int orgCredits = rs.getInt(CREDITS_HEADING);
                 return orgCredits;
             }
         } catch (SQLException throwables) {
@@ -73,28 +97,17 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return 0;
     }
 
-    public void UpdateOrganisationalunitCredits(int orgUnitId, int updatedCredits){
-        try{
-            updateOrganisationalUnitCredits.clearParameters();
-            updateOrganisationalUnitCredits.setInt(1, updatedCredits);
-            updateOrganisationalUnitCredits.setInt(2, orgUnitId);
-            updateOrganisationalUnitCredits.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-    public OrganisationalUnit getOrganisationalUnit() {
+    public OrganisationalUnit getOrganisationalUnit(int orgUnitId) {
         try {
             getOrganisationalUnit.clearParameters();
-            getOrganisationalUnit.setInt(1, OrgUnitId);
+            getOrganisationalUnit.setInt(1, orgUnitId);
             ResultSet rs = getOrganisationalUnit.executeQuery();
 
             if (rs.next()) {
                 var orgUnit = new OrganisationalUnit();
-                orgUnit.setId(OrgUnitId);
-                orgUnit.setName(rs.getString("name"));
-                orgUnit.setCredits(rs.getInt("credits"));
+                orgUnit.setId(orgUnitId);
+                orgUnit.setName(rs.getString(NAME_HEADING));
+                orgUnit.setCredits(rs.getInt(CREDITS_HEADING));
                 return orgUnit;
             }
 
@@ -105,16 +118,17 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return null;
     }
 
-    public void addOrganisationalUnit(String orgName, int orgCredits) {
-        try {
-            addOrganisationalUnit.clearParameters();
-            addOrganisationalUnit.setString(1, orgName);
-            addOrganisationalUnit.setInt(2, orgCredits);
-            getOrganisationalUnit.executeQuery();
+    public void UpdateOrganisationalunitCredits(int OrgUnitID, int updatedCredits){
+        try{
+            updateOrganisationalUnitCredits.clearParameters();
+            updateOrganisationalUnitCredits.setInt(1, updatedCredits);
+            updateOrganisationalUnitCredits.setInt(2, OrgUnitID);
+            updateOrganisationalUnitCredits.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
+
 
     //WHAT TO DO WITH THESE!?
     @Override

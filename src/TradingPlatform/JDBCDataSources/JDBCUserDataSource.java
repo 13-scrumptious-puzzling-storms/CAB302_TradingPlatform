@@ -40,7 +40,7 @@ public class JDBCUserDataSource implements UserDataSource {
                 username = rs.getString("username");
                 accountType = AccountType.getType(rs.getInt("userRole"));
                 int orgId = rs.getInt("organisationUnitId");
-                organisationalUnit = new JDBCOrganisationalUnit(orgId, connection).getOrganisationalUnit();
+                organisationalUnit = new JDBCOrganisationalUnit( connection).getOrganisationalUnit(orgId);
             }
 
         } catch (SQLException ex) {
