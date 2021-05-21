@@ -40,5 +40,5 @@ public interface TradeDataSource {
      * Sets the amount of assets remaining in the order
      * @param amount
      */
-    void setRemaining(int amount);
+    void setRemaining(int tradeId, int amount);
 }
