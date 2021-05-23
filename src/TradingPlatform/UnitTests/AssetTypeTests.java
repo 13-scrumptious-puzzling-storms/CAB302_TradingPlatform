@@ -20,7 +20,7 @@ public class AssetTypeTests {
     @Test
     public void getAssetNameTest(){
         int orgID = 1;
-        String assetName = "pens";
+        String assetName = "Pen";
         JDBCAssetType unit = new JDBCAssetType(connection);
         assert((unit.getAssetName(orgID).equals(assetName)));
     }

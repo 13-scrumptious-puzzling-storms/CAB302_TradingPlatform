@@ -42,6 +42,7 @@ public class GUItester extends JFrame {
         setLocation(new Point(0, 0));
         pack();
         setVisible(true);
+        panel2.setAutoscrolls(true);
 
         pane.setBackground(cust1);
         pane.setForeground(Color.WHITE);
@@ -56,7 +57,6 @@ public class GUItester extends JFrame {
         panel3.setForeground(Color.LIGHT_GRAY);
         setBackground(cust2);
 
-
     }
 
     public void homePanel(JPanel panel){
@@ -65,20 +65,39 @@ public class GUItester extends JFrame {
 
     public void orgHomePanel(JPanel panel2){
         JTabbedPane pane2 = new JTabbedPane();
-        JPanel panel2_1 = new JPanel();
-        orgTrades(panel2_1);
+        JScrollPane tradesPanel = new JScrollPane();
+
+        JScrollPane TradesPaneSell = orgTradesSell(tradesPanel);
+        JScrollPane TradesPaneBuy = orgTradesBuy(tradesPanel);
+
+        JPanel tablesPane = new JPanel();
+        tablesPane.add(TradesPaneSell);
+        tablesPane.add(TradesPaneBuy);
 
         JPanel panel2_2 = new JPanel();
         orgAssets(panel2_2);
 
         panel2.add(pane2);
-        pane2.add("assets", panel2_1);
-        pane2.add("trades", panel2_2);
-        pane2.setPreferredSize(new Dimension(300, 100));
+//        pane3.add(panel2_1);
+        //pane2.add("Trades", panel2_1);
+        pane2.add("Trades", tablesPane);
+
+        pane2.add("Assets", panel2_2);
+        pane2.setPreferredSize(new Dimension(400, 200));
+        panel2.add(pane2);
+
     }
 
-    public void orgTrades(JPanel panel){
+    public JScrollPane orgTradesSell(JScrollPane panel){
+        JTable sellTable = new JTable(2, 2);
+        JScrollPane tradesScrollTable = new JScrollPane(sellTable);
+        return tradesScrollTable;
+    }
 
+    public JScrollPane orgTradesBuy(JScrollPane panel){
+        JTable buyTable = new JTable(2, 2);
+        JScrollPane tradesScrollTable = new JScrollPane(buyTable);
+        return tradesScrollTable;
     }
 
     public void orgAssets(JPanel panel){
