@@ -1,8 +1,13 @@
 package TradingPlatform;
 
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 public class GUItester extends JFrame {
 
@@ -15,83 +20,129 @@ public class GUItester extends JFrame {
     private static final Color cust1 = new Color(38,139,133);
     private static final Color cust2 = new Color(51,61,68);
     private static final Color cust3 = new Color(72,191,146);
+    // Display the window.
+    private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    // the screen height
+    private static int height = (int)screenSize.getHeight();
+    private static int tabHeight = height/2;
+
+    // the screen width
+    private static int width = (int)screenSize.getWidth();
+    private static int tabWidth = width - (width/3);
+
 
     public GUItester() {
         super("SPS Trading");
         JFrame.setDefaultLookAndFeelDecorated(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JTabbedPane pane = new JTabbedPane();
+        JTabbedPane pagePane = new JTabbedPane();
 
-        JPanel panel1 = new JPanel();
-        homePanel(panel1);
+        JPanel homeTab = new JPanel();
+        homePanel(homeTab);
 
-        JPanel panel2 = new JPanel();
-        orgHomePanel(panel2);
+        JPanel orgTab = new JPanel();
+        orgHomePanel(orgTab);
 
-        JPanel panel3 = new JPanel();
-        profilePanel(panel3);
+        JPanel profileTab = new JPanel();
+        profilePanel(profileTab);
 
-        pane.add("Home", panel1);
-        pane.add("Organisation Home", panel2);
-        pane.add("My Profile", panel3);
-        getContentPane().add(pane);
+        pagePane.add("Home", homeTab);
+        pagePane.add("Organisation Home", orgTab);
+        pagePane.add("My Profile", profileTab);
+        getContentPane().add(pagePane);
 
-        // Display the window.
-        setPreferredSize(new Dimension(500, 400));
+
+
+        setPreferredSize(new Dimension((int)width, (int)height));
         setLocation(new Point(0, 0));
         pack();
         setVisible(true);
-        panel2.setAutoscrolls(true);
+        orgTab.setAutoscrolls(true);
 
-        pane.setBackground(cust1);
-        pane.setForeground(Color.WHITE);
+        pagePane.setBackground(cust1);
+        pagePane.setForeground(Color.WHITE);
 
-        panel1.setBackground(cust2);
-        panel1.setForeground(Color.WHITE);
+        homeTab.setBackground(cust2);
+        homeTab.setForeground(Color.WHITE);
 
-        panel2.setBackground(cust2);
-        panel2.setForeground(Color.LIGHT_GRAY);
+        orgTab.setBackground(cust2);
+        orgTab.setForeground(Color.LIGHT_GRAY);
 
-        panel3.setBackground(cust2);
-        panel3.setForeground(Color.LIGHT_GRAY);
+        profileTab.setBackground(cust2);
+        profileTab.setForeground(Color.LIGHT_GRAY);
         setBackground(cust2);
 
     }
 
     public void homePanel(JPanel panel){
+        JButton buyButton = new JButton("Buy");
+        JButton sellButton = new JButton("Sell");
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(buyButton, BorderLayout.WEST);
+        buttonPanel.add(sellButton, BorderLayout.EAST);
+
+        JScrollPane homePanel = new JScrollPane();
+        JScrollPane TradesPaneSell = orgTradesSell(homePanel);
         panel.add(new JLabel("Tab 1"));
+        panel.add(buttonPanel, BorderLayout.NORTH);
+        panel.add(TradesPaneSell, BorderLayout.SOUTH);
+
     }
 
     public void orgHomePanel(JPanel panel2){
-        JTabbedPane pane2 = new JTabbedPane();
+        JTabbedPane tradesAssets = new JTabbedPane();
         JScrollPane tradesPanel = new JScrollPane();
 
         JScrollPane TradesPaneSell = orgTradesSell(tradesPanel);
         JScrollPane TradesPaneBuy = orgTradesBuy(tradesPanel);
 
-        JPanel tablesPane = new JPanel();
-        tablesPane.add(TradesPaneSell);
-        tablesPane.add(TradesPaneBuy);
+        //
+        JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
+        tablesPane.setDividerLocation(tabWidth/2);
+        tablesPane.setResizeWeight(0.5);
 
         JPanel panel2_2 = new JPanel();
         orgAssets(panel2_2);
 
-        panel2.add(pane2);
-//        pane3.add(panel2_1);
-        //pane2.add("Trades", panel2_1);
-        pane2.add("Trades", tablesPane);
-
-        pane2.add("Assets", panel2_2);
-        pane2.setPreferredSize(new Dimension(400, 200));
-        panel2.add(pane2);
-
+        panel2.add(tradesAssets);
+        tradesAssets.add("Trades", tablesPane);
+        tradesAssets.add("Assets", panel2_2);
+        tradesAssets.setPreferredSize(new Dimension(tabWidth, tabHeight));
+        panel2.add(tradesAssets);
     }
 
     public JScrollPane orgTradesSell(JScrollPane panel){
-        JTable sellTable = new JTable(2, 2);
+        JButton button = new JButton();
+        button.setText("Buy");
+//        TableCellRenderer tableRenderer;
+
+//        Object data[][] = {{"Vinod","MCA"},
+//                {"Deepak","PGDCA"},
+//                {"Ranjan","M.SC."},
+//                {"Radha","BCA"}};
+//        ArrayList<String> whatever = new ArrayList<>();
+//        //Object[] whateverName = whatever.toArray();
+//        whatever.add("something");
+//        whatever.add("one more time");
+
+        //ArrayList<ArrayList<String>> data = new ArrayList<>();
+        //data.add(whatever);
+//        //Object[] name = data.toArray();
+//        ArrayList<String> col = new ArrayList<>();
+////        col.add("Title one", "Title Two");
+//        Object[] colName = col.toArray();
+        String data[][] = {{"Vinod","MCA","Computer"},
+                {"Deepak","PGDCA","History"},
+                {"Ranjan","M.SC.","Biology"},
+                {"Radha","BCA","Computer"}};
+        String col[] = {"Name","Course","Subject"};
+
+        DefaultTableModel model = new DefaultTableModel(data,col);
+        JTable sellTable = new JTable(model);
         JScrollPane tradesScrollTable = new JScrollPane(sellTable);
         return tradesScrollTable;
+
     }
 
     public JScrollPane orgTradesBuy(JScrollPane panel){
@@ -107,7 +158,5 @@ public class GUItester extends JFrame {
     public void profilePanel(JPanel panel3){
         panel3.add(new JButton("Tab 2"));
     }
-
-
 
 }
