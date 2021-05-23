@@ -6,6 +6,8 @@ import TradingPlatform.Interfaces.TradeDataSource;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class JDBCTradeDataSource implements TradeDataSource {
 
@@ -16,10 +18,15 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private static final String GET_QUANTITY = "SELECT quantity FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_ASSET = "SELECT organisationAssetID FROM TradeOrders WHERE tradeOrderID=?";
     private static final String SET_REMAINING = "UPDATE TradeOrders SET remainingQuantity=? WHERE tradeOrderID=?";
-    private static final String SET_CANCELLED = "UPDATE TradeOrders SET cancelled=? WHERE tradeOrderID=?";
+    private static final String GET_REMAINING = "SELECT remainingQuantity FROM TradeOrders WHERE tradeOrderID=?";
+    private static final String SET_CANCELLED = "UPDATE TradeOrders SET cancelled='true' WHERE tradeOrderID=?";
+    private static final String GET_CANCELLED = "SELECT cancelled FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_BUY_ORDERS = "SELECT o.*, organisationUnitId FROM TradeOrders as o\n" +
             "left join organisationAsset as a on a.organisationAssetID = o.organisationAssetID\n" +
             "WHERE assetTypeId=? AND isSellOrder='false'";
+    private static final String GET_SELL_ORDERS = "SELECT o.*, organisationUnitId FROM TradeOrders as o\n" +
+            "left join organisationAsset as a on a.organisationAssetID = o.organisationAssetID\n" +
+            "WHERE assetTypeId=? AND isSellOrder='true'";
 
 
 
@@ -30,8 +37,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private PreparedStatement getQuantity;
     private PreparedStatement getAsset;
     private PreparedStatement setRemaining;
+    private PreparedStatement getRemaining;
     private PreparedStatement setCancelled;
+    private PreparedStatement getCancelled;
     private PreparedStatement getBuyOrders;
+    private PreparedStatement getSellOrders;
 
 
     private Connection connection;
@@ -52,8 +62,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
             getQuantity = connection.prepareStatement(GET_QUANTITY);
             getAsset = connection.prepareStatement(GET_ASSET);
             setRemaining = connection.prepareStatement(SET_REMAINING);
+            getRemaining = connection.prepareStatement(GET_REMAINING);
             setCancelled = connection.prepareStatement(SET_CANCELLED);
+            getCancelled = connection.prepareStatement(GET_CANCELLED);
             getBuyOrders = connection.prepareStatement(GET_BUY_ORDERS);
+            getSellOrders = connection.prepareStatement(GET_SELL_ORDERS);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -167,40 +180,73 @@ public class JDBCTradeDataSource implements TradeDataSource {
         }
     }
 
+    @Override
+    public int getRemaining(int tradeId) {
+        try {
+            getRemaining.clearParameters();
+            getRemaining.setInt(1, tradeId);
+            ResultSet rs = getRemaining.executeQuery();
+
+            if (rs.next()) {
+                int Remaining = rs.getInt("remainingQuantity");
+                return Remaining;
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return -1;
+    }
+
     //~~~~~TO FIX METHODS UNDER THIS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @Override
     public void setCancel(int tradeId){
         try {
             setCancelled.clearParameters();
-            setCancelled.setBoolean(1, true);
-            setCancelled.setInt(2, tradeId);
-            setRemaining.executeUpdate();
+            setCancelled.setInt(1, tradeId);
+            setCancelled.executeUpdate();
         }
         catch (SQLException throwables){
             throwables.printStackTrace();
         }
     }
 
-    public int[] getBuyOrders(int orgAssetId){
+    @Override
+    public Boolean getCancel(int tradeId){
+        try{
+            getCancelled.clearParameters();
+            getCancelled.setInt(1, tradeId);
+            ResultSet rs = getCancelled.executeQuery();
+
+            Boolean cancel;
+
+            if (rs.next()) {
+                String cancelled = rs.getString("cancelled");
+
+                if(cancelled.equals("false")){
+                    cancel = false;
+                }else{
+                     cancel = true;
+                }
+                return cancel;
+            }
+        }
+        catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public HashSet<Integer> getBuyOrders(int orgAssetId){
         try {
             getBuyOrders.clearParameters();
             getBuyOrders.setInt(1, orgAssetId);
             ResultSet rs = getBuyOrders.executeQuery();
 
-            //int size = rs.getFetchSize();
-            int i = 0;
-            int size =0;
-            int[] assets = new int[size];
-            if (rs != null)
-            {
-                rs.last();    // moves cursor to the last row
-                size = rs.getRow(); // get row id
-            }
+            HashSet<Integer> assets = new HashSet<Integer>();
             while (rs.next()) {
-
                 int thing = rs.getInt("tradeOrderID");
-                System.out.println(thing);
-                assets[i] = thing;
-                i++;
+                assets.add(thing);
             }
             return assets;
         }
@@ -210,9 +256,25 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return null;
     }
 
-    public AssetType[] getSellOrders(int orgAssetId){
+    public HashSet<Integer> getSellOrders(int orgAssetId){
+        try {
+            getSellOrders.clearParameters();
+            getSellOrders.setInt(1, orgAssetId);
+            ResultSet rs = getSellOrders.executeQuery();
+
+            HashSet<Integer> assets = new HashSet<Integer>();
+            while (rs.next()) {
+                int thing = rs.getInt("tradeOrderID");
+                assets.add(thing);
+            }
+            return assets;
+        }
+        catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
         return null;
     }
+
 //    @Override
 //    public String getOrganisation(int tradeId) {
 //        try {

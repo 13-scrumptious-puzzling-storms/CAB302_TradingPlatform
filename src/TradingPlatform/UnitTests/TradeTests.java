@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.HashSet;
 
 
 public class TradeTests {
@@ -21,12 +23,12 @@ public class TradeTests {
     @BeforeEach
     public void newTrade(){
         trade = new JDBCTradeDataSource(1, connection);
-        trade.addTradeOrder(1, 10, false, 2);
+//        trade.addTradeOrder(1, 10, false, 2);
     }
 
     @Test
     public void testGetValue(){
-        assert (trade.value(1) == 2);
+        assert (trade.value(1) == 5);
     }
 
     @Test
@@ -46,13 +48,28 @@ public class TradeTests {
 
     @Test
     public void testGetBuys(){
-        int[] rs = trade.getBuyOrders(3);
-//        int size = rs.length();
+        HashSet<Integer> rs = trade.getBuyOrders(3);
+        assert (rs != null);
+    }
 
-        for (int res : rs) {
-            System.out.println(res);
-        }
-        System.out.println(rs);
+    @Test
+    public void testGetSells(){
+        HashSet<Integer> rs = trade.getSellOrders(3);
+        assert (rs != null);
+    }
+
+    @Test
+    public void testSetRemaining(){
+        assert(trade.getQuantity(4) == 50);
+        trade.setRemaining(4, 15);
+        assert(trade.getRemaining(4) == 15);
+    }
+
+    @Test
+    public void testSetCancel(){
+        assert (trade.getCancel(1) == false);
+        trade.setCancel(1);
+        assert (trade.getCancel(1) == true);
     }
 
 //    @Test
