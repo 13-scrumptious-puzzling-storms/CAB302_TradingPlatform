@@ -53,7 +53,6 @@ public class GUItester extends JFrame {
         getContentPane().add(pagePane);
 
 
-
         setPreferredSize(new Dimension((int)width, (int)height));
         setLocation(new Point(0, 0));
         pack();
@@ -76,17 +75,26 @@ public class GUItester extends JFrame {
     }
 
     public void homePanel(JPanel panel){
-        JButton buyButton = new JButton("Buy");
-        JButton sellButton = new JButton("Sell");
+        JButton buyButton = new JButton("Buy Assets");
+        JButton sellButton = new JButton("Sell Assets");
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(buyButton, BorderLayout.WEST);
-        buttonPanel.add(sellButton, BorderLayout.EAST);
+        JPanel emptyPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1,8, 10, 10));
+        buttonPanel.add(emptyPanel);
+        buttonPanel.add(emptyPanel);
+        buttonPanel.add(buyButton);
+        buttonPanel.add(emptyPanel);
+        buttonPanel.add(sellButton);
+        buttonPanel.add(emptyPanel);
+        buttonPanel.add(emptyPanel);
 
         JScrollPane homePanel = new JScrollPane();
         JScrollPane TradesPaneSell = orgTradesSell(homePanel);
+        homePanel.setPreferredSize(new Dimension(tabWidth, tabHeight));
         panel.add(new JLabel("Tab 1"));
+        panel.setLayout(new BorderLayout());
         panel.add(buttonPanel, BorderLayout.NORTH);
-        panel.add(TradesPaneSell, BorderLayout.SOUTH);
+        panel.add(TradesPaneSell, BorderLayout.CENTER);
 
     }
 
