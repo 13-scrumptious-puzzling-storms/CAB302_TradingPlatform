@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.HashSet;
 
 
 public class TradeTests {
@@ -22,7 +20,7 @@ public class TradeTests {
 
     @BeforeEach
     public void newTrade(){
-        trade = new JDBCTradeDataSource(1, connection);
+        trade = new JDBCTradeDataSource(connection);
 //        trade.addTradeOrder(1, 10, false, 2);
     }
 
