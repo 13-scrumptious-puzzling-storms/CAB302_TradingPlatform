@@ -54,11 +54,9 @@ public class ReconcileTests {
 
     @Test
     public void TestReconcile(){
-        ArrayList<Integer> assetTypeIds = reconcileSource.getCurrentReconcilableAssetTypeIds();
-        // This is just to make sure that there is test data
-        assert (assetTypeIds.size() > 0);
         tradeReconcile.ReconcileCurrentTrades();
-        assetTypeIds = reconcileSource.getCurrentReconcilableAssetTypeIds();
+        // Check that there are no reconcilable trades left
+        var assetTypeIds = reconcileSource.getCurrentReconcilableAssetTypeIds();
         assert (assetTypeIds.size() == 0);
     }
 }
