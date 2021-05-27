@@ -29,7 +29,40 @@ public class GUItester extends JFrame {
     // the screen width
     private static int width = (int)screenSize.getWidth();
     private static int tabWidth = width - (width/3);
+    String BuyHeading[] = {"Buy Orders","Price","Quantity"};
+    String SellHeading[] = {"Sell Orders","Price","Quantity"};
+    String AssetHeading[] = {"Asset ID","Asset Name","Quantity"};
 
+    String data[][] = {{"Vinod","MCA","Computer"},
+            {"Deepak","PGDCA","History"},
+            {"Ranjan","M.SC.","Biology"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"},
+            {"Radha","BCA","Computer"}};
 
     public GUItester() {
         super("SPS Trading");
@@ -53,7 +86,7 @@ public class GUItester extends JFrame {
         getContentPane().add(pagePane);
 
 
-        setPreferredSize(new Dimension((int)width, (int)height));
+        setPreferredSize(new Dimension(width, height));
         setLocation(new Point(0, 0));
         pack();
         setVisible(true);
@@ -89,7 +122,7 @@ public class GUItester extends JFrame {
         buttonPanel.add(emptyPanel);
 
         JScrollPane homePanel = new JScrollPane();
-        JScrollPane TradesPaneSell = orgTradesSell(homePanel);
+        JScrollPane TradesPaneSell = constructTable(data, SellHeading);
         homePanel.setPreferredSize(new Dimension(tabWidth, tabHeight));
         panel.add(new JLabel("Tab 1"));
         panel.setLayout(new BorderLayout());
@@ -100,68 +133,34 @@ public class GUItester extends JFrame {
 
     public void orgHomePanel(JPanel panel2){
         JTabbedPane tradesAssets = new JTabbedPane();
-        JScrollPane tradesPanel = new JScrollPane();
 
-        JScrollPane TradesPaneSell = orgTradesSell(tradesPanel);
-        JScrollPane TradesPaneBuy = orgTradesBuy(tradesPanel);
+        //Retrieve trades buy and sell tables for organisational unit
+        JScrollPane TradesPaneSell = constructTable(data,SellHeading );
+        JScrollPane TradesPaneBuy = constructTable(data, BuyHeading);
 
-        //
+        //Set up Trades tables in Trades tab
         JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
         tablesPane.setDividerLocation(tabWidth/2);
         tablesPane.setResizeWeight(0.5);
 
-        JPanel panel2_2 = new JPanel();
-        orgAssets(panel2_2);
+        //JPanel AssetsPanel = new JPanel();
+        JScrollPane Assets = constructTable(data, AssetHeading);
 
+        panel2.setLayout(new GridBagLayout());
         panel2.add(tradesAssets);
         tradesAssets.add("Trades", tablesPane);
-        tradesAssets.add("Assets", panel2_2);
+        tradesAssets.add("Assets", Assets);
         tradesAssets.setPreferredSize(new Dimension(tabWidth, tabHeight));
         panel2.add(tradesAssets);
     }
 
-    public JScrollPane orgTradesSell(JScrollPane panel){
-        JButton button = new JButton();
-        button.setText("Buy");
-//        TableCellRenderer tableRenderer;
-
-//        Object data[][] = {{"Vinod","MCA"},
-//                {"Deepak","PGDCA"},
-//                {"Ranjan","M.SC."},
-//                {"Radha","BCA"}};
-//        ArrayList<String> whatever = new ArrayList<>();
-//        //Object[] whateverName = whatever.toArray();
-//        whatever.add("something");
-//        whatever.add("one more time");
-
-        //ArrayList<ArrayList<String>> data = new ArrayList<>();
-        //data.add(whatever);
-//        //Object[] name = data.toArray();
-//        ArrayList<String> col = new ArrayList<>();
-////        col.add("Title one", "Title Two");
-//        Object[] colName = col.toArray();
-        String data[][] = {{"Vinod","MCA","Computer"},
-                {"Deepak","PGDCA","History"},
-                {"Ranjan","M.SC.","Biology"},
-                {"Radha","BCA","Computer"}};
-        String col[] = {"Name","Course","Subject"};
-
-        DefaultTableModel model = new DefaultTableModel(data,col);
-        JTable sellTable = new JTable(model);
-        JScrollPane tradesScrollTable = new JScrollPane(sellTable);
-        return tradesScrollTable;
-
-    }
-
-    public JScrollPane orgTradesBuy(JScrollPane panel){
-        JTable buyTable = new JTable(2, 2);
-        JScrollPane tradesScrollTable = new JScrollPane(buyTable);
+    public JScrollPane constructTable(String[][] data, String[] headingType){
+        DefaultTableModel model = new DefaultTableModel(data, headingType);
+        JTable sell_buyTable = new JTable(model);
+        JScrollPane tradesScrollTable = new JScrollPane(sell_buyTable);
         return tradesScrollTable;
     }
 
-    public void orgAssets(JPanel panel){
-
-    }
 
     public void profilePanel(JPanel panel3){
         panel3.add(new JButton("Tab 2"));
