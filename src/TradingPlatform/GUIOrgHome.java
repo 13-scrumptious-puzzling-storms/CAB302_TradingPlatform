@@ -1,10 +1,20 @@
 package TradingPlatform;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static TradingPlatform.GUIMain.tabHeight;
 import static TradingPlatform.GUIMain.tabWidth;
+import static TradingPlatform.GUIMain.cust1;
+import static TradingPlatform.GUIMain.cust2;
+import static TradingPlatform.GUIMain.cust3;
+
+
 public class GUIOrgHome{
 
     public String BuyHeading[] = {"Buy Orders","Price","Quantity"};
@@ -60,6 +70,7 @@ public class GUIOrgHome{
         JScrollPane TradesPaneSell = GUIMain.constructTable(data,SellHeading );
         JScrollPane TradesPaneBuy = GUIMain.constructTable(data, BuyHeading);
 
+
         //Set up Trades tables in Trades tab
         JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
         tablesPane.setDividerLocation(tabWidth/2);
@@ -76,10 +87,10 @@ public class GUIOrgHome{
         position.gridwidth = 3;
         position.anchor = GridBagConstraints.CENTER;
         JButton button = new JButton("Remove Buy/Sell Order");
-        button.setBackground(Color.CYAN);
+        button.setBackground(cust1);
         panel2.add(button, position);
 
-        position.gridwidth = 1;
+
 
         //Credits Label
         String creditsLabel = "Credits: " + String.valueOf(credits);
