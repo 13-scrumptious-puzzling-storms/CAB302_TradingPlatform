@@ -4,9 +4,10 @@ import java.io.*;
 
 public class ServerConfig {
     private static final int PROP_FILE_LINES = 4;
-    private static final File DEFAULT_PROPS_FILE = new File("defaultPropsFile.txt");
+    private static final String GET_DEFAULT_PROPS_FILE = "./default_db.txt";
+    private static final String DEFAULT_PROPS_FILE = "./db.props";
 
-    private static Boolean defaultPropsExists;
+    public static Boolean defaultPropsExists = false;
 
     private static File propsFile;
     private static String propsURL;
@@ -14,19 +15,9 @@ public class ServerConfig {
     private static String propsUser;
     private static String propsPass;
 
-    // get rid of throwa IOException when you remove writePropsFIle
-    public static void main(String[] args) throws IOException {
-        if (getDefaultPropsFile()) {
-            readPropsFile(); // maybe make this a bool function with a tru catch?
-        }
-
-        //setPropsFile("test");
-        //propsURL = "testypoo";
-        //propsSchema = "yiggy:sdfdsf";
-        //propsUser = "ur gay";
-        //propsPass = "jdbc:nahhhhh";
-
-        //writePropsFile();
+    // get rid of throws IOException when you remove writePropsFIle
+    public ServerConfig() throws IOException {
+        InitialiseConfig();
     }
 
     // Getters & Setters
@@ -46,21 +37,47 @@ public class ServerConfig {
     public static String getPropsPass() { return propsPass; }
 
     public static void setDefaultPropsFile(String defaultPropsFile) throws IOException {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(DEFAULT_PROPS_FILE));){
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(GET_DEFAULT_PROPS_FILE));){
             bufferedWriter.write(defaultPropsFile);
+            setPropsFile(defaultPropsFile);
         }
     }
 
-    public static Boolean getDefaultPropsFile() throws IOException {
-        if (DEFAULT_PROPS_FILE.exists()) {
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(DEFAULT_PROPS_FILE));){
-                setPropsFile(bufferedReader.readLine());
-            }
+    private static void InitialiseConfig() throws IOException {
+        if (getDefaultPropsFile()) {
+            System.out.println("ServerConfig: Successfully found existing props file.");
             defaultPropsExists = true;
-            return true;
+            readPropsFile();
+        } else {
+            defaultPropsExists = false;
+            System.out.println("ServerConfig: Props file not found.");
         }
-        defaultPropsExists = false;
-        return false;
+    }
+
+    private static Boolean getDefaultPropsFile() throws IOException {
+        if (new File(GET_DEFAULT_PROPS_FILE).exists()) {
+            try(BufferedReader bufferedReader = new BufferedReader(new FileReader(GET_DEFAULT_PROPS_FILE))) {
+                String foundPropsFile = bufferedReader.readLine(); // first line in txt should indicate where to find props file
+                if (!(new File(foundPropsFile).exists())) {
+                    readFailed();
+                    return false;
+                } else {
+                    setPropsFile(foundPropsFile);
+                }
+                return true;
+            }
+        } else {
+            readFailed();
+            return false;
+        }
+    }
+
+    private static void readFailed() {
+        setPropsFile("");
+        setPropsURL("");
+        setPropsSchema("");
+        setPropsUser("");
+        setPropsPass("");
     }
 
     public static void writePropsFile() throws IOException {
@@ -68,23 +85,34 @@ public class ServerConfig {
                 "jdbc.schema=" + propsSchema + "\n" +
                 "jdbc.username=" + propsUser + "\n" +
                 "jdbc.password=" + propsPass;
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(propsFile));) {
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(propsFile))) {
             bufferedWriter.write(propsFileData);
         }
     }
 
     public static void readPropsFile() throws IOException {
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(propsFile));) {
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(propsFile))) {
             String[] lines = new String[PROP_FILE_LINES];
 
             for (int i = 0; i < PROP_FILE_LINES; i++) {
                 lines[i] = bufferedReader.readLine();
             }
 
-            setPropsURL(lines[0].split("=")[1]);
-            setPropsSchema(lines[1].split("=")[1]);
-            setPropsUser(lines[2].split("=")[1]);
-            setPropsPass(lines[3].split("=")[1]);
+            String[] splitString;
+            String[] parameters = new String[lines.length];
+            for (int i = 0; i < lines.length; i++) {
+                splitString = lines[i].split("=");
+                if (splitString.length == 2) {
+                    parameters[i] = splitString[1];
+                } else {
+                    parameters[i] = "";
+                }
+            }
+
+            setPropsURL(parameters[0]);
+            setPropsSchema(parameters[1]);
+            setPropsUser(parameters[2]);
+            setPropsPass(parameters[3]);
         }
     }
 }
