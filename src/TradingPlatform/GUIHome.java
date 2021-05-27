@@ -3,11 +3,11 @@ package TradingPlatform;
 import javax.swing.*;
 import java.awt.*;
 
-import static TradingPlatform.GUIMain.cust1;
+import static TradingPlatform.GUIMain.*;
+import static java.awt.GridBagConstraints.*;
 
-public class GUIHome{
+public class GUIHome extends JFrame{
 
-    Object[] colours = GUIMain.getColours();
     String data[][] = {{"Vinod","MCA","Computer"},
             {"Deepak","PGDCA","History"},
             {"Ranjan","M.SC.","Biology"},
@@ -38,37 +38,43 @@ public class GUIHome{
             {"Radha","BCA","Computer"},
             {"Radha","BCA","Computer"},
             {"Radha","BCA","Computer"}};
-    String BuyHeading[] = {"Buy Orders","Price","Quantity"};
+    String BuyHeading[] = {"Recent Trades","Price","Quantity"};
 
     public GUIHome(JPanel HomeTab){
         homePanel(HomeTab);
-        GUIMain.constructTable(data, BuyHeading);
-        HomeTab.setBackground(Color.red);
     }
 
     public void homePanel(JPanel panel){
+
+        panel.setLayout(new GridBagLayout());
+
         JButton buyButton = new JButton("Buy Assets");
         JButton sellButton = new JButton("Sell Assets");
-        JPanel buttonPanel = new JPanel();
-        JPanel emptyPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1,8, 10, 10));
-        buttonPanel.add(emptyPanel);
-        buttonPanel.add(emptyPanel);
-        buttonPanel.add(buyButton);
-        buttonPanel.add(emptyPanel);
-        buttonPanel.add(sellButton);
-        buttonPanel.add(emptyPanel);
-        buttonPanel.add(emptyPanel);
 
-        JScrollPane homePanel = new JScrollPane();
+        GridBagConstraints position = new GridBagConstraints();
+
+        position.gridx = 1;
+        position.gridy = 0;
+        position.insets = new Insets(0, 200, 0, 0);
+        position.anchor = LINE_START;
+        panel.add(buyButton, position);
+
+        position.insets = new Insets(0, 0, 0, 200);
+        position.gridx = 2;
+        position.anchor = LINE_END;
+        panel.add(sellButton, position);
+
+        position.insets = new Insets(50, 0, 0, 0);
+        position.anchor = CENTER;
+        position.gridx = 0;
+        position.gridy = 1;
+        position.gridwidth = 3;
+
         JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
-        homePanel.setPreferredSize(new Dimension(100, 100));
-        panel.add(new JLabel("Tab 1"));
-        panel.setLayout(new BorderLayout());
-        panel.add(buttonPanel, BorderLayout.NORTH);
-        panel.add(TradesPaneSell, BorderLayout.CENTER);
-        panel.setBackground(Color.blue);
-        buyButton.setBackground(cust1);
+        TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
+        TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
+        panel.add(TradesPaneSell, position);
 
+        panel.setBackground(cust1);
     }
 }
