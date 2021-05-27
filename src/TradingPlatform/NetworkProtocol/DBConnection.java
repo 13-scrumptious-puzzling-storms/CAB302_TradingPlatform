@@ -14,12 +14,19 @@ import java.util.Properties;
  * @author Malcolm Corney
  */
 public class DBConnection {
-    private String propsFile = "db.props";
-
     /**
      * The singleton instance of the database connection.
      */
     private static Connection instance;
+
+    private static String propsFile = "./db.props";
+    public static void setPropsFile(String file) {
+        propsFile = file;
+        instance = null;
+    }
+
+    private static Boolean isConnected = false;
+    public static Boolean getIsConnected() { return isConnected; }
 
     /**
      * Constructor initialises the connection.
@@ -27,8 +34,9 @@ public class DBConnection {
     private DBConnection() {
         Properties props = new Properties();
         FileInputStream inputStream = null;
+        isConnected = false;
         try {
-            inputStream = new FileInputStream("db.props");
+            inputStream = new FileInputStream(propsFile);
             props.load(inputStream);
             inputStream.close();
 
@@ -40,12 +48,17 @@ public class DBConnection {
 
             // Get a connection
             instance = DriverManager.getConnection(url + "/" + schema, username, password);
+            isConnected = true;
+            System.out.println("DBConnection: Successfully connected to database.");
         } catch (SQLException sqle) {
             System.err.println(sqle);
         } catch (FileNotFoundException fnfe) {
             System.err.println(fnfe);
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+        if (!isConnected) {
+            System.out.println("DBConnection: Failed to connect to database!");
         }
     }
 
