@@ -1,7 +1,8 @@
 package TradingPlatform.UnitTests;
 
-import TradingPlatform.NetworkProtocol.DBConnection;
+import TradingPlatform.AccountType;
 import TradingPlatform.JDBCDataSources.JDBCUserDataSource;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -12,25 +13,39 @@ public class UserTests {
 
     @BeforeAll
     public static void init(){
-        connection = DBConnection.getInstance();
+        connection = TestDatabaseFunctions.getConnection();
+    }
+
+    @AfterAll
+    public static void deleteDb(){
+        TestDatabaseFunctions.CloseDatabase();
+    }
+
+    @Test
+    public void TestGetUserId(){
+        int userId = JDBCUserDataSource.getUserId("MarkGrayson", "Invincible", connection);
+        assert (userId == 5);
     }
 
     @Test
     public void TestGetUsername(){
-        JDBCUserDataSource user = new JDBCUserDataSource(1, connection);
-        assert (user.getUsername() != null);
+        JDBCUserDataSource user = new JDBCUserDataSource(5, connection);
+        assert (user.getUsername().equals("MarkGrayson"));
     }
 
     @Test
     public void TestGetAccountType(){
-        JDBCUserDataSource user = new JDBCUserDataSource(1, connection);
-        assert(user.getAccountType() != null);
+        JDBCUserDataSource INVINCIBLE = new JDBCUserDataSource(5, connection);
+        assert(INVINCIBLE.getAccountType() == AccountType.MEMBER);
+
+        JDBCUserDataSource Radmin = new JDBCUserDataSource(1, connection);
+        assert(Radmin.getAccountType() == AccountType.ADMINISTRATOR);
     }
 
     @Test
     public void TestGetOrganisationalUnit(){
         JDBCUserDataSource user = new JDBCUserDataSource(1, connection);
         var orgUnit = user.getOrganisationalUnit();
-        assert(orgUnit != null);
+        assert(orgUnit.getID() == 1);
     }
 }
