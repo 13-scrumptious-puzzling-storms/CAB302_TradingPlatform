@@ -154,9 +154,9 @@ public class GUIManager extends JFrame implements ActionListener, Runnable {
         // Buttons
         Color tabColour = DARK_JUNGLE_GREEN;
         propsButton = newButton("Change", FONT_BUTTON, staticTextColour, tabColour);
-        schemaButton = newButton("Edit 1", FONT_BUTTON, staticTextColour, tabColour);
-        userButton = newButton("Edit 2", FONT_BUTTON, staticTextColour, tabColour);
-        passButton = newButton("Edit 3", FONT_BUTTON, staticTextColour, tabColour);
+        schemaButton = newButton("Edit", FONT_BUTTON, staticTextColour, tabColour);
+        userButton = newButton("Edit", FONT_BUTTON, staticTextColour, tabColour);
+        passButton = newButton("Edit", FONT_BUTTON, staticTextColour, tabColour);
         shutdownButton = newButton("SHUTDOWN", FONT_BUTTON, tabColour, CRIMSON);
 
         // Panels
