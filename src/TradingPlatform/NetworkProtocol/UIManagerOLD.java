@@ -1,13 +1,11 @@
 package TradingPlatform.NetworkProtocol;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UIManager extends JFrame implements ActionListener, Runnable {
+public class UIManagerOLD extends JFrame implements ActionListener, Runnable {
     private static final int FONT_SIZE = 24;
 
     private static int width;
@@ -41,7 +39,7 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     private JTextArea row3;
     private JTextArea areDisplay;
 
-    public UIManager(String title) throws HeadlessException {
+    public UIManagerOLD(String title) throws HeadlessException {
         super(title);
     }
 
@@ -218,6 +216,6 @@ public class UIManager extends JFrame implements ActionListener, Runnable {
     public static void main(String[] args)
     {
         //JFrame.setDefaultLookAndFeelDecorated(true);
-        SwingUtilities.invokeLater(new UIManager("BorderLayout"));
+        SwingUtilities.invokeLater(new UIManagerOLD("BorderLayout"));
     }
 }
