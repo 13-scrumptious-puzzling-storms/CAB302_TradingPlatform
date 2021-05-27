@@ -1,5 +1,7 @@
 package TradingPlatform;
 
+import TradingPlatform.JDBCDataSources.JDBCAssetType;
+
 /**
  * Creates a new instance of either a BUY or SELL order for a trade
  */
@@ -39,7 +41,6 @@ public class Trade{
      * @param type True for buy, false for sell.
      */
     public void setType(boolean type){
-
     }
 
     /**

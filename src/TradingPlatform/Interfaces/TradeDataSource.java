@@ -50,7 +50,7 @@ public interface TradeDataSource {
 
     Boolean getCancel(int tradeId);
 
-    HashSet<Integer> getBuyOrders(int orgAssetId);
+    String[][] getBuyOrders(int orgAssetId);
 
-    HashSet<Integer> getSellOrders(int orgAssetId);
+    String[][] getSellOrders(int orgAssetId);
 }
