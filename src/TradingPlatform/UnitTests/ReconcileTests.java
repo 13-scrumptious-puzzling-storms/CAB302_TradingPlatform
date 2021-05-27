@@ -1,10 +1,9 @@
 package TradingPlatform.UnitTests;
 
 import TradingPlatform.JDBCDataSources.JDBCTradeReconcileSource;
-import TradingPlatform.JDBCDataSources.JDBCUserDataSource;
 import TradingPlatform.NetworkProtocol.DBConnection;
-import TradingPlatform.Trade;
 import TradingPlatform.TradeReconciliation.TradeOrder;
+import TradingPlatform.TradeReconciliation.TradeReconcile;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +14,14 @@ public class ReconcileTests {
 
     static Connection connection;
     static JDBCTradeReconcileSource reconcileSource;
+    static final Object tradeLock = new Object();
+    static TradeReconcile tradeReconcile;
 
     @BeforeAll
     public static void init(){
         connection = DBConnection.getInstance();
         reconcileSource = new JDBCTradeReconcileSource(connection);
+        tradeReconcile = new TradeReconcile(tradeLock);
     }
 
     @Test
@@ -42,5 +44,15 @@ public class ReconcileTests {
         for (TradeOrder trade : sellOrders){
             System.out.println(trade.getTradeOrderId() + " " + trade.getOrganisationAssetId());
         }
+    }
+
+    @Test
+    public void TestReconcile(){
+        ArrayList<Integer> assetTypeIds = reconcileSource.getCurrentReconcilableAssetTypeIds();
+        // This is just to make sure that there is test data
+        assert (assetTypeIds.size() > 0);
+        tradeReconcile.ReconcileCurrentTrades();
+        assetTypeIds = reconcileSource.getCurrentReconcilableAssetTypeIds();
+        assert (assetTypeIds.size() == 0);
     }
 }
