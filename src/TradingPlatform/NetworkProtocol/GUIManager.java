@@ -71,7 +71,7 @@ public class GUIManager extends JFrame implements ActionListener, Runnable {
 
     private void displayJFrame() throws IOException {
         // Initialise JFrame
-        jframe = new JFrame("SPS Trading SERVER");
+        jframe = new JFrame("SPS Trading Platform SERVER");
         jframe.setDefaultLookAndFeelDecorated(false);
         jframe.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // custom function will shutdown server
         jframe.addWindowListener(new WindowAdapter() {
