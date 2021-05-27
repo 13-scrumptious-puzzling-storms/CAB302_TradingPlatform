@@ -48,13 +48,34 @@ public class GUIHome extends JFrame{
 
         panel.setLayout(new GridBagLayout());
 
-        JButton buyButton = new JButton("Buy Assets");
-        JButton sellButton = new JButton("Sell Assets");
-
         GridBagConstraints position = new GridBagConstraints();
 
-        position.gridx = 1;
+        JLabel title = new JLabel("SPS Trading");
+        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Verdana", Font.BOLD, 50));
+
+        JButton buyButton = new JButton("Buy Assets");
+        buyButton.setFont(new Font("Verdana", Font.PLAIN, 16));
+        buyButton.setPreferredSize(new Dimension(200, 100));
+        buyButton.setMinimumSize(new Dimension(50, 50));
+        JButton sellButton = new JButton("Sell Assets");
+        sellButton.setFont(new Font("Verdana", Font.PLAIN, 16));
+        sellButton.setPreferredSize(new Dimension(200, 100));
+        sellButton.setMinimumSize(new Dimension(50, 50));
+
+        JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
+        TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
+        TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
+
+        position.weighty = 1;
+        position.gridx = 0;
         position.gridy = 0;
+        position.gridwidth = 3;
+        position.anchor = CENTER;
+        panel.add(title, position);
+
+        position.gridx = 0;
+        position.gridy = 1;
         position.insets = new Insets(0, 200, 0, 0);
         position.anchor = LINE_START;
         panel.add(buyButton, position);
@@ -67,12 +88,8 @@ public class GUIHome extends JFrame{
         position.insets = new Insets(50, 0, 0, 0);
         position.anchor = CENTER;
         position.gridx = 0;
-        position.gridy = 1;
+        position.gridy = 2;
         position.gridwidth = 3;
-
-        JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
-        TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
-        TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
         panel.add(TradesPaneSell, position);
 
         panel.setBackground(cust1);
