@@ -1,10 +1,10 @@
 package TradingPlatform.UnitTests;
 
 import TradingPlatform.JDBCDataSources.JDBCTradeReconcileSource;
-import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.TradeReconciliation.TradeOrder;
 import TradingPlatform.TradeReconciliation.TradeReconcile;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -17,11 +17,17 @@ public class ReconcileTests {
     static final Object tradeLock = new Object();
     static TradeReconcile tradeReconcile;
 
-    @BeforeAll
-    public static void init(){
-        connection = DBConnection.getInstance();
+    @BeforeEach
+    public void resetDb(){
+        TestDatabaseFunctions.InitDb();
+        connection = TestDatabaseFunctions.getConnection();
         reconcileSource = new JDBCTradeReconcileSource(connection);
-        tradeReconcile = new TradeReconcile(tradeLock);
+        tradeReconcile = new TradeReconcile(tradeLock, connection);
+    }
+
+    @AfterAll
+    public static void DeleteTestDb(){
+        TestDatabaseFunctions.CloseDatabase();
     }
 
     @Test

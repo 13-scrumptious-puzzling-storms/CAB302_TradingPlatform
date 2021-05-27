@@ -98,6 +98,7 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
                 int assetTypeId = rs.getInt(1);
                 assetTypeIds.add(assetTypeId);
             }
+            rs.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -116,6 +117,7 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             if (rs.next()) {
                 buyOrder = getTradeOrderFromResultSet(rs);
             }
+            rs.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -151,6 +153,7 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
                 TradeOrder order = getTradeOrderFromResultSet(rs);
                 tradeOrders.add(order);
             }
+            rs.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

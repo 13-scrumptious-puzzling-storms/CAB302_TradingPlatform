@@ -1,9 +1,5 @@
 package TradingPlatform.TradeReconciliation;
 
-import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
-import TradingPlatform.NetworkProtocol.DBConnection;
-
-import java.sql.Connection;
 import java.sql.Timestamp;
 
 public class TradeOrder {
@@ -34,11 +30,6 @@ public class TradeOrder {
      */
     public void reduceRemainingQuantity(int reduceQuantity){
         remainingQuantity = remainingQuantity - reduceQuantity;
-
-        // Update the remaining quantity in the db
-        Connection connection = DBConnection.getInstance();
-        var tradeSource = new JDBCTradeDataSource(connection);
-        tradeSource.setRemaining(tradeOrderId, remainingQuantity);
     }
 
     public int getTradeOrderId() {

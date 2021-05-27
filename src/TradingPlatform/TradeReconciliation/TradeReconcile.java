@@ -2,6 +2,7 @@ package TradingPlatform.TradeReconciliation;
 
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
+import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
 import TradingPlatform.JDBCDataSources.JDBCTradeReconcileSource;
 import TradingPlatform.NetworkProtocol.DBConnection;
 
@@ -16,15 +17,25 @@ public class TradeReconcile implements Runnable {
     private static JDBCTradeReconcileSource reconcileSource;
     private static JDBCOrganisationalUnit orgUnitSource;
     private static JDBCOrganisationalAsset orgAssetSource;
-
+    private static JDBCTradeDataSource tradeSource;
 
     public TradeReconcile(Object tradeLock){
         this.tradeLock = tradeLock;
+        init(DBConnection.getInstance());
+    }
+
+    public TradeReconcile(Object tradeLock, Connection connection){
+        this.tradeLock = tradeLock;
+        init(connection);
+    }
+
+    private void init(Connection connection) {
         try {
-            connection = DBConnection.getInstance();
+            TradeReconcile.connection = connection;
             reconcileSource = new JDBCTradeReconcileSource(connection);
             orgUnitSource = new JDBCOrganisationalUnit(connection);
             orgAssetSource = new JDBCOrganisationalAsset(connection);
+            tradeSource = new JDBCTradeDataSource(connection);
             System.out.println("Connection to database successful!");
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,8 +82,8 @@ public class TradeReconcile implements Runnable {
                             int quantity = Math.min(sellOrder.getRemainingQuantity(), buyOrder.getRemainingQuantity());
                             sellOrder.reduceRemainingQuantity(quantity);
                             buyOrder.reduceRemainingQuantity(quantity);
-//                        tradeSource.setRemaining(sellOrder.getTradeOrderId(), sellOrder.getRemainingQuantity() - quantity);
-//                        tradeSource.setRemaining(buyOrder.getTradeOrderId(), buyOrder.getRemainingQuantity() - quantity);
+                            tradeSource.setRemaining(sellOrder.getTradeOrderId(), sellOrder.getRemainingQuantity());
+                            tradeSource.setRemaining(buyOrder.getTradeOrderId(), buyOrder.getRemainingQuantity());
 
                             // Give the credits to the seller
                             int tradePrice = quantity * sellOrder.getPrice();
