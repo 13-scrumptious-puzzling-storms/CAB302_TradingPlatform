@@ -169,7 +169,7 @@ public class TestDatabaseFunctions {
                     "    userRole           INTEGER\n" +
                     ")",
 
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (1, 'Radmin', 'HaveYouTriedTurningItOffAndOnAgain?', 2, 1)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (1, 'Radmin', 'HaveYouTriedTurningItOffAndOnAgain?', 1, 1)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (2, 'NolanGrayson', 'Omniman', 2, 0)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (3, 'KateCha', 'Duplikate', 3, 0)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (4, 'SammyEve', 'AtomEve', 4, 0)",
