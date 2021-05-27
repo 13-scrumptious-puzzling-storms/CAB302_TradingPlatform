@@ -1,6 +1,7 @@
 package TradingPlatform;
 
 import javax.swing.*;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
@@ -28,9 +29,6 @@ public class GUIMain extends JFrame {
     // the screen width
     public static int width = (int)screenSize.getWidth();
     public static int tabWidth = width - (width/3);
-    public String BuyHeading[] = {"Buy Orders","Price","Quantity"};
-    public String SellHeading[] = {"Sell Orders","Price","Quantity"};
-    public String AssetHeading[] = {"Asset ID","Asset Name","Quantity"};
 
     public String data[][] = {{"Vinod","MCA","Computer"},
             {"Deepak","PGDCA","History"},
@@ -66,6 +64,17 @@ public class GUIMain extends JFrame {
     public GUIMain() {
         super("SPS Trading");
         JFrame.setDefaultLookAndFeelDecorated(false);
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JTabbedPane pagePane = new JTabbedPane();
