@@ -13,7 +13,7 @@ public class ClientApp {
         networkThread.start();
 
         networkTest();
-        new GUItester();
+        new GUIMain();
     }
 
     private static void networkTest() throws IOException, ClassNotFoundException {

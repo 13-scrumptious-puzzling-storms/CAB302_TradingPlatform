@@ -24,6 +24,13 @@ public class TradeOrder {
         this.createdTime = createdTime;
     }
 
+    /**
+     * Reduces the trade's remaining quantity
+     * @param reduceQuantity the quantity to reduce the remaining quantity by
+     */
+    public void reduceRemainingQuantity(int reduceQuantity){
+        remainingQuantity = remainingQuantity - reduceQuantity;
+    }
 
     public int getTradeOrderId() {
         return tradeOrderId;

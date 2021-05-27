@@ -1,17 +1,12 @@
 package TradingPlatform.JDBCDataSources;
 
-import TradingPlatform.AssetType;
 import TradingPlatform.Interfaces.TradeDataSource;
 
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class JDBCTradeDataSource implements TradeDataSource {
 
-    private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, ?, datetime('now'))";
+    private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, 'false', strftime('%Y-%m-%d %H:%M:%f','now'))";
     private static final String GET_TRADE = "SELECT * FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_TYPE = "SELECT isSellOrder FROM TradeOrders WHERE tradeOrderID=?";
@@ -21,12 +16,17 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private static final String GET_REMAINING = "SELECT remainingQuantity FROM TradeOrders WHERE tradeOrderID=?";
     private static final String SET_CANCELLED = "UPDATE TradeOrders SET cancelled='true' WHERE tradeOrderID=?";
     private static final String GET_CANCELLED = "SELECT cancelled FROM TradeOrders WHERE tradeOrderID=?";
-    private static final String GET_BUY_ORDERS = "SELECT o.*, organisationUnitId FROM TradeOrders as o\n" +
+    private static final String GET_BUY_ORDERS = "SELECT o.*, a.organisationUnitId, name FROM TradeOrders AS o \n" +
+            "LEFT JOIN organisationAsset AS a ON a.organisationAssetID = o.organisationAssetID \n" +
+            "LEFT JOIN assetType AS t ON a.assetTypeId = t.assetTypeId\n" +
+            "WHERE a.organisationUnitId=? AND isSellOrder='false';";
+    private static final String GET_SELL_ORDERS = "SELECT o.*, a.organisationUnitId, name FROM TradeOrders AS o \n" +
+            "LEFT JOIN organisationAsset AS a ON a.organisationAssetID = o.organisationAssetID \n" +
+            "LEFT JOIN assetType AS t ON a.assetTypeId = t.assetTypeId\n" +
+            "WHERE a.organisationUnitId=? AND isSellOrder='true';";
+    private static final String COUNT_ORDER_ROWS = "SELECT count(organisationUnitId) as num FROM TradeOrders as o\n" +
             "left join organisationAsset as a on a.organisationAssetID = o.organisationAssetID\n" +
-            "WHERE assetTypeId=? AND isSellOrder='false'";
-    private static final String GET_SELL_ORDERS = "SELECT o.*, organisationUnitId FROM TradeOrders as o\n" +
-            "left join organisationAsset as a on a.organisationAssetID = o.organisationAssetID\n" +
-            "WHERE assetTypeId=? AND isSellOrder='true'";
+            "WHERE organisationUnitId=? and isSellOrder=?;";
 
 
 
@@ -42,15 +42,15 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private PreparedStatement getCancelled;
     private PreparedStatement getBuyOrders;
     private PreparedStatement getSellOrders;
+    private PreparedStatement countOrders;
 
 
     private Connection connection;
 
     private int TradeId;
 
-    public JDBCTradeDataSource(int TradeID, Connection connection){
+    public JDBCTradeDataSource(Connection connection){
         this.connection = connection;
-        this.TradeId = TradeID;
 
         try {
             Statement st = connection.createStatement();
@@ -67,6 +67,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             getCancelled = connection.prepareStatement(GET_CANCELLED);
             getBuyOrders = connection.prepareStatement(GET_BUY_ORDERS);
             getSellOrders = connection.prepareStatement(GET_SELL_ORDERS);
+            countOrders = connection.prepareStatement(COUNT_ORDER_ROWS);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -80,9 +81,13 @@ public class JDBCTradeDataSource implements TradeDataSource {
             addTrade.setInt(1, orgAssetId);
             addTrade.setInt(2, quantity);
             addTrade.setInt(3, quantity);
-            addTrade.setBoolean(4, type);
+            if(type){
+                addTrade.setString(4, "true");
+            }else{
+                addTrade.setString(4, "false");
+            }
             addTrade.setInt(5, price);
-            addTrade.setBoolean(6, false);
+//            addTrade.setBoolean(6, false);
             addTrade.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -237,16 +242,33 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return null;
     }
 
-    public HashSet<Integer> getBuyOrders(int orgAssetId){
+    public String[][] getBuyOrders(int orgUnitId){
         try {
             getBuyOrders.clearParameters();
-            getBuyOrders.setInt(1, orgAssetId);
+            getBuyOrders.setInt(1, orgUnitId);
             ResultSet rs = getBuyOrders.executeQuery();
 
-            HashSet<Integer> assets = new HashSet<Integer>();
+            countOrders.clearParameters();
+            countOrders.setInt(1, orgUnitId);
+            countOrders.setString(2, "false");
+            ResultSet num = countOrders.executeQuery();
+            int count;
+            if (num.next()) {
+                count = num.getInt("num");
+            }else {
+                count = 0;
+            }
+//            HashSet<Integer> assets = new HashSet<Integer>();
+
+            String[][] assets = new String[count][];
+            String[] ass = new String[3];
+            int i = 0;
             while (rs.next()) {
-                int thing = rs.getInt("tradeOrderID");
-                assets.add(thing);
+                ass[0] = rs.getString("name");
+                ass[1] = String.valueOf(rs.getInt("quantity"));
+                ass[2] = String.valueOf(rs.getInt("price"));
+                assets[i] = ass;
+                i++;
             }
             return assets;
         }
@@ -256,16 +278,32 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return null;
     }
 
-    public HashSet<Integer> getSellOrders(int orgAssetId){
+    public String[][] getSellOrders(int orgUnitId){
         try {
             getSellOrders.clearParameters();
-            getSellOrders.setInt(1, orgAssetId);
+            getSellOrders.setInt(1, orgUnitId);
             ResultSet rs = getSellOrders.executeQuery();
 
-            HashSet<Integer> assets = new HashSet<Integer>();
+            countOrders.clearParameters();
+            countOrders.setInt(1, orgUnitId);
+            countOrders.setString(2, "false");
+            ResultSet num = countOrders.executeQuery();
+            int count;
+            if (num.next()) {
+                count = num.getInt("num");
+            }else {
+                count = 0;
+            }
+
+            String[][] assets = new String[count][];
+            String[] ass = new String[3];
+            int i = 0;
             while (rs.next()) {
-                int thing = rs.getInt("tradeOrderID");
-                assets.add(thing);
+                ass[0] = rs.getString("name");
+                ass[1] = String.valueOf(rs.getInt("quantity"));
+                ass[2] = String.valueOf(rs.getInt("price"));
+                assets[i] = ass;
+                i++;
             }
             return assets;
         }

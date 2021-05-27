@@ -1,24 +1,28 @@
 package TradingPlatform;
 
-import java.awt.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import javax.swing.*;
+import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
-public class GUItester extends JFrame {
+public class GUIMain extends JFrame {
     /**
      *
      */
     private static final long serialVersionUID = 692675871418401803L;
 
     // Colours
-    private static final Color cust1 = new Color(38,139,133);
-    private static final Color cust2 = new Color(51,61,68);
-    private static final Color cust3 = new Color(72,191,146);
+    public static final Color cust1 = new Color(38,139,133);
+    public static final Color cust2 = new Color(51,61,68);
+    public static final Color cust3 = new Color(72,191,146);
+
+    public static Object[] getColours(){
+        Object[] colours = new Object[]{cust1, cust2, cust3};
+        return colours;
+    }
     // Display the window.
     private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     // the screen height
@@ -28,11 +32,8 @@ public class GUItester extends JFrame {
     // the screen width
     public static int width = (int)screenSize.getWidth();
     public static int tabWidth = width - (width/3);
-    String BuyHeading[] = {"Buy Orders","Price","Quantity"};
-    String SellHeading[] = {"Sell Orders","Price","Quantity"};
-    String AssetHeading[] = {"Asset ID","Asset Name","Quantity"};
 
-    String data[][] = {{"Vinod","MCA","Computer"},
+    public String data[][] = {{"Vinod","MCA","Computer"},
             {"Deepak","PGDCA","History"},
             {"Ranjan","M.SC.","Biology"},
             {"Radha","BCA","Computer"},
@@ -63,21 +64,32 @@ public class GUItester extends JFrame {
             {"Radha","BCA","Computer"},
             {"Radha","BCA","Computer"}};
 
-    public GUItester() {
+    public GUIMain() {
         super("SPS Trading");
         JFrame.setDefaultLookAndFeelDecorated(false);
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JTabbedPane pagePane = new JTabbedPane();
 
         JPanel homeTab = new JPanel();
-        homePanel(homeTab);
+        new GUIHome(homeTab);
 
         JPanel orgTab = new JPanel();
-        orgHomePanel(orgTab);
+        new GUIOrgHome(orgTab);
 
         JPanel profileTab = new JPanel();
-        profilePanel(profileTab);
+       new GUIProfile(profileTab);
 
         pagePane.add("Home", homeTab);
         pagePane.add("Organisation Home", orgTab);
@@ -106,63 +118,37 @@ public class GUItester extends JFrame {
 
     }
 
-    public void homePanel(JPanel panel){
-        JButton buyButton = new JButton("Buy Assets");
-        JButton sellButton = new JButton("Sell Assets");
-        JPanel buttonPanel = new JPanel();
-        JPanel emptyPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1,8, 10, 10));
-        buttonPanel.add(emptyPanel);
-        buttonPanel.add(emptyPanel);
-        buttonPanel.add(buyButton);
-        buttonPanel.add(emptyPanel);
-        buttonPanel.add(sellButton);
-        buttonPanel.add(emptyPanel);
-        buttonPanel.add(emptyPanel);
 
-        JScrollPane homePanel = new JScrollPane();
-        JScrollPane TradesPaneSell = constructTable(data, SellHeading);
-        homePanel.setPreferredSize(new Dimension(tabWidth, tabHeight));
-        panel.add(new JLabel("Tab 1"));
-        panel.setLayout(new BorderLayout());
-        panel.add(buttonPanel, BorderLayout.NORTH);
-        panel.add(TradesPaneSell, BorderLayout.CENTER);
 
-    }
-
-    public void orgHomePanel(JPanel panel2){
-        JTabbedPane tradesAssets = new JTabbedPane();
-
-        //Retrieve trades buy and sell tables for organisational unit
-        JScrollPane TradesPaneSell = constructTable(data,SellHeading );
-        JScrollPane TradesPaneBuy = constructTable(data, BuyHeading);
-
-        //Set up Trades tables in Trades tab
-        JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
-        tablesPane.setDividerLocation(tabWidth/2);
-        tablesPane.setResizeWeight(0.5);
-
-        //JPanel AssetsPanel = new JPanel();
-        JScrollPane Assets = constructTable(data, AssetHeading);
-
-        panel2.setLayout(new GridBagLayout());
-        panel2.add(tradesAssets);
-        tradesAssets.add("Trades", tablesPane);
-        tradesAssets.add("Assets", Assets);
-        tradesAssets.setPreferredSize(new Dimension(tabWidth, tabHeight));
-        panel2.add(tradesAssets);
-    }
-
-    public JScrollPane constructTable(String[][] data, String[] headingType){
+    public static JScrollPane constructTable(String[][] data, String[] headingType){
         DefaultTableModel model = new DefaultTableModel(data, headingType);
-        JTable sell_buyTable = new JTable(model);
+        JTable sell_buyTable = new JTable(model); /**{
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component comp = super.prepareRenderer(renderer, row, column);
+                Color alternateColor = new Color(200, 201, 210);
+                Color whiteColor = Color.WHITE;
+                if(!comp.getBackground().equals(getSelectionBackground())) {
+                    Color c = (row % 2 == 0 ? alternateColor : whiteColor);
+                    comp.setBackground(cust3);
+                    c = null;
+                }
+                return returnComp;
+            }
+        };
+         **/
         JScrollPane tradesScrollTable = new JScrollPane(sell_buyTable);
+        tradesScrollTable.setBackground(cust3);
+        tradesScrollTable.getVerticalScrollBar().setBackground(cust2);
+        tradesScrollTable.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = cust1;
+            }
+        });
+        JTableHeader anHeader = sell_buyTable.getTableHeader();
+        anHeader.setBackground(cust1);
+
         return tradesScrollTable;
-    }
-
-
-    public void profilePanel(JPanel panel3){
-        panel3.add(new JButton("Tab 2"));
     }
 
 }

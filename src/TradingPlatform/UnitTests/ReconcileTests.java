@@ -1,11 +1,10 @@
 package TradingPlatform.UnitTests;
 
 import TradingPlatform.JDBCDataSources.JDBCTradeReconcileSource;
-import TradingPlatform.JDBCDataSources.JDBCUserDataSource;
-import TradingPlatform.NetworkProtocol.DBConnection;
-import TradingPlatform.Trade;
 import TradingPlatform.TradeReconciliation.TradeOrder;
-import org.junit.jupiter.api.BeforeAll;
+import TradingPlatform.TradeReconciliation.TradeReconcile;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -15,11 +14,20 @@ public class ReconcileTests {
 
     static Connection connection;
     static JDBCTradeReconcileSource reconcileSource;
+    static final Object tradeLock = new Object();
+    static TradeReconcile tradeReconcile;
 
-    @BeforeAll
-    public static void init(){
-        connection = DBConnection.getInstance();
+    @BeforeEach
+    public void resetDb(){
+        TestDatabaseFunctions.InitDb();
+        connection = TestDatabaseFunctions.getConnection();
         reconcileSource = new JDBCTradeReconcileSource(connection);
+        tradeReconcile = new TradeReconcile(tradeLock, connection);
+    }
+
+    @AfterAll
+    public static void DeleteTestDb(){
+        TestDatabaseFunctions.CloseDatabase();
     }
 
     @Test
@@ -42,5 +50,13 @@ public class ReconcileTests {
         for (TradeOrder trade : sellOrders){
             System.out.println(trade.getTradeOrderId() + " " + trade.getOrganisationAssetId());
         }
+    }
+
+    @Test
+    public void TestReconcile(){
+        tradeReconcile.ReconcileCurrentTrades();
+        // Check that there are no reconcilable trades left
+        var assetTypeIds = reconcileSource.getCurrentReconcilableAssetTypeIds();
+        assert (assetTypeIds.size() == 0);
     }
 }
