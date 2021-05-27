@@ -48,14 +48,14 @@ public class TradeTests {
 
     @Test
     public void testGetBuys(){
-        HashSet<Integer> rs = trade.getBuyOrders(3);
-        assert (rs != null);
+//        HashSet<Integer> rs = trade.getBuyOrders(3);
+//        assert (rs != null);
     }
 
     @Test
     public void testGetSells(){
-        HashSet<Integer> rs = trade.getSellOrders(3);
-        assert (rs != null);
+//        HashSet<Integer> rs = trade.getSellOrders(3);
+//        assert (rs != null);
     }
 
     @Test
@@ -72,8 +72,14 @@ public class TradeTests {
         assert (trade.getCancel(1) == true);
     }
 
-//    @Test
-//    public void testGetOrg(){
-//        assert (trade.getOrganisation() != null);
-//    }
+    @Test
+    public void testGetOrg(){
+        Object[][] test = trade.getBuyOrders(2);
+        for (Object[] thing : test) {
+            for ( Object bit : thing ) {
+                System.out.println(bit);
+            }
+        }
+        assert (trade.getBuyOrders(2) != null);
+    }
 }
