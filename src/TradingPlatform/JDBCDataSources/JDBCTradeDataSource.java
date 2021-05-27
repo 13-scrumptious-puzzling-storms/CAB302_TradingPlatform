@@ -1,18 +1,12 @@
 package TradingPlatform.JDBCDataSources;
 
-import TradingPlatform.AssetType;
 import TradingPlatform.Interfaces.TradeDataSource;
 
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class JDBCTradeDataSource implements TradeDataSource {
 
-    private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, 'false', datetime('now'))";
+    private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, 'false', strftime('%Y-%m-%d %H:%M:%f','now'))";
     private static final String GET_TRADE = "SELECT * FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_VALUE = "SELECT price FROM TradeOrders WHERE tradeOrderID=?";
     private static final String GET_TYPE = "SELECT isSellOrder FROM TradeOrders WHERE tradeOrderID=?";
@@ -55,9 +49,8 @@ public class JDBCTradeDataSource implements TradeDataSource {
 
     private int TradeId;
 
-    public JDBCTradeDataSource(int TradeID, Connection connection){
+    public JDBCTradeDataSource(Connection connection){
         this.connection = connection;
-        this.TradeId = TradeID;
 
         try {
             Statement st = connection.createStatement();
