@@ -15,9 +15,11 @@ public class ServerHandle implements Runnable {
     private static volatile Boolean stopFlag = false;
 
     // Should this be here? Idk should it be static? Idk
-    private static Socket socket;
     private static ServerSend serverSendRunnable;
+    private static Socket socket;
 
+    // WHY DOES THIS WORK? I dont pass in the ServerApp I'm talking about. Does this go and make another ServerApp to create its own server runnable?
+    // hmm maybe not because im not saying new ServerApp simply referring to ServerApp
     @Override
     public void run() {
         try {
