@@ -38,20 +38,10 @@ public class OrganisationAsset {
 //    }
 
     // Get Methods below ...
-    public String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
+    public static String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[] {String.valueOf(orgID)});
-        ArrayList<ArrayList<String>> result = stringToDoubleArray.str2dblArr(response.getArguments()[0]);
-        System.out.println(response.getArguments()[0]);
-
-        for (int i = 0; i < result.size(); i++) {
-            for (int j = 0; j < result.get(i).size();j ++) {
-                System.out.println(result.get(i).get(j));
-            }
-        }
-
-        System.out.println(result.get(0).get(0));
-
-        return null;
+        String[][] result = response.getDoubleString();
+        return result;
     }
 
 

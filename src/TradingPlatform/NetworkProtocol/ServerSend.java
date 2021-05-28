@@ -2,6 +2,7 @@ package TradingPlatform.NetworkProtocol;
 
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
+import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
 import TradingPlatform.Request;
 import TradingPlatform.stringToDoubleArray;
 
@@ -27,9 +28,7 @@ public class ServerSend implements Runnable {
                     case "getName":
                         // need to get Server Send working
                         JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(connection);
-                        //String[][] response = stringToDoubleArray.str2dblArr(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])));
-
-                        Transmit(new Request(className, methodName, new String[] {String.valueOf(null)}));
+                        Transmit(new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
                         //ServerSend(OrganisationalUnitServer.getName(Integer.parseInt(arguments[0])));
                         //ServerSend ...;
                         break;
@@ -45,10 +44,28 @@ public class ServerSend implements Runnable {
                 switch (methodName) {
                     case "getOrganisationAssetsQuantity":
                         JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
-                        Transmit(new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationAssetsQuantity(Integer.parseInt(arguments[0])))}));
+                        String[][] response = (DBInterface.getOrganisationAssetsQuantity(Integer.parseInt(arguments[0])));
+                        Transmit(new Request(className, methodName, response));
                         break;
                     case "getAssetType":
                         // ServerSend
+                        break;
+                    default:
+                        System.out.println("Invalid Method");
+                        break;
+                }
+                break;
+            case "JDBCTradeDataSource":
+                switch(methodName){
+                    case "getSellOrders":
+                        JDBCTradeDataSource DBInterface = new JDBCTradeDataSource(connection);
+                        String[][] response = (DBInterface.getSellOrders(Integer.parseInt(arguments[0])));
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    case "getBuyOrders":
+                        JDBCTradeDataSource DBInterface1 = new JDBCTradeDataSource(connection);
+                        String[][] response1 = (DBInterface1.getBuyOrders(Integer.parseInt(arguments[0])));
+                        Transmit(new Request(className, methodName, response1));
                         break;
                     default:
                         System.out.println("Invalid Method");

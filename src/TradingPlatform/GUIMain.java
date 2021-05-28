@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.io.IOException;
 
 public class GUIMain extends JFrame {
     /**
@@ -68,7 +69,7 @@ public class GUIMain extends JFrame {
             {"Radha","BCA","Computer"},
             {"Radha","BCA","Computer"}};
 
-    public GUIMain() {
+    public GUIMain() throws IOException, ClassNotFoundException {
         super("SPS Trading");
         JFrame.setDefaultLookAndFeelDecorated(false);
         try {

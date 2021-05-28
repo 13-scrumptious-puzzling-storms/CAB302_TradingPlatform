@@ -9,6 +9,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import static TradingPlatform.GUIMain.tabHeight;
 import static TradingPlatform.GUIMain.tabWidth;
@@ -20,8 +21,8 @@ import static TradingPlatform.GUIMain.FONT;
 
 public class GUIOrgHome{
 
-    public String BuyHeading[] = {"Buy Orders","Price","Quantity"};
-    public String SellHeading[] = {"Sell Orders","Price","Quantity"};
+    public String BuyHeading[] = {"Buy Orders","Quantity", "Price",};
+    public String SellHeading[] = {"Sell Orders","Quantity","Price"};
     public String AssetHeading[] = {"Asset Item","Quantity"};
 
     //Temp data stuff
@@ -60,19 +61,22 @@ public class GUIOrgHome{
     String orgName = "Organisational Unit Name";
 
 
-    public GUIOrgHome(JPanel OrgHomeTab){
+    public GUIOrgHome(JPanel OrgHomeTab) throws IOException, ClassNotFoundException {
         orgHomePanel(OrgHomeTab);
     }
 
-    public void orgHomePanel(JPanel panel2){
+    public void orgHomePanel(JPanel panel2) throws IOException, ClassNotFoundException {
+        //////USER INFO **
+        int orgID = 1;
+
         JTabbedPane tradesAssets = new JTabbedPane();
         tradesAssets.setBackground(cust3);
         panel2.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
         //Retrieve trades buy and sell tables for organisational unit
-        JScrollPane TradesPaneSell = GUIMain.constructTable(data,SellHeading );
-        JScrollPane TradesPaneBuy = GUIMain.constructTable(data, BuyHeading);
+        JScrollPane TradesPaneSell = GUIMain.constructTable(TradeManager.getSellOrders(orgID),SellHeading );
+        JScrollPane TradesPaneBuy = GUIMain.constructTable(TradeManager.getBuyOrders(orgID), BuyHeading);
 
         //Set up Trades tables in Trades tab
         JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
@@ -80,15 +84,12 @@ public class GUIOrgHome{
         tablesPane.setResizeWeight(0.5);
 
         //JPanel AssetsPanel = new JPanel();
-        JScrollPane Assets = GUIMain.constructTable(data, AssetHeading);
+        JScrollPane Assets = GUIMain.constructTable(OrganisationAsset.getOrganisationalUnitAssetTable(orgID), AssetHeading);
 
         removeButton(panel2, position);
         buyAssetButton(panel2, position);
         sellAssetButton(panel2, position);
         creditsLabel(panel2, position);
-
-
-
 
         //Organisation name label
         String name = "Organisation: " + orgName;
