@@ -44,8 +44,8 @@ class ButtonEditor extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (isPushed) {
-            JOptionPane.showMessageDialog(button, label + ": Ouch!");
-
+            //JOptionPane.showMessageDialog(button, label + ": Ouch!");
+            GUIOrder.buyPopup();
         }
         isPushed = false;
         return label;

@@ -11,16 +11,27 @@ public class JDBCOrganisationalAsset {
     private static final String GET_ORGANISATIONASSET_ORGUNITID = "SELECT organisationUnitID FROM OrganisationAsset WHERE OrganisationAssetID=?";
     private static final String GET_ORGANISATIONASSET_ASSETTYPEID = "SELECT assetTypeID FROM OrganisationAsset WHERE OrganisationAssetID=?";
     private static final String GET_ORGANISATIONASSET_QUANTITY = "SELECT Quantity FROM OrganisationAsset WHERE OrganisationAssetID=?";
+    private static final String GET_ORG_ASSETS_TABLE = "SELECT o.*, name FROM organisationAsset AS o\n" +
+            "LEFT JOIN assetType as a ON o.assetTypeId = a.assetTypeId\n"+
+            "WHERE o.organisationUnitId = ?";
+    private static final String GET_ORG_ASSETS_TABLE_COUNT = "SELECT count(name) as num, name FROM organisationAsset AS o\n" +
+            "LEFT JOIN assetType as a ON o.assetTypeId = a.assetTypeId\n"+
+            "WHERE o.organisationUnitId = ?";
+
 
     private static final String ORGID_HEADING = "organisationUnitID";
     private static final String ASSETTYPEID_HEADING = "assetTypeID";
     private static final String QUANTITY_HEADING = "Quantity";
+    private static final String NAME_HEADING = "name";
+
 
     private PreparedStatement addOrganisationAsset;
     private PreparedStatement updateOrganisationAssetQuantity;
     private PreparedStatement getOrganisationAssetOrgUnitID;
     private PreparedStatement getOrganisationAssetTypeID;
     private PreparedStatement getOrganisationAssetQuantity;
+    private PreparedStatement getOrganisationAssetsTable;
+    private PreparedStatement getOrgAssetsTableCount;
 
 
     private Connection connection;
@@ -36,7 +47,8 @@ public class JDBCOrganisationalAsset {
             getOrganisationAssetOrgUnitID = connection.prepareStatement(GET_ORGANISATIONASSET_ORGUNITID);
             getOrganisationAssetTypeID = connection.prepareStatement(GET_ORGANISATIONASSET_ASSETTYPEID);
             getOrganisationAssetQuantity = connection.prepareStatement(GET_ORGANISATIONASSET_QUANTITY);
-
+            getOrganisationAssetsTable = connection.prepareStatement(GET_ORG_ASSETS_TABLE);
+            getOrgAssetsTableCount = connection.prepareStatement(GET_ORG_ASSETS_TABLE_COUNT);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -88,6 +100,39 @@ public class JDBCOrganisationalAsset {
             throwables.printStackTrace();
         }
         return -1;
+    }
+
+    public String[][] getOrganisationAssetsQuantity(int orgUnitId){
+        try {
+            getOrganisationAssetsTable.clearParameters();
+            getOrganisationAssetsTable.setInt(1, orgUnitId);
+            ResultSet rs = getOrganisationAssetsTable.executeQuery();
+
+            getOrgAssetsTableCount.clearParameters();
+            getOrgAssetsTableCount.setInt(1, orgUnitId);
+            ResultSet num = getOrgAssetsTableCount.executeQuery();
+            int count;
+            if (num.next()) {
+                count = num.getInt("num");
+            }else {
+                count = 0;
+            }
+
+            String[][] assets = new String[count][];
+            String[] ass = new String[2];
+            int i = 0;
+            while (rs.next()) {
+                ass[0] = rs.getString(NAME_HEADING);
+                ass[1] = String.valueOf(rs.getInt(QUANTITY_HEADING));
+                assets[i] = ass;
+                i++;
+            }
+            return assets;
+        }
+        catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        return null;
     }
 
     public int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity) {

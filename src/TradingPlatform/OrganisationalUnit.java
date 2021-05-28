@@ -72,9 +72,8 @@ public class OrganisationalUnit implements Serializable {
      * @return  name of the Organisational Unit
      */
     public String getName(int orgID) throws IOException, ClassNotFoundException {
-//        Request response = networkManager.GetResponse("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
-//        return response.getArguments()[0];
-        return null;
+        Request response = networkManager.GetResponse("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
+        return response.getArguments()[0];
     }
 
     /**

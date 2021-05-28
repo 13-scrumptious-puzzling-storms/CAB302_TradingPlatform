@@ -1,5 +1,8 @@
 package TradingPlatform;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
  * OrganisationAssets stores an asset owned by each OrganisationalUnit and records unique ID for this pair
  */
@@ -8,6 +11,7 @@ public class OrganisationAsset {
     private int organisationUnitID;
     private AssetType assetType;
     private int quantity;
+    private static NetworkManager networkManager = ClientApp.networkManager;
 
     // GUI OrganisationAsset Constructor
     public OrganisationAsset(int organisationAssetID, int organisationUnitID, AssetType assetType, int quantity){
@@ -15,6 +19,10 @@ public class OrganisationAsset {
         this.organisationUnitID = organisationUnitID;
         this.assetType = assetType;
         this.quantity = quantity;
+    }
+
+    public OrganisationAsset() {
+
     }
 
     // JDBC Constructor
@@ -30,6 +38,22 @@ public class OrganisationAsset {
 //    }
 
     // Get Methods below ...
+    public String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[] {String.valueOf(orgID)});
+        ArrayList<ArrayList<String>> result = stringToDoubleArray.str2dblArr(response.getArguments()[0]);
+        System.out.println(response.getArguments()[0]);
+
+        for (int i = 0; i < result.size(); i++) {
+            for (int j = 0; j < result.get(i).size();j ++) {
+                System.out.println(result.get(i).get(j));
+            }
+        }
+
+        System.out.println(result.get(0).get(0));
+
+        return null;
+    }
+
 
     public int getOrganisationAssetID() {
         return organisationAssetID;

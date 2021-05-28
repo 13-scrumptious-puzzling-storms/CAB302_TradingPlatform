@@ -15,8 +15,10 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private static final String GET_ORGANISATIONALUNIT = "SELECT * FROM OrganisationUnit WHERE OrganisationUnitID=?";
     private static final String GET_NEW_ORGANISATIONALUNIT_ID = "SELECT * FROM OrganisationUnit WHERE name=?";
     private static final String ORGID_HEADING = "OrganisationUnitID";
+
     private static final String NAME_HEADING = "name";
     private static final String CREDITS_HEADING = "credits";
+
 
     private PreparedStatement addOrganisationalUnit;
     private PreparedStatement updateOrganisationalUnitCredits;

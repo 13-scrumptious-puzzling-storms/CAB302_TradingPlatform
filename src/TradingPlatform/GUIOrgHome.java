@@ -22,7 +22,7 @@ public class GUIOrgHome{
 
     public String BuyHeading[] = {"Buy Orders","Price","Quantity"};
     public String SellHeading[] = {"Sell Orders","Price","Quantity"};
-    public String AssetHeading[] = {"Asset Item","Quantity", "Buy", "Sell"};
+    public String AssetHeading[] = {"Asset Item","Quantity"};
 
     //Temp data stuff
     String data[][] = {{"Vinod","MCA","Computer"},
@@ -74,37 +74,21 @@ public class GUIOrgHome{
         JScrollPane TradesPaneSell = GUIMain.constructTable(data,SellHeading );
         JScrollPane TradesPaneBuy = GUIMain.constructTable(data, BuyHeading);
 
-
         //Set up Trades tables in Trades tab
         JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
         tablesPane.setDividerLocation(tabWidth/2);
         tablesPane.setResizeWeight(0.5);
 
         //JPanel AssetsPanel = new JPanel();
-        JScrollPane Assets = constructTable(data, AssetHeading);
+        JScrollPane Assets = GUIMain.constructTable(data, AssetHeading);
 
-        //Create Remove Buy/Sell
-        //Insets
-        position.insets = new Insets(40, 0, 20, 0);
-        position.gridx = 1;
-        position.gridy = 0;
-        position.gridwidth = 3;
-        position.anchor = GridBagConstraints.CENTER;
-        JButton button = new JButton("Remove Buy/Sell Order");
-        button.setBackground(cust1);
-        panel2.add(button, position);
+        removeButton(panel2, position);
+        buyAssetButton(panel2, position);
+        sellAssetButton(panel2, position);
+        creditsLabel(panel2, position);
 
 
 
-        //Credits Label
-        String creditsLabel = "Credits: " + String.valueOf(credits);
-        JLabel credits = new JLabel(creditsLabel);
-        credits.setForeground(Color.white);
-        credits.setFont(new Font(FONT, Font.PLAIN, 18));
-        position.gridx = 3;
-        position.gridy = 2;
-        position.anchor = GridBagConstraints.LINE_END;
-        panel2.add(credits, position);
 
         //Organisation name label
         String name = "Organisation: " + orgName;
@@ -116,10 +100,8 @@ public class GUIOrgHome{
         position.anchor = GridBagConstraints.LINE_START;
         panel2.add(orgName, position);
 
-
-        //Insets
+        //setup of tradeAssets JTabbed pane
         position.insets = new Insets(40, 0, 20, 0);
-
         position.gridwidth = 3;
         position.gridx = 1;
         position.gridy = 4;
@@ -145,17 +127,74 @@ public class GUIOrgHome{
             }
         });
 
-        JTableHeader anHeader = table.getTableHeader();
-        anHeader.setBackground(cust1);
-
-        table.getColumn("Buy").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Buy").setCellEditor(new ButtonEditor(new JCheckBox()));
-
-        table.setPreferredScrollableViewportSize(table.getPreferredSize());
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);//so buttons will fit and not be shown butto..
-
-
         return tradesScrollTable;
+    }
+
+    private void removeButton(JPanel panel2, GridBagConstraints position){
+        //Create Remove Buy/Sell Button
+        position.insets = new Insets(0, 0, 20, 0);
+        position.gridx = 2;
+        position.gridy = 1;
+        position.gridwidth = 3;
+        position.anchor = GridBagConstraints.CENTER;
+        JButton removeButton = new JButton("Remove Buy/Sell Order");
+        removeButton.setBackground(cust1);
+        panel2.add(removeButton, position);
+        removeButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                // display buy popup
+                System.out.println("Just pressed the remove button");
+            }
+        });
+    }
+
+    private void buyAssetButton(JPanel panel2, GridBagConstraints position){
+        //Create Buy Asset Button
+        position.gridwidth = 1;
+        position.gridx = 1;
+        position.gridy = 0;
+        position.anchor = GridBagConstraints.LINE_END;
+        JButton buyButton = new JButton("Buy Assets");
+        buyButton.setBackground(cust1);
+        panel2.add(buyButton, position);
+        buyButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                // display buy popup
+                System.out.println("Just pressed the buy button");
+            }
+        });
+    }
+
+    private void sellAssetButton(JPanel panel2, GridBagConstraints position){
+        //Create Sell Asset Button
+        position.gridx = 3;
+        position.gridy = 0;
+        position.anchor = GridBagConstraints.LINE_START;
+        JButton sellButton = new JButton("Sell Assets");
+        sellButton.setBackground(cust1);
+        panel2.add(sellButton, position);
+        sellButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // display sell popup
+                System.out.println("Just pressed the sell button");
+            }
+        });
+    }
+
+    private void creditsLabel(JPanel panel2, GridBagConstraints position){
+        //Credits Label
+        String creditsLabel = "Credits: " + String.valueOf(credits);
+        JLabel credits = new JLabel(creditsLabel);
+        credits.setForeground(Color.white);
+        credits.setFont(new Font(FONT, Font.PLAIN, 18));
+        position.gridx = 3;
+        position.gridy = 2;
+        position.anchor = GridBagConstraints.LINE_END;
+        panel2.add(credits, position);
     }
 
 }
