@@ -6,6 +6,8 @@ import java.util.List;
 
 public class stringToDoubleArray {
 
+    //yep
+
     public static ArrayList<ArrayList<String>> str2dblArr(String array) {
         String[] subArrays = array.split("]");
         ArrayList<ArrayList<String>> newArray = new ArrayList<ArrayList<String>>();
