@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class stringToArray {
+public class stringToDoubleArray {
 
     public static ArrayList<ArrayList<String>> str2dblArr(String array) {
         String[] subArrays = array.split("]");
