@@ -101,6 +101,9 @@ public class TradeReconcile implements Runnable {
                             int buyOrgAssetQuantity = orgAssetSource.getOrganisationAssetQuantity(buyOrder.getOrganisationAssetId());
                             orgAssetSource.UpdateOrganisationAssetQuantity(buyOrder.getOrganisationAssetId(), buyOrgAssetQuantity + quantity);
 
+                            // Insert a tradeReconcile item into the TradeRecon table in the database
+                            TradeRecon recon = new TradeRecon(sellOrder.getTradeOrderId(), buyOrder.getTradeOrderId(), quantity);
+                            reconcileSource.insertTradeRecon(recon);
                         }
                         else // There are no compatible buy orders
                             break;

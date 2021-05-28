@@ -80,7 +80,7 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             insertRecon.clearParameters();
             insertRecon.setInt(1, recon.getSellOrderId());
             insertRecon.setInt(2, recon.getBuyOrderId());
-            insertRecon.setInt(2, recon.getQuantity());
+            insertRecon.setInt(3, recon.getQuantity());
 
             insertRecon.executeUpdate();
         } catch (SQLException ex) {
