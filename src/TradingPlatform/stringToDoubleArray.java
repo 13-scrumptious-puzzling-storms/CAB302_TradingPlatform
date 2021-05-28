@@ -6,7 +6,19 @@ import java.util.List;
 
 public class stringToDoubleArray {
 
-    //yep
+    public static String dblArr2str(String[][] parentArray) {
+        String result = "";
+        for (int i = 0; i < parentArray.length; i++) {
+            result = result + "[";
+            for (int j = 0; j < parentArray[i].length; j++) {
+                result = result + parentArray[i][j] + ", ";
+            }
+            result = result.substring(0, result.length() - 2);
+            result = result + "], ";
+        }
+        result = result.substring(0, result.length() - 2);
+        return result;
+    }
 
     public static ArrayList<ArrayList<String>> str2dblArr(String array) {
         String[] subArrays = array.split("]");
