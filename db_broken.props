@@ -1,0 +1,4 @@
+jdbc.url=jdbc:sqlite:
+jdbc.schema=
+jdbc.username=fakeusername
+jdbc.password=
