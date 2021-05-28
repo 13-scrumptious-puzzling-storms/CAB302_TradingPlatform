@@ -23,12 +23,18 @@ public class GUIOrder extends JFrame{
 
     private static JButton confirm;
     private static JButton cancel;
+    private static PopupFactory popUp;
+    private static JFrame buy;
+    private static JPanel panel;
+    private static JFrame sell;
+
 
     public static void buyPopup(){
-        PopupFactory popUp = new PopupFactory();
-        JFrame buy = new JFrame();
-//        JPanel mainPanel = new JPanel();
-        JPanel panel = new JPanel();
+        buy = new JFrame("Buy");
+        buy.setSize(100, 100);
+        popUp = new PopupFactory();
+
+        panel = new JPanel();
         panel.setPreferredSize(new Dimension(width/2, height/2));
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
@@ -43,10 +49,10 @@ public class GUIOrder extends JFrame{
         priceInput = new JTextField();
 
         confirm = new JButton("Confirm Order");
-        confirm.addActionListener(confirmAction(buyPop));
+        confirm.addActionListener(GUIOrder::finalButton);
 
         cancel = new JButton("Cancel");
-        cancel.addActionListener(cancelAction(buyPop));
+        cancel.addActionListener(GUIOrder::finalButton);
 
         position.gridx = 0;
         position.gridy = 0;
@@ -63,18 +69,27 @@ public class GUIOrder extends JFrame{
         position.gridy = 2;
         panel.add(priceInput, position);
 
+        position.gridy = 3;
+        panel.add(confirm, position);
+        position.gridx = 2;
+        panel.add(cancel, position);
 
-        buyPop = popUp.getPopup(buy, panel, width/4, height/4);
-        buyPop.show();
         buy.setPreferredSize(new Dimension(200, 200));
+        buyPop = popUp.getPopup(buy, panel, width/4, height/4);
+
+        buyPop.show();
+    }
+    public static void closePop(){
+        buyPop.hide();
+        buyPop = popUp.getPopup(buy, panel, 100, 100);
     }
 
     public static void sellPopup(){
 
-        PopupFactory popUp = new PopupFactory();
-        JFrame sell = new JFrame();
+        popUp = new PopupFactory();
+        sell = new JFrame();
 //        JPanel mainPanel = new JPanel();
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         panel.setPreferredSize(new Dimension(width/2, height/2));
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
@@ -103,20 +118,19 @@ public class GUIOrder extends JFrame{
         panel.add(quantityInput, position);
         position.gridy = 2;
         panel.add(priceInput, position);
-
-
+        panel.add(new JLabel("THIS IS SELL"));
         sellPop = popUp.getPopup(sell, panel, width/4, height/4);
         sellPop.show();
         sell.setPreferredSize(new Dimension(200, 200));
     }
 
-    public static ActionListener confirmAction(Popup box){
-        box.hide();
-        return null;
-    }
-
-    public static ActionListener cancelAction(Popup box){
-        box.hide();
-        return null;
+    public static void finalButton(ActionEvent e){
+        var box = e.getActionCommand();
+        if(box == "Cancel"){
+            buyPop.hide();
+        }else{
+            //do add new trade order
+            buyPop.hide();
+        }
     }
 }

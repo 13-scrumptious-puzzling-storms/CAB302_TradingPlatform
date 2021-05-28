@@ -90,9 +90,12 @@ public class GUIHome extends JFrame{
     }
 
     public void buyActionListener(ActionEvent e){
-        GUIOrder.buyPopup();
+        String event = e.getActionCommand();
+        if(event == "Buy Assets") {
+            GUIOrder.buyPopup();
+        }
     }
     public void sellActionListener(ActionEvent e){
-        GUIOrder.sellPopup();
+//        GUIOrder.sellPopup();
     }
 }
