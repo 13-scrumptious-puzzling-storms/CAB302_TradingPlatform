@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +15,7 @@ import static TradingPlatform.GUIMain.tabWidth;
 import static TradingPlatform.GUIMain.cust1;
 import static TradingPlatform.GUIMain.cust2;
 import static TradingPlatform.GUIMain.cust3;
+import static TradingPlatform.GUIMain.FONT;
 
 
 public class GUIOrgHome{
@@ -63,6 +66,7 @@ public class GUIOrgHome{
 
     public void orgHomePanel(JPanel panel2){
         JTabbedPane tradesAssets = new JTabbedPane();
+        tradesAssets.setBackground(cust3);
         panel2.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
@@ -77,7 +81,7 @@ public class GUIOrgHome{
         tablesPane.setResizeWeight(0.5);
 
         //JPanel AssetsPanel = new JPanel();
-        JScrollPane Assets = GUIMain.constructTable(data, AssetHeading);
+        JScrollPane Assets = constructTable(data, AssetHeading);
 
         //Create Remove Buy/Sell
         //Insets
@@ -96,7 +100,7 @@ public class GUIOrgHome{
         String creditsLabel = "Credits: " + String.valueOf(credits);
         JLabel credits = new JLabel(creditsLabel);
         credits.setForeground(Color.white);
-        credits.setFont(new Font("Verdana", Font.PLAIN, 18));
+        credits.setFont(new Font(FONT, Font.PLAIN, 18));
         position.gridx = 3;
         position.gridy = 2;
         position.anchor = GridBagConstraints.LINE_END;
@@ -106,7 +110,7 @@ public class GUIOrgHome{
         String name = "Organisation: " + orgName;
         JLabel orgName = new JLabel(name);
         orgName.setForeground(Color.white);
-        orgName.setFont(new Font("Verdana", Font.PLAIN, 18));
+        orgName.setFont(new Font(FONT, Font.PLAIN, 18));
         position.gridx = 1;
         position.gridy = 2;
         position.anchor = GridBagConstraints.LINE_START;
@@ -126,6 +130,32 @@ public class GUIOrgHome{
         tradesAssets.setMinimumSize(new Dimension(tabWidth/2, tabHeight/2));
         JScrollPane pageScroll = new JScrollPane();
         pageScroll.add(panel2);
+    }
+
+    public static JScrollPane constructTable(String[][] data, String[] headingType){
+        DefaultTableModel model = new DefaultTableModel(data, headingType);
+        JTable table = new JTable(model);
+        JScrollPane tradesScrollTable = new JScrollPane(table);
+        tradesScrollTable.setBackground(cust3);
+        tradesScrollTable.getVerticalScrollBar().setBackground(cust2);
+        tradesScrollTable.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = cust1;
+            }
+        });
+
+        JTableHeader anHeader = table.getTableHeader();
+        anHeader.setBackground(cust1);
+
+        table.getColumn("Buy").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Buy").setCellEditor(new ButtonEditor(new JCheckBox()));
+
+        table.setPreferredScrollableViewportSize(table.getPreferredSize());
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);//so buttons will fit and not be shown butto..
+
+
+        return tradesScrollTable;
     }
 
 }

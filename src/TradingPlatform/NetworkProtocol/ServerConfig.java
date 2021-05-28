@@ -80,6 +80,14 @@ public class ServerConfig {
         setPropsPass("");
     }
 
+    /**private static void readFailed() {
+        setPropsFile("");
+        setPropsURL("");
+        setPropsSchema("");
+        setPropsUser("");
+        setPropsPass("");
+    }**/
+
     public static void writePropsFile() throws IOException {
         String propsFileData = "jdbc.url=" + propsURL + "\n" +
                 "jdbc.schema=" + propsSchema + "\n" +
