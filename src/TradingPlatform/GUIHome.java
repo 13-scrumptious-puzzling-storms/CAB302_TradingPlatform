@@ -68,12 +68,6 @@ public class GUIHome extends JFrame{
         TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
         position.weighty = 1;
-//        position.gridx = 0;
-//        position.gridy = 0;
-//        position.gridwidth = 3;
-//        position.anchor = CENTER;
-//        panel.add(title, position);
-
         position.gridx = 0;
         position.gridy = 1;
         position.insets = new Insets(0, 200, 0, 0);
