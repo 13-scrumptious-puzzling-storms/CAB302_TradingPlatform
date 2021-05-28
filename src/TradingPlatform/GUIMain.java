@@ -32,6 +32,8 @@ public class GUIMain extends JFrame {
     // the screen width
     public static int width = (int)screenSize.getWidth();
     public static int tabWidth = width - (width/3);
+    //Font
+    public static String FONT = "SansSerif";
 
     public String data[][] = {{"Vinod","MCA","Computer"},
             {"Deepak","PGDCA","History"},
@@ -81,6 +83,9 @@ public class GUIMain extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JTabbedPane pagePane = new JTabbedPane();
+        UIManager.put("TabbedPane.selectedBackground", cust1);
+
+
 
         JPanel homeTab = new JPanel();
         new GUIHome(homeTab);

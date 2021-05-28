@@ -47,8 +47,11 @@ public class GUIHome extends JFrame{
     public void homePanel(JPanel panel){
 
         panel.setLayout(new GridBagLayout());
-
         GridBagConstraints position = new GridBagConstraints();
+
+        JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
+        TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
+        TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
         JLabel title = new JLabel("SPS Trading");
         title.setForeground(Color.WHITE);
@@ -63,9 +66,9 @@ public class GUIHome extends JFrame{
         sellButton.setPreferredSize(new Dimension(200, 100));
         sellButton.setMinimumSize(new Dimension(50, 50));
 
-        JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
-        TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
-        TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
+        //JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
+        //TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
+        //TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
         position.weighty = 1;
         position.gridx = 0;
