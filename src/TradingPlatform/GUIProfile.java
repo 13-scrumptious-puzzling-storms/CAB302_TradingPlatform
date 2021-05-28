@@ -1,7 +1,9 @@
 package TradingPlatform;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import static TradingPlatform.GUIMain.*;
 
 public class GUIProfile {
 
@@ -24,12 +26,31 @@ public class GUIProfile {
      * gap between the components and the left and right edges of the panel.
      */
     private void profilePanel(JPanel pnlProfile){
-        pnlProfile.setLayout(new BoxLayout(pnlProfile, BoxLayout.Y_AXIS));
-        pnlProfile.add(Box.createVerticalStrut(20));
-        pnlProfile.add(makeUserDetailsPanel());
-        pnlProfile.add(Box.createVerticalStrut(20));
-        pnlProfile.add(makeButtonsPanel());
-        pnlProfile.add(Box.createVerticalStrut(20));
+        pnlProfile.setLayout(new GridBagLayout());
+        GridBagConstraints position = new GridBagConstraints();
+
+        position.gridy = 0;
+        position.anchor = GridBagConstraints.CENTER;
+        position.insets = new Insets(0, 0, 50, 0);
+        var pnlDetails = makeUserDetailsPanel();
+        pnlDetails.setPreferredSize(new Dimension(width / 2, 150));
+        pnlProfile.add(pnlDetails, position);
+
+        position.gridy = 1;
+        position.anchor = GridBagConstraints.CENTER;
+        position.insets = new Insets(0, 0, 0, 0);
+        var pnlButtons = makeButtonsPanel();
+        pnlButtons.setPreferredSize(new Dimension(width / 2, 100));
+        pnlProfile.add(pnlButtons, position);
+
+
+
+//        pnlProfile.setLayout(new BoxLayout(pnlProfile, BoxLayout.Y_AXIS));
+//        pnlProfile.add(Box.createVerticalStrut(20));
+//        pnlProfile.add(makeUserDetailsPanel());
+//        pnlProfile.add(Box.createVerticalStrut(20));
+//        pnlProfile.add(makeButtonsPanel());
+//        pnlProfile.add(Box.createVerticalStrut(20));
     }
 
 
@@ -42,9 +63,10 @@ public class GUIProfile {
      * @return a panel containing the user's detail fields
      */
     private JPanel makeUserDetailsPanel() {
-        JPanel addressPanel = new JPanel();
-        GroupLayout layout = new GroupLayout(addressPanel);
-        addressPanel.setLayout(layout);
+        JPanel pnlUserDetails = new JPanel();
+        GroupLayout layout = new GroupLayout(pnlUserDetails);
+        pnlUserDetails.setLayout(layout);
+        pnlUserDetails.setBackground(cust2);
 
         // Turn on automatically adding gaps between components
         layout.setAutoCreateGaps(true);
@@ -64,6 +86,12 @@ public class GUIProfile {
         txtAccountType = new JTextField(20);
         txtCurrentPassword = new JTextField(20);
         txtNewPassword = new JTextField(20);
+
+        lblUsername.setForeground(Color.white);
+        lblOrgUnitName.setForeground(Color.white);
+        lblAccountType.setForeground(Color.white);
+        lblCurrentPassword.setForeground(Color.white);
+        lblNewPassword.setForeground(Color.white);
 
         txtUsername.setEditable(false);
         txtOrgUnitName.setEditable(false);
@@ -104,7 +132,7 @@ public class GUIProfile {
                 .addComponent(lblNewPassword).addComponent(txtNewPassword));
         layout.setVerticalGroup(vGroup);
 
-        return addressPanel;
+        return pnlUserDetails;
     }
 
     /**
@@ -112,17 +140,36 @@ public class GUIProfile {
      * @return
      */
     private JPanel makeButtonsPanel(){
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        JPanel pnlButton = new JPanel();
+        pnlButton.setLayout(new GridBagLayout());
+        pnlButton.setBackground(cust2);
+        GridBagConstraints position = new GridBagConstraints();
+
         btnChangePassword = new JButton("Change Password");
+        btnChangePassword.setPreferredSize(new Dimension(200, 100));
+        btnChangePassword.setBackground(cust1);
         btnSave = new JButton("Save");
+        btnSave.setPreferredSize(new Dimension(200, 100));
+        btnSave.setBackground(cust1);
+
         btnSave.setEnabled(false);
-        buttonPanel.add(Box.createHorizontalStrut(50));
-        buttonPanel.add(btnChangePassword);
-        buttonPanel.add(Box.createHorizontalStrut(50));
-        buttonPanel.add(btnSave);
-        buttonPanel.add(Box.createHorizontalStrut(50));
-        return buttonPanel;
+
+        position.gridx = 0;
+        position.anchor = GridBagConstraints.LINE_START;
+        position.insets = new Insets(0, 0, 0, width/2 - 400);
+        pnlButton.add(btnChangePassword, position);
+
+        position.gridx = 1;
+        position.anchor = GridBagConstraints.LINE_END;
+        position.insets = new Insets(0, 0, 0, 0);
+        pnlButton.add(btnSave, position);
+
+//        pnlButton.add(Box.createHorizontalStrut(50));
+//        pnlButton.add(btnChangePassword);
+//        pnlButton.add(Box.createHorizontalStrut(50));
+//        pnlButton.add(btnSave);
+//        pnlButton.add(Box.createHorizontalStrut(50));
+        return pnlButton;
     }
 
     /**
