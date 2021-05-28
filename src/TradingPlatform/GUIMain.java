@@ -34,6 +34,8 @@ public class GUIMain extends JFrame {
     public static int tabWidth = width - (width/3);
     //Font
     public static String FONT = "SansSerif";
+    //orgTab
+    public JPanel orgTab = new JPanel();
 
     public String data[][] = {{"Vinod","MCA","Computer"},
             {"Deepak","PGDCA","History"},
@@ -90,7 +92,7 @@ public class GUIMain extends JFrame {
         JPanel homeTab = new JPanel();
         new GUIHome(homeTab);
 
-        JPanel orgTab = new JPanel();
+
         new GUIOrgHome(orgTab);
 
         JPanel profileTab = new JPanel();
@@ -127,20 +129,7 @@ public class GUIMain extends JFrame {
 
     public static JScrollPane constructTable(String[][] data, String[] headingType){
         DefaultTableModel model = new DefaultTableModel(data, headingType);
-        JTable sell_buyTable = new JTable(model); /**{
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-                Component comp = super.prepareRenderer(renderer, row, column);
-                Color alternateColor = new Color(200, 201, 210);
-                Color whiteColor = Color.WHITE;
-                if(!comp.getBackground().equals(getSelectionBackground())) {
-                    Color c = (row % 2 == 0 ? alternateColor : whiteColor);
-                    comp.setBackground(cust3);
-                    c = null;
-                }
-                return returnComp;
-            }
-        };
-         **/
+        JTable sell_buyTable = new JTable(model);
         JScrollPane tradesScrollTable = new JScrollPane(sell_buyTable);
         tradesScrollTable.setBackground(cust3);
         tradesScrollTable.getVerticalScrollBar().setBackground(cust2);

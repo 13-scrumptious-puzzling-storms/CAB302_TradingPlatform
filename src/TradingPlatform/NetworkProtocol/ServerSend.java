@@ -1,5 +1,6 @@
 package TradingPlatform.NetworkProtocol;
 
+import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
 import TradingPlatform.Request;
 
@@ -37,10 +38,11 @@ public class ServerSend implements Runnable {
                         break;
                 }
                 break;
-            case "OrganisationAsset":
+            case "JDBCOrganisationalAsset":
                 switch (methodName) {
-                    case "getQuantity":
-                        // ServerSend
+                    case "getOrganisationAssetsQuantity":
+                        JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
+                        Transmit(new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationAssetsQuantity(Integer.parseInt(arguments[0])))}));
                         break;
                     case "getAssetType":
                         // ServerSend

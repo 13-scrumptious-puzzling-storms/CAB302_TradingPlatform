@@ -19,5 +19,8 @@ public class ClientApp {
     private static void networkTest() throws IOException, ClassNotFoundException {
         OrganisationalUnit organisationalUnit = new OrganisationalUnit();
         System.out.println("Organisational Unit Name for ID 1: " + organisationalUnit.getName(1));
+
+        OrganisationAsset oAss = new OrganisationAsset();
+        oAss.getOrganisationalUnitAssetTable(1);
     }
 }
