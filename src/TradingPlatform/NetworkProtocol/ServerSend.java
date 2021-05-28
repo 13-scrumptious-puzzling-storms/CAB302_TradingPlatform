@@ -3,6 +3,7 @@ package TradingPlatform.NetworkProtocol;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
 import TradingPlatform.Request;
+import TradingPlatform.stringToDoubleArray;
 
 import java.io.*;
 import java.net.Socket;
@@ -26,7 +27,9 @@ public class ServerSend implements Runnable {
                     case "getName":
                         // need to get Server Send working
                         JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(connection);
-                        Transmit(new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
+                        //String[][] response = stringToDoubleArray.str2dblArr(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])));
+
+                        Transmit(new Request(className, methodName, new String[] {String.valueOf(null)}));
                         //ServerSend(OrganisationalUnitServer.getName(Integer.parseInt(arguments[0])));
                         //ServerSend ...;
                         break;
