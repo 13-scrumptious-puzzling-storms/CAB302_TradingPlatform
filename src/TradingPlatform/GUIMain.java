@@ -73,7 +73,7 @@ public class GUIMain extends JFrame {
         super("SPS Trading");
         JFrame.setDefaultLookAndFeelDecorated(false);
         try {
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -84,6 +84,10 @@ public class GUIMain extends JFrame {
             e.printStackTrace();
         }
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        JPanel mainframe = new JPanel();
+        mainframe.setLayout(new GridBagLayout());
+        GridBagConstraints position = new GridBagConstraints();
 
         JTabbedPane pagePane = new JTabbedPane();
         UIManager.put("TabbedPane.selectedBackground", cust1);
@@ -97,13 +101,26 @@ public class GUIMain extends JFrame {
         new GUIOrgHome(orgTab);
 
         JPanel profileTab = new JPanel();
-       new GUIProfile(profileTab);
+        new GUIProfile(profileTab);
 
         pagePane.add("Home", homeTab);
         pagePane.add("Organisation Home", orgTab);
         pagePane.add("My Profile", profileTab);
-        getContentPane().add(pagePane);
 
+        position.weighty = 0;
+        position.gridy = 0;
+        JLabel title = new JLabel("SPS Trading");
+        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Verdana", Font.BOLD, 50));
+        mainframe.add(title , position);
+        position.gridy = 1;
+        pagePane.setPreferredSize(new Dimension(width-width/10, height - height/4));
+        pagePane.setMinimumSize(new Dimension(width/2, height/2));
+        mainframe.add(pagePane, position);
+        mainframe.setBackground(cust2);
+
+        getContentPane().add(mainframe);
+        getContentPane().setBackground(cust2);
 
         setPreferredSize(new Dimension(width, height));
         setLocation(new Point(0, 0));

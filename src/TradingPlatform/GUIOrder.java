@@ -2,57 +2,121 @@ package TradingPlatform;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static TradingPlatform.GUIMain.*;
 
 public class GUIOrder extends JFrame{
 
+    // popups
+    Popup p;
+    private static Popup buyPop;
+    private static Popup sellPop;
 
-    // popup
-    private static Popup p;
+    private static JComboBox itemNameInput;
+    private static JTextField quantityInput;
+    private static JTextField priceInput;
+    private static JLabel itemName;
+    private static JLabel quantity;
+    private static JLabel price;
 
-    // constructor
-    GUIOrder(JFrame frame)
-    {
-        // create a label
-        JLabel l = new JLabel("This is a popup");
+    private static JButton confirm;
+    private static JButton cancel;
 
-        PopupFactory pf = new PopupFactory();
-
-        // create a panel
-        JPanel p2 = new JPanel();
-
-        // set Background of panel
-        p2.setBackground(Color.red);
-
-        p2.add(l);
-
-        // create a popup
-        p = pf.getPopup(frame, p2, 180, 100);
-
-    }
-
-    public static void buyPopup() {
+    public static void buyPopup(){
         PopupFactory popUp = new PopupFactory();
         JFrame buy = new JFrame();
+//        JPanel mainPanel = new JPanel();
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(width/2, height/2));
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints position = new GridBagConstraints();
 
-        // create a label
-        JLabel l = new JLabel("This is a popup");
+        itemName = new JLabel("Item Name: ");
+        quantity = new JLabel("Quantity: ");
+        price = new JLabel("Price: ");
 
-        PopupFactory pf = new PopupFactory();
+        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+        itemNameInput = new JComboBox(petStrings);
+        quantityInput = new JTextField();
+        priceInput = new JTextField();
 
-        // create a panel
-        JPanel p2 = new JPanel();
+        confirm = new JButton("Confirm Order");
+        confirm.addActionListener(confirmAction(buyPop));
 
-        // set Background of panel
-        p2.setBackground(Color.red);
+        cancel = new JButton("Cancel");
+        cancel.addActionListener(cancelAction(buyPop));
 
-        p2.add(l);
+        position.gridx = 0;
+        position.gridy = 0;
+        panel.add(itemName, position);
+        position.gridy = 1;
+        panel.add(quantity, position);
+        position.gridy = 2;
+        panel.add(price, position);
+        position.gridx = 1;
+        position.gridy = 0;
+        panel.add(itemNameInput, position);
+        position.gridy = 1;
+        panel.add(quantityInput, position);
+        position.gridy = 2;
+        panel.add(priceInput, position);
 
-        // create a popup
-        //p = pf.getPopup(frame, p2, 180, 100);
+
+        buyPop = popUp.getPopup(buy, panel, width/4, height/4);
+        buyPop.show();
+        buy.setPreferredSize(new Dimension(200, 200));
     }
-    public void sellPopup(){
 
+    public static void sellPopup(){
+
+        PopupFactory popUp = new PopupFactory();
+        JFrame sell = new JFrame();
+//        JPanel mainPanel = new JPanel();
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(width/2, height/2));
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints position = new GridBagConstraints();
+
+        itemName = new JLabel("Item Name: ");
+        quantity = new JLabel("Quantity: ");
+        price = new JLabel("Price: ");
+
+        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+        itemNameInput = new JComboBox(petStrings);
+
+        quantityInput = new JTextField();
+        priceInput = new JTextField();
+
+        position.gridx = 0;
+        position.gridy = 0;
+        panel.add(itemName, position);
+        position.gridy = 1;
+        panel.add(quantity, position);
+        position.gridy = 2;
+        panel.add(price, position);
+        position.gridx = 1;
+        position.gridy = 0;
+        panel.add(itemNameInput, position);
+        position.gridy = 1;
+        panel.add(quantityInput, position);
+        position.gridy = 2;
+        panel.add(priceInput, position);
+
+
+        sellPop = popUp.getPopup(sell, panel, width/4, height/4);
+        sellPop.show();
+        sell.setPreferredSize(new Dimension(200, 200));
+    }
+
+    public static ActionListener confirmAction(Popup box){
+        box.hide();
+        return null;
+    }
+
+    public static ActionListener cancelAction(Popup box){
+        box.hide();
+        return null;
     }
 }

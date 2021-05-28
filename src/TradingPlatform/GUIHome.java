@@ -2,6 +2,8 @@ package TradingPlatform;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static TradingPlatform.GUIMain.*;
 import static java.awt.GridBagConstraints.*;
@@ -49,34 +51,23 @@ public class GUIHome extends JFrame{
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
-        JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
-        TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
-        TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
-
-        JLabel title = new JLabel("SPS Trading");
-        title.setForeground(Color.WHITE);
-        title.setFont(new Font("Verdana", Font.BOLD, 50));
-
         JButton buyButton = new JButton("Buy Assets");
         buyButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         buyButton.setPreferredSize(new Dimension(200, 100));
         buyButton.setMinimumSize(new Dimension(50, 50));
+        buyButton.addActionListener(this::buyActionListener);
+
         JButton sellButton = new JButton("Sell Assets");
         sellButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         sellButton.setPreferredSize(new Dimension(200, 100));
         sellButton.setMinimumSize(new Dimension(50, 50));
+        buyButton.addActionListener(this::sellActionListener);
 
-        //JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
-        //TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
-        //TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
+        JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
+        TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
+        TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
         position.weighty = 1;
-        position.gridx = 0;
-        position.gridy = 0;
-        position.gridwidth = 3;
-        position.anchor = CENTER;
-        panel.add(title, position);
-
         position.gridx = 0;
         position.gridy = 1;
         position.insets = new Insets(0, 200, 0, 0);
@@ -96,5 +87,12 @@ public class GUIHome extends JFrame{
         panel.add(TradesPaneSell, position);
 
         panel.setBackground(cust1);
+    }
+
+    public void buyActionListener(ActionEvent e){
+        GUIOrder.buyPopup();
+    }
+    public void sellActionListener(ActionEvent e){
+        GUIOrder.sellPopup();
     }
 }
