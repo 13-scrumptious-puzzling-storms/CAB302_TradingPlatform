@@ -1,6 +1,7 @@
 package TradingPlatform;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * OrganisationAssets stores an asset owned by each OrganisationalUnit and records unique ID for this pair
@@ -39,12 +40,17 @@ public class OrganisationAsset {
     // Get Methods below ...
     public String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[] {String.valueOf(orgID)});
-        String test = "[[\"Hello\", \"hi\"], [\"1\", \"5\", \"7\"], [\"liam\", \"is\", \"old now\"]]";
-        //for (int i = 0; i < ) {
-
-        //}
-        //return response.getArguments()[0];
+        ArrayList<ArrayList<String>> result = stringToDoubleArray.str2dblArr(response.getArguments()[0]);
         System.out.println(response.getArguments()[0]);
+
+        for (int i = 0; i < result.size(); i++) {
+            for (int j = 0; j < result.get(i).size();j ++) {
+                System.out.println(result.get(i).get(j));
+            }
+        }
+
+        System.out.println(result.get(0).get(0));
+
         return null;
     }
 
