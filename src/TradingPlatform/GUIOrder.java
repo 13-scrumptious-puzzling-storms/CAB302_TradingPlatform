@@ -58,7 +58,44 @@ public class GUIOrder extends JFrame{
         buyPop.show();
         buy.setPreferredSize(new Dimension(200, 200));
     }
-    public void sellPopup(){
+    public static void sellPopup(){
 
+        PopupFactory popUp = new PopupFactory();
+        JFrame sell = new JFrame();
+//        JPanel mainPanel = new JPanel();
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(width/2, height/2));
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints position = new GridBagConstraints();
+
+        itemName = new JLabel("Item Name: ");
+        quantity = new JLabel("Quantity: ");
+        price = new JLabel("Price: ");
+
+        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+        itemNameInput = new JComboBox(petStrings);
+
+        quantityInput = new JTextField();
+        priceInput = new JTextField();
+
+        position.gridx = 0;
+        position.gridy = 0;
+        panel.add(itemName, position);
+        position.gridy = 1;
+        panel.add(quantity, position);
+        position.gridy = 2;
+        panel.add(price, position);
+        position.gridx = 1;
+        position.gridy = 0;
+        panel.add(itemNameInput, position);
+        position.gridy = 1;
+        panel.add(quantityInput, position);
+        position.gridy = 2;
+        panel.add(priceInput, position);
+
+
+        buyPop = popUp.getPopup(sell, panel, width/4, height/4);
+        buyPop.show();
+        sell.setPreferredSize(new Dimension(200, 200));
     }
 }

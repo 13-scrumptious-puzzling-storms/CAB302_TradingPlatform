@@ -61,6 +61,7 @@ public class GUIHome extends JFrame{
         sellButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         sellButton.setPreferredSize(new Dimension(200, 100));
         sellButton.setMinimumSize(new Dimension(50, 50));
+        buyButton.addActionListener(this::sellActionListener);
 
         JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
         TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
@@ -96,5 +97,8 @@ public class GUIHome extends JFrame{
 
     public void buyActionListener(ActionEvent e){
         GUIOrder.buyPopup();
+    }
+    public void sellActionListener(ActionEvent e){
+        GUIOrder.sellPopup();
     }
 }
