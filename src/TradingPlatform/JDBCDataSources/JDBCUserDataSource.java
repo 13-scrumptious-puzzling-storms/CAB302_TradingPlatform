@@ -101,10 +101,10 @@ public class JDBCUserDataSource implements UserDataSource {
     }
 
     @Override
-    public boolean ChangePassword(String currentPassword, String newPassword) {
-        if (currentPassword.equals(password)){
+    public boolean ChangePassword(String currentHashedPassword, String newHashedPassword) {
+        if (currentHashedPassword.equals(password)){
             try {
-                password = newPassword;
+                password = newHashedPassword;
                 setUserPassword.clearParameters();
                 setUserPassword.setString(1, password);
                 setUserPassword.setInt(2, userId);

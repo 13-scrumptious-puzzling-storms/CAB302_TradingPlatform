@@ -70,16 +70,16 @@ public class User implements UserDataSource {
     /**
      * Changes the user's password.
      *
-     * @param currentPassword The user's current password.
-     * @param newPassword The user's new password.
+     * @param currentHashedPassword The user's current password.
+     * @param newHashedPassword The user's new password.
      * @return True if the password was successfully changed.
      */
-    public boolean ChangePassword(String currentPassword, String newPassword){
+    public boolean ChangePassword(String currentHashedPassword, String newHashedPassword){
         // Attempt to change the user's password
         Request response = null;
         try {
             response = NetworkManager.GetResponse("JDBCUserDataSource", "changePassword",
-                    new String[] {String.valueOf(userID), currentPassword, newPassword});
+                    new String[] {String.valueOf(userID), currentHashedPassword, newHashedPassword});
         } catch (Exception e) {
             e.printStackTrace();
         }
