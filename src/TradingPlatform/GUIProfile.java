@@ -29,8 +29,8 @@ public class GUIProfile {
     }
 
     /**
-     * Makes a JPanel consisting of the user's information, and text fields to change
-     * their password in a grid bag layout.
+     * Makes a JPanel consisting of the user's information, text fields to change
+     * their password, as well as buttons to change and save their password in a grid bag layout.
      */
     private void profilePanel(JPanel ProfilePanel){
         pnlProfile = ProfilePanel;
@@ -66,14 +66,14 @@ public class GUIProfile {
         JPanel pnlUserDetails = new JPanel();
         GroupLayout layout = new GroupLayout(pnlUserDetails);
         pnlUserDetails.setLayout(layout);
-        pnlUserDetails.setBackground(cust2);
+        pnlUserDetails.setBackground(DARK_JUNGLE_GREEN);
 
         // Turn on automatically adding gaps between components
         layout.setAutoCreateGaps(true);
 
         // Turn on automatically creating gaps between components that touch
         // the edge of the container and the container.
-        layout.setAutoCreateContainerGaps(true);
+//        layout.setAutoCreateContainerGaps(true);
 
         JLabel lblUsername = new JLabel("Username");
         JLabel lblOrgUnitName = new JLabel("Organisation Unit");
@@ -138,6 +138,12 @@ public class GUIProfile {
         txtUsername.setBackground(UIManager.getColor("TextField.Background"));
         txtOrgUnitName.setBackground(UIManager.getColor("TextField.Background"));
         txtAccountType.setBackground(UIManager.getColor("TextField.Background"));
+
+        txtUsername.setMinimumSize(new Dimension(500, 20));
+        txtOrgUnitName.setMinimumSize(new Dimension(500, 20));
+        txtAccountType.setMinimumSize(new Dimension(500, 20));
+        txtCurrentPassword.setMinimumSize(new Dimension(500, 20));
+        txtNewPassword.setMinimumSize(new Dimension(500, 20));
 
         txtUsername.setForeground(Color.WHITE);
         txtOrgUnitName.setForeground(Color.WHITE);
