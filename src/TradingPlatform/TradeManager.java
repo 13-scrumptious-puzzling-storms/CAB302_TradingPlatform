@@ -1,11 +1,13 @@
 package TradingPlatform;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
  * TradeManager executes and manages the listed trades
  */
 public class TradeManager {
+    private static NetworkManager networkManager = ClientApp.networkManager;
 
     /**
      * gets the current BUY orders for an asset.
@@ -49,5 +51,21 @@ public class TradeManager {
      */
     public void updateDatabase(int sellOrg, int buyOrg){
 
+    }
+
+    /**
+     * Bella implemented this. not sure where it is meant to go. You may change later
+     */
+    public static String[][] getSellOrders(int orgID) throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("JDBCTradeDataSource", "getSellOrders", new String[] {String.valueOf(orgID)});
+        return response.getDoubleString();
+    }
+
+    /**
+     * Bella implemented this. not sure where it is meant to go. You may change later
+     */
+    public static String[][] getBuyOrders(int orgID) throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("JDBCTradeDataSource", "getBuyOrders", new String[] {String.valueOf(orgID)});
+        return response.getDoubleString();
     }
 }

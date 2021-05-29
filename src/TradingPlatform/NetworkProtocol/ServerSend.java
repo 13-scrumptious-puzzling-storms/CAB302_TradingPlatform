@@ -1,7 +1,10 @@
 package TradingPlatform.NetworkProtocol;
 
+import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
+import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
 import TradingPlatform.Request;
+import TradingPlatform.stringToDoubleArray;
 
 import java.io.*;
 import java.net.Socket;
@@ -37,13 +40,32 @@ public class ServerSend implements Runnable {
                         break;
                 }
                 break;
-            case "OrganisationAsset":
+            case "JDBCOrganisationalAsset":
                 switch (methodName) {
-                    case "getQuantity":
-                        // ServerSend
+                    case "getOrganisationAssetsQuantity":
+                        JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
+                        String[][] response = (DBInterface.getOrganisationAssetsQuantity(Integer.parseInt(arguments[0])));
+                        Transmit(new Request(className, methodName, response));
                         break;
                     case "getAssetType":
                         // ServerSend
+                        break;
+                    default:
+                        System.out.println("Invalid Method");
+                        break;
+                }
+                break;
+            case "JDBCTradeDataSource":
+                switch(methodName){
+                    case "getSellOrders":
+                        JDBCTradeDataSource DBInterface = new JDBCTradeDataSource(connection);
+                        String[][] response = (DBInterface.getSellOrders(Integer.parseInt(arguments[0])));
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    case "getBuyOrders":
+                        JDBCTradeDataSource DBInterface1 = new JDBCTradeDataSource(connection);
+                        String[][] response1 = (DBInterface1.getBuyOrders(Integer.parseInt(arguments[0])));
+                        Transmit(new Request(className, methodName, response1));
                         break;
                     default:
                         System.out.println("Invalid Method");
