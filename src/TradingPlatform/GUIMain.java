@@ -73,7 +73,7 @@ public class GUIMain extends JFrame {
             {"Radha","BCA","Computer"},
             {"Radha","BCA","Computer"}};
 
-    public GUIMain() throws IOException, ClassNotFoundException {
+    public GUIMain(User user) throws IOException, ClassNotFoundException {
         super("SPS Trading");
 //        JFrame.setDefaultLookAndFeelDecorated(false);
         try {
@@ -102,7 +102,7 @@ public class GUIMain extends JFrame {
         new GUIOrgHome(orgTab);
 
         JPanel profileTab = new JPanel();
-        new GUIProfile(profileTab);
+        new GUIProfile(profileTab, user);
 
         pagePane.add("Home", homeTab);
 

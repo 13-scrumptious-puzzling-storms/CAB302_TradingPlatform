@@ -13,7 +13,9 @@ public class ClientApp {
         networkThread.start();
 
         networkTest();
-        new GUIMain();
+        // Get the logged in user
+        User user = new User(1);
+        new GUIMain(user);
     }
 
     private static void networkTest() throws IOException, ClassNotFoundException {

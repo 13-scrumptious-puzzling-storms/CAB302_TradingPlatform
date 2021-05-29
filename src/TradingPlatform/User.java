@@ -4,7 +4,7 @@ package TradingPlatform;
  * A user is a part of an organisational unit, and has their own username, password,
  * and account type.
  */
-public abstract class User {
+public class User {
     private final OrganisationalUnit unit;
     private final String username;
     private AccountType accountType;

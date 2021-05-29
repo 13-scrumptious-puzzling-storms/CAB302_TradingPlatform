@@ -2,10 +2,13 @@ package TradingPlatform;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import static TradingPlatform.GUIMain.*;
 
 public class GUIProfile {
+
+    private JPanel pnlProfile;
 
     private JTextField txtUsername;
     private JTextField txtOrgUnitName;
@@ -16,16 +19,20 @@ public class GUIProfile {
     private JButton btnChangePassword;
     private JButton btnSave;
 
-    public GUIProfile(JPanel ProfileTab){
+    private User user;
+
+
+    public GUIProfile(JPanel ProfileTab, User user){
         profilePanel(ProfileTab);
+        this.user = user;
     }
 
     /**
      * Makes a JPanel consisting of the user's information, and text fields to change
-     * their password in a box layout with horizontal alignment and puts a 20 pixel
-     * gap between the components and the left and right edges of the panel.
+     * their password in a grid bag layout.
      */
-    private void profilePanel(JPanel pnlProfile){
+    private void profilePanel(JPanel ProfilePanel){
+        pnlProfile = ProfilePanel;
         pnlProfile.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
@@ -43,14 +50,6 @@ public class GUIProfile {
         pnlButtons.setPreferredSize(new Dimension(width / 2, 100));
         pnlProfile.add(pnlButtons, position);
 
-
-
-//        pnlProfile.setLayout(new BoxLayout(pnlProfile, BoxLayout.Y_AXIS));
-//        pnlProfile.add(Box.createVerticalStrut(20));
-//        pnlProfile.add(makeUserDetailsPanel());
-//        pnlProfile.add(Box.createVerticalStrut(20));
-//        pnlProfile.add(makeButtonsPanel());
-//        pnlProfile.add(Box.createVerticalStrut(20));
     }
 
 
@@ -81,21 +80,20 @@ public class GUIProfile {
         JLabel lblCurrentPassword = new JLabel("Current Password");
         JLabel lblNewPassword = new JLabel("New Password");
 
-        txtUsername = new JTextField(20);
-        txtOrgUnitName = new JTextField(20);
-        txtAccountType = new JTextField(20);
-        txtCurrentPassword = new JTextField(20);
-        txtNewPassword = new JTextField(20);
-
         lblUsername.setForeground(Color.white);
         lblOrgUnitName.setForeground(Color.white);
         lblAccountType.setForeground(Color.white);
         lblCurrentPassword.setForeground(Color.white);
         lblNewPassword.setForeground(Color.white);
 
-        txtUsername.setEditable(false);
-        txtOrgUnitName.setEditable(false);
-        txtAccountType.setEditable(false);
+        txtUsername = new JTextField(20);
+        txtOrgUnitName = new JTextField(20);
+        txtAccountType = new JTextField(20);
+        txtCurrentPassword = new JTextField(20);
+        txtNewPassword = new JTextField(20);
+
+        setTextFieldsAppearance();
+
         setPasswordFieldsEditable(false);
 
         // Create a sequential group for the horizontal axis.
@@ -135,14 +133,32 @@ public class GUIProfile {
         return pnlUserDetails;
     }
 
+    private void setTextFieldsAppearance(){
+        txtUsername.setBackground(UIManager.getColor("TextField.Background"));
+        txtOrgUnitName.setBackground(UIManager.getColor("TextField.Background"));
+        txtAccountType.setBackground(UIManager.getColor("TextField.Background"));
+
+        txtUsername.setForeground(Color.WHITE);
+        txtOrgUnitName.setForeground(Color.WHITE);
+        txtAccountType.setForeground(Color.WHITE);
+
+        txtUsername.setEditable(false);
+        txtOrgUnitName.setEditable(false);
+        txtAccountType.setEditable(false);
+
+        txtUsername.setEnabled(false);
+        txtOrgUnitName.setEnabled(false);
+        txtAccountType.setEnabled(false);
+    }
+
     /**
      * Adds the ChangePassword and SavePassword buttons to a panel
-     * @return
+     * @return a new panel containing Change Password and Save Password buttons.
      */
     private JPanel makeButtonsPanel(){
         JPanel pnlButton = new JPanel();
         pnlButton.setLayout(new GridBagLayout());
-        pnlButton.setBackground(cust2);
+        pnlButton.setBackground(DARK_JUNGLE_GREEN);
         GridBagConstraints position = new GridBagConstraints();
 
         btnChangePassword = new JButton("Change Password");
@@ -153,6 +169,7 @@ public class GUIProfile {
         btnSave.setBackground(cust1);
 
         btnSave.setEnabled(false);
+        addButtonListeners(new ButtonListener());
 
         position.gridx = 0;
         position.anchor = GridBagConstraints.LINE_START;
@@ -164,11 +181,6 @@ public class GUIProfile {
         position.insets = new Insets(0, 0, 0, 0);
         pnlButton.add(btnSave, position);
 
-//        pnlButton.add(Box.createHorizontalStrut(50));
-//        pnlButton.add(btnChangePassword);
-//        pnlButton.add(Box.createHorizontalStrut(50));
-//        pnlButton.add(btnSave);
-//        pnlButton.add(Box.createHorizontalStrut(50));
         return pnlButton;
     }
 
@@ -186,6 +198,22 @@ public class GUIProfile {
     private void setPasswordFieldsEditable(boolean editable) {
         txtCurrentPassword.setEditable(editable);
         txtNewPassword.setEditable(editable);
+        if (editable){
+            txtCurrentPassword.setBackground(Color.WHITE);
+            txtNewPassword.setBackground(Color.WHITE);
+        }
+        else {
+            txtCurrentPassword.setBackground(UIManager.getColor("TextField.Background"));
+            txtNewPassword.setBackground(UIManager.getColor("TextField.Background"));
+        }
+    }
+
+    /**
+     * Sets the text in the password fields to the empty string.
+     */
+    private void clearPasswordFields() {
+        txtCurrentPassword.setText("");
+        txtNewPassword.setText("");
     }
 
     /**
@@ -197,6 +225,56 @@ public class GUIProfile {
             txtUsername.setText(user.getUsername());
             txtOrgUnitName.setText(user.getOrganisationalUnit().organisationName);
             txtAccountType.setText(user.getAccountType().name());
+        }
+    }
+
+    private class ButtonListener implements ActionListener {
+
+        /**
+         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+         */
+        public void actionPerformed(ActionEvent e) {
+            JButton source = (JButton) e.getSource();
+            if (source == btnChangePassword) {
+                changePasswordPressed();
+            } else if (source == btnSave) {
+                savePressed();
+            }
+        }
+
+        /**
+         * When the change password button is pressed, enable the password text fields
+         * and the save button.
+         */
+        private void changePasswordPressed() {
+            setPasswordFieldsEditable(true);
+            btnSave.setEnabled(true);
+            btnChangePassword.setEnabled(false);
+        }
+
+        /**
+         * When the save button is pressed, check that both password fields contains
+         * something. If they do, attempt to verify the user's current password, and if
+         * verified change their password. If successfully updated, change the fields back
+         * to not editable, make the save button inactive and clear the password fields.
+         */
+        private void savePressed() {
+            if (txtCurrentPassword.getText() != null && !txtCurrentPassword.getText().equals("")
+                && txtNewPassword.getText() != null && !txtNewPassword.getText().equals("")) {
+                if (true/*user.ChangePassword(txtCurrentPassword.getText(), txtNewPassword.getText())*/){
+                    JOptionPane.showMessageDialog(pnlProfile, "Your password has been changed!", "Change Password", JOptionPane.INFORMATION_MESSAGE);
+                    setPasswordFieldsEditable(false);
+                    btnSave.setEnabled(false);
+                    btnChangePassword.setEnabled(true);
+                    clearPasswordFields();
+                }
+                else {
+                    JOptionPane.showMessageDialog(pnlProfile, "Invalid current password! Please try again.", "Change Password", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(pnlProfile, "Please enter your current and new passwords.", "Change Password", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 }
