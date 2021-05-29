@@ -108,7 +108,12 @@ public class TestDatabaseFunctions {
             "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (2, 2, 2, 200)",
             "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (3, 2, 1, 100)",
             "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (4, 3, 3, 100)",
-            "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (5, 3, 3, 0)",
+            "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (5, 4, 1, 0)",
+            "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (6, 4, 4, 0)",
+            "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (7, 5, 1, 0)",
+            "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (8, 5, 4, 0)",
+            "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (9, 5, 2, 0)",
+            "INSERT INTO OrganisationAsset (organisationAssetID, organisationUnitID, assetTypeID, Quantity) VALUES (10, 5, 3, 0)",
 
 //Table: OrganisationUnit
             "CREATE TABLE OrganisationUnit (\n" +
@@ -143,6 +148,12 @@ public class TestDatabaseFunctions {
             "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (2, 4, 50, 50, 'true', 4, 'false', '2021-05-21 16:44:00.000')",
             "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (3, 1, 25, 25, 'true', 2, 'false', '2021-05-21 18:12:00.000')",
             "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (4, 3, 50, 15, 'false', 1, 'false', '2021-05-21 18:14:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (5, 5, 50, 50, 'true', 1, 'false', '2021-05-21 18:15:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (6, 6, 50, 50, 'true', 1, 'false', '2021-05-21 18:16:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (7, 7, 50, 40, 'false', 3, 'false', '2021-05-21 18:17:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (8, 8, 50, 15, 'false', 1, 'false', '2021-05-21 18:18:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (9, 9, 50, 15, 'true', 1, 'false', '2021-05-21 18:19:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (10, 10, 50, 15, 'true', 1, 'false', '2021-05-21 18:20:00.000')",
 
 //Table: TradeRecon
             "CREATE TABLE TradeRecon (\n" +
