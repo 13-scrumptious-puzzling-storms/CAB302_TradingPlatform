@@ -1,5 +1,7 @@
 package TradingPlatform.UnitTests;
 
+import TradingPlatform.SHA256;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -180,12 +182,12 @@ public class TestDatabaseFunctions {
                     "    userRole           INTEGER\n" +
                     ")",
 
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (1, 'radmin', 'HaveYouTriedTurningItOffAndOnAgain?', 1, 1)",
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (2, 'nolangrayson', 'Omniman', 2, 0)",
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (3, 'katecha', 'Duplikate', 3, 0)",
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (4, 'sammyeve', 'AtomEve', 4, 0)",
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (5, 'markgrayson', 'Invincible', 5, 0)",
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (6, 'root', '�\\�s�;6\u0011�T��\u0013���\u0001#��w\u001Eq4!����\u001FS�', 6, 0)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (1, 'radmin', '" + SHA256.hashPassword("HaveYouTriedTurningItOffAndOnAgain?") + "', 1, 1)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (2, 'nolangrayson', '" + SHA256.hashPassword("Omni-man") + "', 2, 0)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (3, 'katecha', '" + SHA256.hashPassword("DupliKate") + "', 3, 0)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (4, 'sammyeve', '" + SHA256.hashPassword("AtomEve") + "', 4, 0)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (5, 'markgrayson', '" + SHA256.hashPassword("Invincible") + "', 5, 0)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (6, 'root', '�\\�s�;6\u0011�T��\u0013���\u0001#��w\u001Eq4!����\u001FS�', 2, 0)",
 
 // Foreign key constraints
             "PRAGMA foreign_keys = on",
