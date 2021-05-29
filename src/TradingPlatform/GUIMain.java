@@ -112,6 +112,8 @@ public class GUIMain extends JFrame {
             JPanel adminTab = new JPanel();
             new GUIAdmin(adminTab, new ITAdministrator(user.getUserID()));
             pagePane.add("Admin", adminTab);
+            adminTab.setBackground(DARK_JUNGLE_GREEN);
+            adminTab.setForeground(Color.LIGHT_GRAY);
         }
 
         position.weighty = 0;

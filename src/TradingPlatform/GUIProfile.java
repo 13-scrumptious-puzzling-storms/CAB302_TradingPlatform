@@ -269,18 +269,21 @@ public class GUIProfile {
             if (txtCurrentPassword.getText() != null && !txtCurrentPassword.getText().equals("")
                 && txtNewPassword.getText() != null && !txtNewPassword.getText().equals("")) {
                 if (user.ChangePassword(txtCurrentPassword.getText(), txtNewPassword.getText())){
-                    JOptionPane.showMessageDialog(pnlProfile, "Your password has been changed!", "Change Password", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(pnlProfile, "Your password has been changed!",
+                            "Change Password", JOptionPane.INFORMATION_MESSAGE);
                     setPasswordFieldsEditable(false);
                     btnSave.setEnabled(false);
                     btnChangePassword.setEnabled(true);
                     clearPasswordFields();
                 }
                 else {
-                    JOptionPane.showMessageDialog(pnlProfile, "Invalid current password! Please try again.", "Change Password", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(pnlProfile, "Invalid current password! Please try again.",
+                            "Change Password", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else {
-                JOptionPane.showMessageDialog(pnlProfile, "Please enter your current and new passwords.", "Change Password", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(pnlProfile, "Please enter your current and new passwords.",
+                        "Change Password", JOptionPane.WARNING_MESSAGE);
             }
         }
     }

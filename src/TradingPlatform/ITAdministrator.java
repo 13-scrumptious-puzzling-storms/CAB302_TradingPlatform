@@ -17,11 +17,11 @@ public class ITAdministrator extends User {
      * Creates a new user and assigns them passwords and an organisational unit.
      *
      * @param username User's username
-     * @param password User's password
+     * @param hashedPassword User's hashed password
      * @param unit Organisational unit that the user belongs to
      */
-    public void CreateNewUser(String username, String password, OrganisationalUnit unit){
-        CreateUser(username, password, unit, AccountType.MEMBER);
+    public void CreateNewMember(String username, String hashedPassword, OrganisationalUnit unit){
+        CreateUser(username, hashedPassword, unit, AccountType.MEMBER);
     }
 
     /**
@@ -29,24 +29,24 @@ public class ITAdministrator extends User {
      * Organisational Unit (the unit of this IT admin).
      *
      * @param username Admin's username
-     * @param password Admin's password
+     * @param hashedPassword Admin's hashed password
      */
-    public void CreateNewITAdmin(String username, String password){
-        CreateUser(username, password, this.getOrganisationalUnit(), AccountType.ADMINISTRATOR);
+    public void CreateNewITAdmin(String username, String hashedPassword){
+        CreateUser(username, hashedPassword, this.getOrganisationalUnit(), AccountType.ADMINISTRATOR);
     }
 
     /**
      * Create a new user and add them to the server.
      *
      * @param username User's username
-     * @param password User's password
+     * @param hashedPassword User's password
      * @param unit Organisational unit that the user belongs to
      * @param accountType The user's account type (member or admin)
      */
-    private void CreateUser(String username, String password, OrganisationalUnit unit, AccountType accountType){
+    private void CreateUser(String username, String hashedPassword, OrganisationalUnit unit, AccountType accountType){
         try {
             NetworkManager.SendRequest("JDBCUserDataSource", "addUser",
-                    new String[] {username, password, accountType.name(), Integer.toString(unit.getID())});
+                    new String[] {username, hashedPassword, accountType.name(), Integer.toString(unit.getID())});
         } catch (IOException e) {
             e.printStackTrace();
         }
