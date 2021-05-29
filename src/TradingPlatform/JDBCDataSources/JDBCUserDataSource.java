@@ -74,7 +74,6 @@ public class JDBCUserDataSource implements UserDataSource {
 
     /**
      * Adds a new user to the database
-     * @return the userId of the user, or -1 if not found
      */
     public static void addUser(String username, String password, AccountType AccountType, int OrganisationUnitId, Connection connection){
         try {
