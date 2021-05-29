@@ -29,12 +29,12 @@ public class OrganisationalUnit implements Serializable {
         this.organisationCredit = organisationCredit;
     }
 
-//    /**
-//     * Creates new instance of an organisational unit
-//     * @param organisationID organisation's unique ID
-//     */
-//    public OrganisationalUnit(int organisationID){
-//    }
+    /**
+     * Creates new instance of an organisational unit
+     * @param organisationID organisation's unique ID
+     */
+    public OrganisationalUnit(int organisationID){
+    }
 
     /**
      * Creates a null instance of an organisational unit
