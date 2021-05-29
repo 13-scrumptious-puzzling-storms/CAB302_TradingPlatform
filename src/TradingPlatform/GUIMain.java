@@ -77,7 +77,7 @@ public class GUIMain extends JFrame {
         super("SPS Trading");
 //        JFrame.setDefaultLookAndFeelDecorated(false);
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
