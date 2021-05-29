@@ -5,12 +5,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 public class GUILogin extends JFrame implements ActionListener, FocusListener, Runnable {
     // Screen Sizing
     private static final float WIDTH_RATIO = 4.5f;
-    private static final float HEIGHT_RATIO = 2;
+    private static final int HEIGHT_RATIO = 2;
     private static final float WINDOW_RATIO = 2;
 
     // Constant Strings
@@ -44,7 +43,7 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
     // Buttons
     private static JButton loginButton;
 
-    private static JFrame jframe;
+    public static JFrame jframe;
     private static NetworkManager networkManager = ClientApp.networkManager;
 
     // Refer to WIRING FOR GOOD COMMENTS
@@ -62,8 +61,10 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
 
         // Get and set relative screen dimensions
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        windowWidth = (int)(screenSize.getWidth() / WIDTH_RATIO);
-        windowHeight = (int)(screenSize.getHeight() / HEIGHT_RATIO);
+        float screenWidth = (float)screenSize.getWidth();
+        float screenHeight = (float)screenSize.getHeight();
+        windowWidth = (int)(screenWidth / WIDTH_RATIO);
+        windowHeight = (int)(screenHeight / HEIGHT_RATIO);
 
         // Set background colour of window
         jframe.getContentPane().setBackground(CELADON_GREEN);
@@ -83,7 +84,7 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
 
         // Set dimensions and location of window. Display the window
         jframe.setPreferredSize(new Dimension(windowWidth, windowHeight));
-        jframe.setLocation(new Point(windowWidth - windowWidth/2, windowHeight - windowHeight/2)); // window position on screen
+        jframe.setLocation(new Point(Math.round(screenWidth / 2) - windowWidth/2,  Math.round(screenHeight / 2) - windowHeight / 2)); // window position on screen
         jframe.pack();
         jframe.setVisible(true);
     }
@@ -151,18 +152,17 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         return panel;
     }
 
-    private static void attemptLogin() throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
+    private void attemptLogin() throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
         String username = usernameField.getText();
-        String password = passwordField.getText();
-        String hashPass = SHA256.hashPasword(password);
-        Request response = networkManager.GetResponse("JDBCUserDataSource", "getUserId", new String[] {username, hashPass});
+        String hashedPass = SHA256.hashPassword(passwordField.getText());
+        Request response = networkManager.GetResponse("JDBCUserDataSource", "getUserId", new String[] { username, hashedPass });
+
         int userID = Integer.parseInt(response.getArguments()[0]);
         if (userID != -1) {
             ClientApp.launchProgram(userID);
-            // close this gui program
+        } else {
+            JOptionPane.showConfirmDialog(this, "Invalid username or password.", "Access Denied", JOptionPane.PLAIN_MESSAGE, JOptionPane.WARNING_MESSAGE);
         }
-
-        System.out.println(response.getArguments()[0]);
     }
 
     @Override
