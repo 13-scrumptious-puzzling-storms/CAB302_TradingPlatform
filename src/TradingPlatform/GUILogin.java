@@ -156,6 +156,12 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         String password = passwordField.getText();
         String hashPass = SHA256.hashPasword(password);
         Request response = networkManager.GetResponse("JDBCUserDataSource", "getUserId", new String[] {username, hashPass});
+        int userID = Integer.parseInt(response.getArguments()[0]);
+        if (userID != -1) {
+            ClientApp.launchProgram(userID);
+            // close this gui program
+        }
+
         System.out.println(response.getArguments()[0]);
     }
 
