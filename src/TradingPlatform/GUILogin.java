@@ -2,9 +2,11 @@ package TradingPlatform;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 public class GUILogin extends JFrame implements ActionListener, FocusListener, Runnable {
     // Screen Sizing
@@ -156,7 +158,7 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         return panel;
     }
 
-    private void attemptLogin() throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
+    private void attemptLogin() throws IOException, ClassNotFoundException {
         String username = usernameField.getText();
         String hashedPass = SHA256.hashPassword(passwordField.getText());
         Request response = networkManager.GetResponse("JDBCUserDataSource", "getUserId", new String[] { username, hashedPass });
