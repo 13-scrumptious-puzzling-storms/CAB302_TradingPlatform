@@ -53,6 +53,10 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         catch (IOException e) { e.printStackTrace(); }
     }
 
+    public static void terminate() {
+        // doesnt close yet
+    }
+
     private void displayJFrame() throws IOException {
         // Initialise JFrame
         jframe = new JFrame("SPS Trading Platform");
