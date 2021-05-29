@@ -1,12 +1,11 @@
 package TradingPlatform;
 
 import javax.swing.*;
-import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.io.IOException;
 
 public class GUIMain extends JFrame {
     /**
@@ -18,6 +17,12 @@ public class GUIMain extends JFrame {
     public static final Color cust1 = new Color(38,139,133);
     public static final Color cust2 = new Color(51,61,68);
     public static final Color cust3 = new Color(72,191,146);
+    public static final Color CELADON_GREEN = new Color(38,139,133);
+    public static final Color OCEAN_GREEN = new Color(72,191,146);
+    public static final Color CRIMSON = new Color(214, 40, 57);
+    public static final Color CHARCOAL = new Color(51,61,68);
+    public static final Color DARK_JUNGLE_GREEN = new Color(13, 27, 30);
+    public static final Color WHITE = Color.WHITE;
 
     public static Object[] getColours(){
         Object[] colours = new Object[]{cust1, cust2, cust3};
@@ -68,9 +73,9 @@ public class GUIMain extends JFrame {
             {"Radha","BCA","Computer"},
             {"Radha","BCA","Computer"}};
 
-    public GUIMain() {
+    public GUIMain(User user) throws IOException, ClassNotFoundException {
         super("SPS Trading");
-        JFrame.setDefaultLookAndFeelDecorated(false);
+//        JFrame.setDefaultLookAndFeelDecorated(false);
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
@@ -84,25 +89,42 @@ public class GUIMain extends JFrame {
         }
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        JPanel mainframe = new JPanel();
+        mainframe.setLayout(new GridBagLayout());
+        GridBagConstraints position = new GridBagConstraints();
+
         JTabbedPane pagePane = new JTabbedPane();
         UIManager.put("TabbedPane.selectedBackground", cust1);
-
-
 
         JPanel homeTab = new JPanel();
         new GUIHome(homeTab);
 
-
         new GUIOrgHome(orgTab);
 
         JPanel profileTab = new JPanel();
-       new GUIProfile(profileTab);
+        new GUIProfile(profileTab, user);
 
         pagePane.add("Home", homeTab);
+
         pagePane.add("Organisation Home", orgTab);
         pagePane.add("My Profile", profileTab);
-        getContentPane().add(pagePane);
 
+        position.weighty = 0;
+        position.gridy = 0;
+        JLabel title = new JLabel("SPS Trading");
+        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Verdana", Font.BOLD, 50));
+        mainframe.add(title , position);
+
+        position.gridy = 1;
+        mainframe.add(pagePane, position);
+        mainframe.setBackground(DARK_JUNGLE_GREEN);
+
+        pagePane.setPreferredSize(new Dimension(width-width/10, height - height/4));
+        pagePane.setMinimumSize(new Dimension(width/2, height/2));
+
+        getContentPane().add(mainframe);
+        getContentPane().setBackground(DARK_JUNGLE_GREEN);
 
         setPreferredSize(new Dimension(width, height));
         setLocation(new Point(0, 0));
@@ -110,18 +132,16 @@ public class GUIMain extends JFrame {
         setVisible(true);
         orgTab.setAutoscrolls(true);
 
-        pagePane.setBackground(cust1);
-        pagePane.setForeground(Color.WHITE);
+        pagePane.setForeground(Color.BLACK);
+        pagePane.setBackgroundAt(1, cust1);
+        homeTab.setBackground(DARK_JUNGLE_GREEN);
+        homeTab.setForeground(Color.LIGHT_GRAY);
 
-        homeTab.setBackground(cust2);
-        homeTab.setForeground(Color.WHITE);
-
-        orgTab.setBackground(cust2);
+        orgTab.setBackground(DARK_JUNGLE_GREEN);
         orgTab.setForeground(Color.LIGHT_GRAY);
 
-        profileTab.setBackground(cust2);
+        profileTab.setBackground(DARK_JUNGLE_GREEN);
         profileTab.setForeground(Color.LIGHT_GRAY);
-        setBackground(cust2);
 
     }
 

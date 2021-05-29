@@ -5,7 +5,6 @@ import java.io.IOException;
 public class ClientApp {
 
     public static NetworkManager networkManager;
-    private static GUILogin guiLogin;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         // Initialise the client-side network protocol
@@ -13,13 +12,10 @@ public class ClientApp {
         Thread networkThread = new Thread(networkManager);
         networkThread.start();
 
-        //networkTest();
-
-        guiLogin = new GUILogin();
-        Thread guiLoginThread = new Thread(guiLogin);
-        guiLoginThread.start();
-
-        //new GUIMain();
+        networkTest();
+        // Get the logged in user
+        User user = new User(1);
+        new GUIMain(user);
     }
 
     private static void networkTest() throws IOException, ClassNotFoundException {
