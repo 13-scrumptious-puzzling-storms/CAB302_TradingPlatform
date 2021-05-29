@@ -1,9 +1,7 @@
 package TradingPlatform.NetworkProtocol;
 
-import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
-import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
-import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
-import TradingPlatform.JDBCDataSources.JDBCUserDataSource;
+import TradingPlatform.AccountType;
+import TradingPlatform.JDBCDataSources.*;
 import TradingPlatform.Request;
 
 import java.io.BufferedOutputStream;
@@ -44,14 +42,21 @@ public class ServerSend implements Runnable {
                 break;
             case "JDBCOrganisationalAsset":
                 switch (methodName) {
-                    case "getOrganisationAssetsQuantity":
+                    case "getOrganisationAssetsQuantity": {
                         JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
                         String[][] response = (DBInterface.getOrganisationAssetsQuantity(Integer.parseInt(arguments[0])));
                         Transmit(new Request(className, methodName, response));
                         break;
-                    case "getAssetType":
+                    }
+                    case "getAssetType": {
                         // ServerSend
                         break;
+                    }
+                    case "addAssetType": {
+                        var DBInterface = new JDBCAssetType(connection);
+                        DBInterface.addAssetType(arguments[0]);
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;
@@ -89,6 +94,14 @@ public class ServerSend implements Runnable {
                         String[] response = new String[]{userSource.getUsername(),
                                 Integer.toString(userSource.getAccountType().getValue()), Integer.toString(userSource.getOrganisationalUnit().getID())};
                         Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    case "addUser": {
+                        String username = arguments[0];
+                        String password = arguments[1];
+                        AccountType accountType = AccountType.valueOf(arguments[2]);
+                        int OrgUnitId = Integer.parseInt(arguments[3]);
+                        JDBCUserDataSource.addUser(username, password, accountType, OrgUnitId, connection);
                         break;
                     }
                     case "changePassword": {

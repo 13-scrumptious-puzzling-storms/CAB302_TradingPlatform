@@ -11,26 +11,22 @@ public class JDBCUserDataSource implements UserDataSource {
     private static final String GET_USER = "SELECT * FROM User WHERE userId=?";
     private static final String GET_USERID_FROM_USERNAME_PASSWORD = "SELECT userId FROM User WHERE username=? and password=?";
     private static final String SET_USER_PASSWORD = "UPDATE User SET password=? WHERE userId=?";
+    private static final String INSERT_USER = "INSERT INTO USER (username, password, organisationUnitId, userRol) VALUES (?, ?, ?, ?)";
 
-    private PreparedStatement getUser;
     private PreparedStatement setUserPassword;
-    private static PreparedStatement getUserIdFromUsernamePassword;
 
-    private Connection connection;
-
-    private int userId;
+    private final int userId;
     private String username;
     private String password;
     private AccountType accountType;
     private OrganisationalUnit organisationalUnit;
 
     public JDBCUserDataSource(int userId, Connection connection){
-        this.connection = connection;
         this.userId = userId;
 
         try {
             // Preparing Statements
-            getUser = connection.prepareStatement(GET_USER);
+            PreparedStatement getUser = connection.prepareStatement(GET_USER);
             setUserPassword = connection.prepareStatement(SET_USER_PASSWORD);
 
             // Getting the user's data
@@ -57,8 +53,8 @@ public class JDBCUserDataSource implements UserDataSource {
     public static int getUserId(String username, String password, Connection connection){
         int userId = -1;
         try {
-            getUserIdFromUsernamePassword = connection.prepareStatement(GET_USERID_FROM_USERNAME_PASSWORD);
-            getUserIdFromUsernamePassword.setString(1, username);
+            PreparedStatement getUserIdFromUsernamePassword = connection.prepareStatement(GET_USERID_FROM_USERNAME_PASSWORD);
+            getUserIdFromUsernamePassword.setString(1, username.toLowerCase());
             getUserIdFromUsernamePassword.setString(2, password);
             var rs = getUserIdFromUsernamePassword.executeQuery();
             if (rs.next()){
@@ -68,6 +64,25 @@ public class JDBCUserDataSource implements UserDataSource {
             ex.printStackTrace();
         }
         return userId;
+    }
+
+    /**
+     * Adds a new user to the database
+     */
+    public static void addUser(String username, String password, AccountType AccountType, int OrganisationUnitId, Connection connection){
+        try {
+            PreparedStatement insertUser = connection.prepareStatement(INSERT_USER);
+            insertUser.setString(1, username.toLowerCase());
+            insertUser.setString(2, password);
+            insertUser.setInt(3, AccountType.getValue());
+            insertUser.setInt(4, OrganisationUnitId);
+            int numRecords = insertUser.executeUpdate();
+            if (numRecords == 0){
+                throw new SQLException("Unable to insert new user into database.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -94,6 +109,9 @@ public class JDBCUserDataSource implements UserDataSource {
                 setUserPassword.setString(1, password);
                 setUserPassword.setInt(2, userId);
                 int numRecords = setUserPassword.executeUpdate();
+                if (numRecords == 0){
+                    throw new SQLException("Unable to update password for user " + userId + ".");
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return false;
