@@ -76,6 +76,13 @@ public class ServerSend implements Runnable {
                 break;
             case "JDBCUserDataSource":
                 switch (methodName){
+                    case "getUserId":{
+                        String username = arguments[0];
+                        String hashPass = arguments[1];
+                        int userID = JDBCUserDataSource.getUserId(username, hashPass, connection);
+                        Transmit(new Request(className, methodName, new String[] { Integer.toString(userID) } ));
+                        break;
+                    }
                     case "getUser": {
                         int userId = Integer.parseInt(arguments[0]);
                         JDBCUserDataSource userSource = new JDBCUserDataSource(userId, connection);
