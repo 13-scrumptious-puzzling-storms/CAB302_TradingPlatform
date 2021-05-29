@@ -1,14 +1,16 @@
 package TradingPlatform;
 
+import TradingPlatform.Interfaces.UserDataSource;
+
 /**
  * A user is a part of an organisational unit, and has their own username, password,
  * and account type.
  */
-public class User {
+public class User implements UserDataSource {
     private final OrganisationalUnit unit;
     private final String username;
-    private AccountType accountType;
-    private int userID;
+    private final AccountType accountType;
+    private final int userID;
 
     /**
      * Instantiates a user from their userid, getting their information from the database
@@ -16,8 +18,27 @@ public class User {
      */
     public User(int userID){
         this.userID = userID;
-        this.unit = null;
-        this.username = null;
+
+        // Get the user's data from the server
+        Request response = null;
+        try {
+            response = NetworkManager.GetResponse("UserServer", "getUser", new String[] {String.valueOf(userID)});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Check for not null response
+        if (response != null && response.getArguments() != null) {
+            String[] details = response.getArguments();
+            this.username = details[0];
+            this.accountType = AccountType.getType(Integer.parseInt(details[1])); // Account type passed as the int val of the enum
+            this.unit = new OrganisationalUnit(Integer.parseInt(details[2])); // Get organisational unit from the orgUnitId
+        }
+        else {
+            this.username = null;
+            this.accountType = null;
+            this.unit = null;
+        }
     }
 
     /**
@@ -47,7 +68,19 @@ public class User {
      * @return True if the password was successfully changed.
      */
     public boolean ChangePassword(String currentPassword, String newPassword){
-        return false;
+        // Attempt to change the user's password
+        Request response = null;
+        try {
+            response = NetworkManager.GetResponse("UserServer", "changePassword",
+                    new String[] {String.valueOf(userID), currentPassword, newPassword});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (response != null && response.getArguments() != null)
+            return Boolean.parseBoolean(response.getArguments()[0]);
+        else
+            return false;
     }
 
 }

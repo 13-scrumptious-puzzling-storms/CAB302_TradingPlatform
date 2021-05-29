@@ -3,10 +3,12 @@ package TradingPlatform.NetworkProtocol;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
 import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
+import TradingPlatform.JDBCDataSources.JDBCUserDataSource;
 import TradingPlatform.Request;
-import TradingPlatform.stringToDoubleArray;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Connection;
 
@@ -72,6 +74,27 @@ public class ServerSend implements Runnable {
                         break;
                 }
                 break;
+            case "JDBCUserDataSource":
+                switch (methodName){
+                    case "getUser": {
+                        int userId = Integer.parseInt(arguments[0]);
+                        JDBCUserDataSource userSource = new JDBCUserDataSource(userId, connection);
+                        String[] response = new String[]{userSource.getUsername(),
+                                Integer.toString(userSource.getAccountType().getValue()), Integer.toString(userSource.getOrganisationalUnit().getID())};
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    case "changePassword": {
+                        int userId = Integer.parseInt(arguments[0]);
+                        JDBCUserDataSource userSource = new JDBCUserDataSource(userId, connection);
+                        String[] response = new String[]{Boolean.toString(userSource.ChangePassword(arguments[1], arguments[2]))};
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    default:
+                        System.out.println("Invalid Method");
+                        break;
+                }
             default:
                 System.out.println("Invalid Class");
                 break;
