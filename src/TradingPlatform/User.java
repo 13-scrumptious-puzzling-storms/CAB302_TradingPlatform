@@ -22,7 +22,7 @@ public class User implements UserDataSource {
         // Get the user's data from the server
         Request response = null;
         try {
-            response = NetworkManager.GetResponse("UserServer", "getUser", new String[] {String.valueOf(userID)});
+            response = NetworkManager.GetResponse("JDBCUserDataSource", "getUser", new String[] {String.valueOf(userID)});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,7 +71,7 @@ public class User implements UserDataSource {
         // Attempt to change the user's password
         Request response = null;
         try {
-            response = NetworkManager.GetResponse("UserServer", "changePassword",
+            response = NetworkManager.GetResponse("JDBCUserDataSource", "changePassword",
                     new String[] {String.valueOf(userID), currentPassword, newPassword});
         } catch (Exception e) {
             e.printStackTrace();

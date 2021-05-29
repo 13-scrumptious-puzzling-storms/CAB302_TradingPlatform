@@ -10,14 +10,17 @@ public class JDBCUserDataSource implements UserDataSource {
 
     private static final String GET_USER = "SELECT * FROM User WHERE userId=?";
     private static final String GET_USERID_FROM_USERNAME_PASSWORD = "SELECT userId FROM User WHERE username=? and password=?";
+    private static final String SET_USER_PASSWORD = "UPDATE User SET password=? WHERE userId=?";
 
     private PreparedStatement getUser;
+    private PreparedStatement setUserPassword;
     private static PreparedStatement getUserIdFromUsernamePassword;
 
     private Connection connection;
 
     private int userId;
     private String username;
+    private String password;
     private AccountType accountType;
     private OrganisationalUnit organisationalUnit;
 
@@ -28,6 +31,7 @@ public class JDBCUserDataSource implements UserDataSource {
         try {
             // Preparing Statements
             getUser = connection.prepareStatement(GET_USER);
+            setUserPassword = connection.prepareStatement(SET_USER_PASSWORD);
 
             // Getting the user's data
             getUser.setInt(1, userId);
@@ -35,6 +39,7 @@ public class JDBCUserDataSource implements UserDataSource {
 
             if (rs.next()) {
                 username = rs.getString("username");
+                password = rs.getString("password");
                 accountType = AccountType.getType(rs.getInt("userRole"));
                 int orgId = rs.getInt("organisationUnitId");
                 organisationalUnit = new JDBCOrganisationalUnit(connection).getOrganisationalUnit(orgId);
@@ -82,6 +87,21 @@ public class JDBCUserDataSource implements UserDataSource {
 
     @Override
     public boolean ChangePassword(String currentPassword, String newPassword) {
-        return false;
+        if (currentPassword.equals(password)){
+            try {
+                password = newPassword;
+                setUserPassword.clearParameters();
+                setUserPassword.setString(1, password);
+                setUserPassword.setInt(2, userId);
+                int numRecords = setUserPassword.executeUpdate();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

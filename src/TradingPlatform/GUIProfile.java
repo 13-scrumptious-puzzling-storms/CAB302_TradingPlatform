@@ -25,6 +25,7 @@ public class GUIProfile {
     public GUIProfile(JPanel ProfileTab, User user){
         profilePanel(ProfileTab);
         this.user = user;
+        display(user);
     }
 
     /**
@@ -261,7 +262,7 @@ public class GUIProfile {
         private void savePressed() {
             if (txtCurrentPassword.getText() != null && !txtCurrentPassword.getText().equals("")
                 && txtNewPassword.getText() != null && !txtNewPassword.getText().equals("")) {
-                if (true/*user.ChangePassword(txtCurrentPassword.getText(), txtNewPassword.getText())*/){
+                if (user.ChangePassword(txtCurrentPassword.getText(), txtNewPassword.getText())){
                     JOptionPane.showMessageDialog(pnlProfile, "Your password has been changed!", "Change Password", JOptionPane.INFORMATION_MESSAGE);
                     setPasswordFieldsEditable(false);
                     btnSave.setEnabled(false);
