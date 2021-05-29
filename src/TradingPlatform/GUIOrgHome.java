@@ -155,7 +155,7 @@ public class GUIOrgHome{
         //Create Buy Asset Button
         position.gridwidth = 1;
         position.gridx = 1;
-        position.gridy = 0;
+        position.gridy = 1;
         position.anchor = GridBagConstraints.LINE_END;
         JButton buyButton = new JButton("Buy Assets");
         buyButton.setBackground(cust1);
@@ -173,7 +173,7 @@ public class GUIOrgHome{
     private void sellAssetButton(JPanel panel2, GridBagConstraints position){
         //Create Sell Asset Button
         position.gridx = 3;
-        position.gridy = 0;
+        position.gridy = 1;
         position.anchor = GridBagConstraints.LINE_START;
         JButton sellButton = new JButton("Sell Assets");
         sellButton.setBackground(cust1);
