@@ -185,6 +185,7 @@ public class TestDatabaseFunctions {
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (3, 'katecha', 'Duplikate', 3, 0)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (4, 'sammyeve', 'AtomEve', 4, 0)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (5, 'markgrayson', 'Invincible', 5, 0)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (6, 'root', '�\\�s�;6\u0011�T��\u0013���\u0001#��w\u001Eq4!����\u001FS�', 6, 0)",
 
 // Foreign key constraints
             "PRAGMA foreign_keys = on",
