@@ -1,9 +1,11 @@
 package TradingPlatform.Interfaces;
 
+import TradingPlatform.AssetType;
 import TradingPlatform.TradeReconciliation.TradeOrder;
 import TradingPlatform.TradeReconciliation.TradeRecon;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface TradeReconcileSource {
     /**
@@ -39,5 +41,10 @@ public interface TradeReconcileSource {
      * @return A matching buy trade order, or null if there are none.
      */
     TradeOrder getMatchingBuyOrder(int assetTypeId, int minPrice);
+
+    /**
+     * Gets a list of the asset types that have been traded, and the price, quantity, and date of its last trade.
+     */
+    Map<AssetType, String[]> getMostRecentAssetTypeTradeDetails();
 
 }
