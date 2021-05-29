@@ -23,14 +23,14 @@ public class UserTests {
 
     @Test
     public void TestGetUserId(){
-        int userId = JDBCUserDataSource.getUserId("MarkGrayson", "Invincible", connection);
+        int userId = JDBCUserDataSource.getUserId("markgrayson", "Invincible", connection);
         assert (userId == 5);
     }
 
     @Test
     public void TestGetUsername(){
         JDBCUserDataSource user = new JDBCUserDataSource(5, connection);
-        assert (user.getUsername().equals("MarkGrayson"));
+        assert (user.getUsername().equals("markgrayson"));
     }
 
     @Test
