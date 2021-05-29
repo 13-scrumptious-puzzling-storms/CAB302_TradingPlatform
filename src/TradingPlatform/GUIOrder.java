@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static TradingPlatform.GUIMain.*;
+import static java.awt.GridBagConstraints.CENTER;
+import static java.awt.GridBagConstraints.LINE_END;
 
 public class GUIOrder extends JFrame{
 
@@ -31,7 +33,7 @@ public class GUIOrder extends JFrame{
 
     public static void buyPopup(){
         buy = new JFrame("Buy");
-        buy.setSize(100, 100);
+        buy.setSize(new Dimension(width/2, height/2));
         popUp = new PopupFactory();
 
         panel = new JPanel();
@@ -45,8 +47,11 @@ public class GUIOrder extends JFrame{
 
         String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
         itemNameInput = new JComboBox(petStrings);
+        itemNameInput.setPreferredSize(new Dimension(width/4, 20));
         quantityInput = new JTextField();
+        quantityInput.setPreferredSize(new Dimension(width/4, 20));
         priceInput = new JTextField();
+        priceInput.setPreferredSize(new Dimension(width/4, 20));
 
         confirm = new JButton("Confirm Order");
         confirm.addActionListener(GUIOrder::finalButton);
@@ -54,6 +59,9 @@ public class GUIOrder extends JFrame{
         cancel = new JButton("Cancel");
         cancel.addActionListener(GUIOrder::finalButton);
 
+        position.weighty = 0;
+        position.insets = new Insets(20, 0, 20, 10);
+        position.anchor = LINE_END;
         position.gridx = 0;
         position.gridy = 0;
         panel.add(itemName, position);
@@ -61,6 +69,8 @@ public class GUIOrder extends JFrame{
         panel.add(quantity, position);
         position.gridy = 2;
         panel.add(price, position);
+        position.insets = new Insets(20, 0, 20, 0);
+        position.anchor = CENTER;
         position.gridx = 1;
         position.gridy = 0;
         panel.add(itemNameInput, position);
@@ -104,6 +114,7 @@ public class GUIOrder extends JFrame{
         quantityInput = new JTextField();
         priceInput = new JTextField();
 
+        position.weighty = 0;
         position.gridx = 0;
         position.gridy = 0;
         panel.add(itemName, position);
