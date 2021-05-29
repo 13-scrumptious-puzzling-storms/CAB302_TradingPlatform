@@ -1,15 +1,11 @@
 package TradingPlatform;
 
-import TradingPlatform.NetworkProtocol.DBConnection;
-import TradingPlatform.NetworkProtocol.ServerApp;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.regex.Pattern;
 
 public class GUILogin extends JFrame implements ActionListener, FocusListener, Runnable {
     // Screen Sizing
@@ -155,14 +151,12 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         return panel;
     }
 
-    private static void attemptLogin() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException, ClassNotFoundException {
+    private static void attemptLogin() throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
         String username = usernameField.getText();
         String password = passwordField.getText();
-        byte[] hashPass = PBKDF2.hashPasword(password);
-
-        Request response = networkManager.GetResponse("JDBCUserDataSource", "getUserId", new String[] {username});
-        System.out.println(usernameField.getText());
-        System.out.println(passwordField.getText());
+        String hashPass = SHA256.hashPasword(password);
+        Request response = networkManager.GetResponse("JDBCUserDataSource", "getUserId", new String[] {username, hashPass});
+        System.out.println(response.getArguments()[0]);
     }
 
     @Override
@@ -171,7 +165,8 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         if (src instanceof JButton) {
             JButton btn = ((JButton) src);
             if (btn == loginButton) {
-                attemptLogin();
+                try { attemptLogin(); }
+                catch (Exception ex) { ex.printStackTrace(); }
             }
         }
     }
