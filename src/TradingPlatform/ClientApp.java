@@ -1,10 +1,12 @@
 package TradingPlatform;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class ClientApp {
 
     public static NetworkManager networkManager;
+    private static GUILogin guiLogin;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         // Initialise the client-side network protocol
@@ -12,8 +14,16 @@ public class ClientApp {
         Thread networkThread = new Thread(networkManager);
         networkThread.start();
 
-        networkTest();
+        guiLogin = new GUILogin();
+        Thread guiLoginThread = new Thread(guiLogin);
+        guiLoginThread.start();
+
+        // networkTest();
         // Get the logged in user
+        new GUILogin();
+    }
+
+    public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
         User user = new User(1);
         new GUIMain(user);
     }
