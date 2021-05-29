@@ -1,6 +1,7 @@
 package TradingPlatform.UnitTests;
 
 import TradingPlatform.SHA256;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.sql.Connection;
@@ -13,6 +14,11 @@ import java.sql.SQLException;
 public class TestDatabaseFunctions {
     private static Connection connection;
     private static final String testDbName = "testdb.db";
+
+    @Test
+    public void CreateDB(){
+        TestDatabaseFunctions.InitDb();
+    }
 
     /**
      * Initialises the test database file and connection.
