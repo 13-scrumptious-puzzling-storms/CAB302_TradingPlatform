@@ -61,6 +61,13 @@ public class User implements UserDataSource {
     }
 
     /**
+     * @return The user's userId
+     */
+    public int getUserID(){
+        return userID;
+    }
+
+    /**
      * Changes the user's password.
      *
      * @param currentPassword The user's current password.
