@@ -94,6 +94,21 @@ public class ITAdministrator extends User {
         }
     }
 
+    /**
+     * Updates the given user's password.
+     * 
+     * @param user the user who's password will be changed
+     * @param newHashedPassword the hash of the user's new password
+     */
+    public void ChangeUserPassword(User user, String newHashedPassword){
+        try {
+            NetworkManager.SendRequest("JDBCUserDataSource", "adminChangeUserPassword",
+                    new String[] {Integer.toString(user.getUserID()), newHashedPassword});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public AccountType getAccountType() {
         return AccountType.ADMINISTRATOR;

@@ -111,6 +111,12 @@ public class ServerSend implements Runnable {
                         Transmit(new Request(className, methodName, response));
                         break;
                     }
+                    case "adminChangeUserPassword": {
+                        int userId = Integer.parseInt(arguments[0]);
+                        String password = arguments[1];
+                        JDBCUserDataSource.adminChangeUserPassword(userId, password, connection);
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;

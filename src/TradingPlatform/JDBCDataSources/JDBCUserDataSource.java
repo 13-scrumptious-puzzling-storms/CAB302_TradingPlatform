@@ -13,16 +13,18 @@ public class JDBCUserDataSource implements UserDataSource {
     private static final String SET_USER_PASSWORD = "UPDATE User SET password=? WHERE userId=?";
     private static final String INSERT_USER = "INSERT INTO USER (username, password, organisationUnitId, userRol) VALUES (?, ?, ?, ?)";
 
-    private PreparedStatement setUserPassword;
+    private static PreparedStatement setUserPassword;
 
     private final int userId;
     private String username;
     private String password;
     private AccountType accountType;
     private OrganisationalUnit organisationalUnit;
+    private Connection connection;
 
     public JDBCUserDataSource(int userId, Connection connection){
         this.userId = userId;
+        this.connection = connection;
 
         try {
             // Preparing Statements
@@ -85,6 +87,17 @@ public class JDBCUserDataSource implements UserDataSource {
         }
     }
 
+    /**
+     * IT admins change user password function does not require the user's current password.
+     */
+    public static void adminChangeUserPassword(int userId, String newHashedPassword, Connection connection){
+        try {
+            changeUserPassword(userId, newHashedPassword, connection);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     @Override
     public String getUsername() {
         return username;
@@ -104,14 +117,7 @@ public class JDBCUserDataSource implements UserDataSource {
     public boolean ChangePassword(String currentHashedPassword, String newHashedPassword) {
         if (currentHashedPassword.equals(password)){
             try {
-                password = newHashedPassword;
-                setUserPassword.clearParameters();
-                setUserPassword.setString(1, password);
-                setUserPassword.setInt(2, userId);
-                int numRecords = setUserPassword.executeUpdate();
-                if (numRecords == 0){
-                    throw new SQLException("Unable to update password for user " + userId + ".");
-                }
+                changeUserPassword(userId, newHashedPassword, connection);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return false;
@@ -120,6 +126,16 @@ public class JDBCUserDataSource implements UserDataSource {
         }
         else {
             return false;
+        }
+    }
+
+    private static void changeUserPassword(int userId, String newPassword, Connection connection) throws SQLException {
+        setUserPassword = connection.prepareStatement(SET_USER_PASSWORD);
+        setUserPassword.setString(1, newPassword);
+        setUserPassword.setInt(2, userId);
+        int numRecords = setUserPassword.executeUpdate();
+        if (numRecords == 0) {
+            throw new SQLDataException("Unable to update password for user " + userId + ".");
         }
     }
 }
