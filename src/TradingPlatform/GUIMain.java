@@ -1,11 +1,9 @@
 package TradingPlatform;
 
 import javax.swing.*;
-import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.io.IOException;
 
@@ -19,12 +17,12 @@ public class GUIMain extends JFrame {
     public static final Color cust1 = new Color(38,139,133);
     public static final Color cust2 = new Color(51,61,68);
     public static final Color cust3 = new Color(72,191,146);
-    private static final Color CELADON_GREEN = new Color(38,139,133);
-    private static final Color OCEAN_GREEN = new Color(72,191,146);
-    private static final Color CRIMSON = new Color(214, 40, 57);
-    private static final Color CHARCOAL = new Color(51,61,68);
-    private static final Color DARK_JUNGLE_GREEN = new Color(13, 27, 30);
-    private static final Color WHITE = Color.WHITE;
+    public static final Color CELADON_GREEN = new Color(38,139,133);
+    public static final Color OCEAN_GREEN = new Color(72,191,146);
+    public static final Color CRIMSON = new Color(214, 40, 57);
+    public static final Color CHARCOAL = new Color(51,61,68);
+    public static final Color DARK_JUNGLE_GREEN = new Color(13, 27, 30);
+    public static final Color WHITE = Color.WHITE;
 
     public static Object[] getColours(){
         Object[] colours = new Object[]{cust1, cust2, cust3};
