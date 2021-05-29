@@ -1,1 +1,1 @@
-C:\Users\liamf\Documents\Personal\GitHub\CAB302_TradingPlatform\db_working.props
+C:\Users\liamf\Documents\Personal\GitHub\CAB302_TradingPlatform\db_testdb.props
