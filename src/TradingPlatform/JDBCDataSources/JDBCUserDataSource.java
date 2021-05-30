@@ -9,10 +9,11 @@ import java.sql.*;
 public class JDBCUserDataSource implements UserDataSource {
 
     private static final String GET_USER = "SELECT * FROM User WHERE userId=?";
+    private static final String GET_NUM_USERS_WITH_USERNAME = "SELECT COUNT(*) FROM User WHERE username=?";
     private static final String GET_USERID_FROM_USERNAME_PASSWORD = "SELECT userId FROM User WHERE username=? and password=?";
     private static final String SET_USER_PASSWORD = "UPDATE User SET password=? WHERE userId=?";
     private static final String SET_USER_PASSWORD_BY_USERNAME = "UPDATE User SET password=? WHERE username=?";
-    private static final String INSERT_USER = "INSERT INTO USER (username, password, organisationUnitId, userRol) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_USER = "INSERT INTO USER (username, password, organisationUnitId, userRole) VALUES (?, ?, ?, ?)";
 
     private static PreparedStatement setUserPassword;
 
@@ -21,7 +22,7 @@ public class JDBCUserDataSource implements UserDataSource {
     private String password;
     private AccountType accountType;
     private OrganisationalUnit organisationalUnit;
-    private Connection connection;
+    private final Connection connection;
 
     public JDBCUserDataSource(int userId, Connection connection){
         this.userId = userId;
@@ -70,22 +71,34 @@ public class JDBCUserDataSource implements UserDataSource {
     }
 
     /**
-     * Adds a new user to the database
+     * Adds a new user to the database if the username does not exist
      */
-    public static void addUser(String username, String password, AccountType AccountType, int OrganisationUnitId, Connection connection){
+    public static boolean addUser(String username, String password, AccountType AccountType, int OrganisationUnitId, Connection connection){
+        boolean success;
         try {
+            // Check that there are no users with the given username
+            PreparedStatement getUsersWithUsername = connection.prepareStatement(GET_NUM_USERS_WITH_USERNAME);
+            getUsersWithUsername.setString(1, username.toLowerCase());
+            ResultSet rs = getUsersWithUsername.getResultSet();
+            if (rs.next())
+                if (rs.getInt(1) != 0)
+                    return false; // There are users with the given username
+
             PreparedStatement insertUser = connection.prepareStatement(INSERT_USER);
             insertUser.setString(1, username.toLowerCase());
             insertUser.setString(2, password);
-            insertUser.setInt(3, AccountType.getValue());
-            insertUser.setInt(4, OrganisationUnitId);
+            insertUser.setInt(3, OrganisationUnitId);
+            insertUser.setInt(4, AccountType.getValue());
             int numRecords = insertUser.executeUpdate();
             if (numRecords == 0){
                 throw new SQLException("Unable to insert new user into database.");
             }
+            success = true;
         } catch (SQLException ex) {
             ex.printStackTrace();
+            success = false;
         }
+        return success;
     }
 
     /**

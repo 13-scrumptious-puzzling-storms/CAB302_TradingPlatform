@@ -21,8 +21,8 @@ public class ITAdministrator extends User {
      * @param hashedPassword User's hashed password
      * @param unit Organisational unit that the user belongs to
      */
-    public void CreateNewMember(String username, String hashedPassword, OrganisationalUnit unit){
-        CreateUser(username, hashedPassword, unit, AccountType.MEMBER);
+    public boolean CreateNewMember(String username, String hashedPassword, OrganisationalUnit unit){
+        return CreateUser(username, hashedPassword, unit, AccountType.MEMBER);
     }
 
     /**
@@ -32,8 +32,8 @@ public class ITAdministrator extends User {
      * @param username Admin's username
      * @param hashedPassword Admin's hashed password
      */
-    public void CreateNewITAdmin(String username, String hashedPassword){
-        CreateUser(username, hashedPassword, this.getOrganisationalUnit(), AccountType.ADMINISTRATOR);
+    public boolean CreateNewITAdmin(String username, String hashedPassword){
+        return CreateUser(username, hashedPassword, this.getOrganisationalUnit(), AccountType.ADMINISTRATOR);
     }
 
     /**
@@ -44,13 +44,17 @@ public class ITAdministrator extends User {
      * @param unit Organisational unit that the user belongs to
      * @param accountType The user's account type (member or admin)
      */
-    private void CreateUser(String username, String hashedPassword, OrganisationalUnit unit, AccountType accountType){
+    private boolean CreateUser(String username, String hashedPassword, OrganisationalUnit unit, AccountType accountType){
+        boolean success;
         try {
-            NetworkManager.SendRequest("JDBCUserDataSource", "addUser",
+            Request response = NetworkManager.GetResponse("JDBCUserDataSource", "addUser",
                     new String[] {username, hashedPassword, accountType.name(), Integer.toString(unit.getID())});
-        } catch (IOException e) {
+            success = Boolean.parseBoolean(response.getArguments()[0]); // Whether the user was successfully added.
+        } catch (Exception e) {
             e.printStackTrace();
+            success = false;
         }
+        return success;
     }
 
     /**

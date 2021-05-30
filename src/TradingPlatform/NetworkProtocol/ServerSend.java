@@ -120,7 +120,8 @@ public class ServerSend implements Runnable {
                         String password = arguments[1];
                         AccountType accountType = AccountType.valueOf(arguments[2]);
                         int OrgUnitId = Integer.parseInt(arguments[3]);
-                        JDBCUserDataSource.addUser(username, password, accountType, OrgUnitId, connection);
+                        boolean success = JDBCUserDataSource.addUser(username, password, accountType, OrgUnitId, connection);
+                        Transmit(new Request(className, methodName, new String[]{ Boolean.toString(success)}));
                         break;
                     }
                     case "changePassword": {

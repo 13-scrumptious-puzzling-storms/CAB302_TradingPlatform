@@ -498,12 +498,13 @@ public class GUIAdmin {
                 if (source == btnAddUser) {
                     setAddUserComponentsEditable(true);
                 } else if (source == btnSaveNewUser) {
-                    //saveUserPressed();
-                    setAddUserComponentsEditable(false);
+                    saveUserPressed();
                 } else if (source == btnAddAsset) {
                     setAddAssetComponentsEditable(true);
                 } else if (source == btnSaveNewAsset) {
                     saveAssetPressed();
+                } else if (source == btnUpdatePassword) {
+                    changePasswordPressed();
                 }
             } else if (src instanceof JComboBox){
                 JComboBox source = (JComboBox) e.getSource();
@@ -511,7 +512,7 @@ public class GUIAdmin {
                     String selectedAccountType = (String)source.getSelectedItem();
                     if (AccountType.ADMINISTRATOR.toString().equals(selectedAccountType)) {
                         addUserIsMember = false;
-                        cboxUserOrgUnitName.setSelectedItem(admin.getOrganisationalUnit().organisationName);
+                        cboxUserOrgUnitName.setSelectedItem(admin.getOrganisationalUnit().getName());
                     }
                     else
                         addUserIsMember = true;
@@ -527,30 +528,37 @@ public class GUIAdmin {
          */
         private void saveUserPressed() {
             if (txtAddUserUsername.getText() != null && !txtAddUserUsername.getText().equals("")
-                    && txtAddUserPassword.getText() != null && !txtAddUserPassword.getText().equals("")) {
+                    && txtAddUserPassword.getText() != null && !txtAddUserPassword.getText().equals("")
+                    && cboxUserOrgUnitName.getSelectedIndex() >= 0) {
                 // Get the text fields (username and password)
                 String username = txtAddUserUsername.getText();
                 String hashedPassword = SHA256.hashPassword(txtAddUserPassword.getText());
 
                 // If member, add new member, else add admin
+                boolean success = false;
                 if (AccountType.MEMBER.toString().equals(cboxUserAccountType.getSelectedItem())){
                     // Get the org unit
                     OrganisationalUnit unit = OrganisationUnits.get(cboxUserOrgUnitName.getSelectedIndex());
                     // Create the new member
-                    admin.CreateNewMember(txtAddUserUsername.getText(), SHA256.hashPassword(txtAddUserPassword.getText()), unit);
+                    success = admin.CreateNewMember(txtAddUserUsername.getText(), SHA256.hashPassword(txtAddUserPassword.getText()), unit);
                 } else if (AccountType.ADMINISTRATOR.toString().equals(cboxUserAccountType.getSelectedItem())){
-                    admin.CreateNewITAdmin(username, hashedPassword);
+                    success = admin.CreateNewITAdmin(username, hashedPassword);
                 }
 
-                JOptionPane.showMessageDialog(pnlAdmin, username + " has been added to " + cboxUserOrgUnitName.getSelectedItem(),
-                        "Change Password", JOptionPane.INFORMATION_MESSAGE);
-                txtAddUserPassword.setText("");
-                txtAddUserUsername.setText("");
-                setAddUserComponentsEditable(false);
-            }
-            else {
-                JOptionPane.showMessageDialog(pnlAdmin, "Please enter enter the user's username and password.",
-                        "Change Password", JOptionPane.WARNING_MESSAGE);
+                // If adding user was successful, display message and clear the fields.
+                if (success) {
+                    JOptionPane.showMessageDialog(pnlAdmin, username + " has been added to " + cboxUserOrgUnitName.getSelectedItem(),
+                            "Add user", JOptionPane.INFORMATION_MESSAGE);
+                    txtAddUserPassword.setText("");
+                    txtAddUserUsername.setText("");
+                    setAddUserComponentsEditable(false);
+                } else { // Adding user was not successful, show error message.
+                    JOptionPane.showMessageDialog(pnlAdmin, username + " could not be added. Please try a different username.",
+                            "Add user", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(pnlAdmin, "Please enter enter the user's username, password, and Organisational Unit.",
+                        "Add user", JOptionPane.WARNING_MESSAGE);
             }
         }
 
@@ -567,10 +575,35 @@ public class GUIAdmin {
                         "New Asset Type", JOptionPane.INFORMATION_MESSAGE);
                 txtAssetName.setText("");
                 setAddAssetComponentsEditable(false);
-            }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(pnlAdmin, "Please enter name of the new asset.",
                         "Create Asset", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+
+        private void changePasswordPressed() {
+            if (txtUpdatePasswordUsername.getText() != null && !txtUpdatePasswordUsername.getText().equals("")
+                    && txtUpdatePasswordPassword.getText() != null && !txtUpdatePasswordPassword.getText().equals("")) {
+
+                // Get the text fields (username and password)
+                String username = txtUpdatePasswordUsername.getText();
+                String hashedPassword = SHA256.hashPassword(txtUpdatePasswordPassword.getText());
+
+                boolean success = admin.ChangeUserPassword(username, hashedPassword);
+                if (success){
+                    JOptionPane.showMessageDialog(pnlAdmin, username + "'s password has been updated.",
+                            "Change password", JOptionPane.INFORMATION_MESSAGE);
+                    txtUpdatePasswordUsername.setText("");
+                    txtUpdatePasswordPassword.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(pnlAdmin, username + "'s password could not be changed. " +
+                                    "Please check for the correct username.",
+                            "Change password", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(pnlAdmin, "Please enter enter the user's username and new password.",
+                        "Change password", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
