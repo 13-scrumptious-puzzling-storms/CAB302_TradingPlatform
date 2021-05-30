@@ -34,6 +34,9 @@ public class OrganisationalUnit implements Serializable {
      * @param organisationID organisation's unique ID
      */
     public OrganisationalUnit(int organisationID){
+        this.organisationID = organisationID;
+
+        // GET CREDITS AND NAME FROM SERVER
     }
 
     /**

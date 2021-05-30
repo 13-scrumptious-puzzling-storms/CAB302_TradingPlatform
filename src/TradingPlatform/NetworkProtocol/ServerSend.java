@@ -2,6 +2,7 @@ package TradingPlatform.NetworkProtocol;
 
 import TradingPlatform.AccountType;
 import TradingPlatform.JDBCDataSources.*;
+import TradingPlatform.OrganisationalUnit;
 import TradingPlatform.Request;
 
 import java.io.BufferedOutputStream;
@@ -35,6 +36,16 @@ public class ServerSend implements Runnable {
                     }
                     case "getCredits": {
                         //ServerSend ...;
+                        break;
+                    }
+                    case "getOrganisationalUnit": {
+                        var DBInterface = new JDBCOrganisationalUnit(connection);
+                        OrganisationalUnit orgUnit = DBInterface.getOrganisationalUnit(Integer.parseInt(arguments[0]));
+                        String[] orgUnitDetails = new String[] {
+                                orgUnit.getName(),
+                                Integer.toString(orgUnit.getCredits())
+                        };
+                        Transmit(new Request(className, methodName, orgUnitDetails));
                         break;
                     }
                     case "getAllOrgs": {
@@ -120,9 +131,10 @@ public class ServerSend implements Runnable {
                         break;
                     }
                     case "adminChangeUserPassword": {
-                        int userId = Integer.parseInt(arguments[0]);
+                        String username = arguments[0];
                         String password = arguments[1];
-                        JDBCUserDataSource.adminChangeUserPassword(userId, password, connection);
+                        boolean success = JDBCUserDataSource.adminChangeUserPassword(username, password, connection);
+                        Transmit(new Request(className, methodName, new String[]{ Boolean.toString(success) }));
                         break;
                     }
                     default:
