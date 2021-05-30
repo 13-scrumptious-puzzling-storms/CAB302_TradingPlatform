@@ -65,7 +65,8 @@ public class GUIOrgHome{
         //JPanel AssetsPanel = new JPanel();
         JScrollPane Assets = GUIMain.tablePane(GUIMain.constructTable(OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID), AssetHeading));
 
-        JButton removeButton = removeButton(panel2, position);
+        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position);
+        JButton removeSellOrderButton = removeSellOrderButton(panel2, position);
         JButton buyButton = buyAssetButton(panel2, position);
         JButton sellButton = sellAssetButton(panel2, position);
         creditsLabel(panel2, position);
@@ -93,12 +94,14 @@ public class GUIOrgHome{
                 JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
                 int selectedTab = tabbedPane.getSelectedIndex();
                 if (selectedTab == 0) {
-                    removeButton.setVisible(true);
+                    removeBuyOrderButton.setVisible(true);
+                    removeSellOrderButton.setVisible(true);
                     buyButton.setVisible(false);
                     sellButton.setVisible(false);
                 }
                 else if (selectedTab == 1) {
-                    removeButton.setVisible(false);
+                    removeBuyOrderButton.setVisible(false);
+                    removeSellOrderButton.setVisible(false);
                     buyButton.setVisible(true);
                     sellButton.setVisible(true);
                 }
@@ -110,14 +113,14 @@ public class GUIOrgHome{
         pageScroll.add(panel2);
     }
 
-    private JButton removeButton(JPanel panel2, GridBagConstraints position){
+    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
-        position.gridx = 1;
+        position.gridx = 2;
         position.gridy = 1;
         position.gridwidth = 3;
         position.anchor = GridBagConstraints.CENTER;
-        JButton removeButton = new JButton("Cancel Buy/Sell Order");
+        JButton removeButton = new JButton("Cancel Buy Order");
         removeButton.setBackground(cust1);
         panel2.add(removeButton, position);
         removeButton.addActionListener(new ActionListener()
@@ -125,7 +128,28 @@ public class GUIOrgHome{
             public void actionPerformed(ActionEvent e)
             {
                 // display buy popup
-                System.out.println("Just pressed the remove button");
+                System.out.println("Just pressed the remove buy button");
+            }
+        });
+        return removeButton;
+    }
+
+    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position){
+        //Create Remove Buy/Sell Button
+        position.insets = new Insets(0, 0, 20, 0);
+        position.gridx = 3;
+        position.gridy = 1;
+        position.gridwidth = 3;
+        position.anchor = GridBagConstraints.CENTER;
+        JButton removeButton = new JButton("Cancel Sell Order");
+        removeButton.setBackground(cust1);
+        panel2.add(removeButton, position);
+        removeButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                // display buy popup
+                System.out.println("Just pressed the remove sell button");
             }
         });
         return removeButton;
@@ -136,7 +160,7 @@ public class GUIOrgHome{
         position.gridwidth = 1;
         position.gridx = 2;
         position.gridy = 1;
-        position.anchor = GridBagConstraints.LINE_START;
+        position.anchor = GridBagConstraints.LINE_END;
         JButton buyButton = new JButton("Buy Assets");
         buyButton.setBackground(cust1);
         panel2.add(buyButton, position);
