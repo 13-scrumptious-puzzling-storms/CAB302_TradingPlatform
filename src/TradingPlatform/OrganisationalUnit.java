@@ -32,7 +32,7 @@ public class OrganisationalUnit implements Serializable {
      * Creates new instance of an organisational unit that already exists in the database
      * @param organisationID organisation's unique ID
      */
-    public OrganisationalUnit(int organisationID) throws IOException, ClassNotFoundException {
+    public OrganisationalUnit(int organisationID) {
         this.organisationID = organisationID;
         this.organisationName = getName(organisationID);
         this.organisationCredit = getCredits(organisationID);
@@ -76,6 +76,10 @@ public class OrganisationalUnit implements Serializable {
         return null;
     }
 
+    public String getName(){
+        return organisationName;
+    }
+
     /**
      * Sets the OrganisationalUnit's credits to credits
      *
@@ -97,6 +101,10 @@ public class OrganisationalUnit implements Serializable {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public int getCredits(){
+        return organisationCredit;
     }
 
     /**
@@ -129,22 +137,28 @@ public class OrganisationalUnit implements Serializable {
      * @return allAssets
      */
     public ArrayList<OrganisationAsset> getAssets() throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[] {String.valueOf(organisationID)});
-        String[][] result = response.getDoubleString();
-        ArrayList<OrganisationAsset> assetCollection = new ArrayList<OrganisationAsset>();
-        for (String[] i : result) {
-            //**Bella can't get any results - coming back to this later
-            System.out.println("method i is: " +i);
-            String asset = "pens";
-            int quantity = 0;
-            assetCollection.add(new OrganisationAsset(organisationID, asset, quantity));
+        try {
+            Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[]{String.valueOf(organisationID)});
+            String[][] result = response.getDoubleString();
+            ArrayList<OrganisationAsset> assetCollection = new ArrayList<OrganisationAsset>();
+            for (String[] i : result) {
+                //**Bella can't get any results - coming back to this later
+                System.out.println("method i is: " + i);
+                String asset = "pens";
+                int quantity = 0;
+                assetCollection.add(new OrganisationAsset(organisationID, asset, quantity));
+            }
+            //OrganisationAsset(int organisationAssetID, int organisationUnitID, AssetType assetType, int quantity)
+            //turn response into ArrayList<>
+            //response.getArguments()[0];
+            //return response.getArguments()[0];
+            return assetCollection;
         }
-        //OrganisationAsset(int organisationAssetID, int organisationUnitID, AssetType assetType, int quantity)
-        //turn response into ArrayList<>
-        //response.getArguments()[0];
-        //return response.getArguments()[0];
+        catch(Exception e){
+            ArrayList<OrganisationAsset> assetCollection = new ArrayList<OrganisationAsset>();
+            return assetCollection;
 
-        return assetCollection;
+        }
     }
 
     /**
