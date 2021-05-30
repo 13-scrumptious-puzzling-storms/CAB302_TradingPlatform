@@ -34,6 +34,10 @@ public class GUIAdmin {
     private JButton btnCreateOrgUnit;
     private JButton btnSaveNewOrgUnit;
 
+    private JComboBox<String> cboxCreditsOrgUnit;
+    private JTextField txtCredits;
+    private JButton btnUpdateCredits;
+
     private final adminActionListener listener = new adminActionListener();
 
     private final ITAdministrator admin;
@@ -65,41 +69,42 @@ public class GUIAdmin {
         pnlAdmin.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
+        position.insets = new Insets(0, 0, 25, 50);
         position.gridy = 0;
         position.gridx = 0;
         position.anchor = GridBagConstraints.CENTER;
-        position.insets = new Insets(0, 0, 25, 50);
         var pnlAddUser = makeAddUserPanel();
         pnlAdmin.add(pnlAddUser, position);
 
         position.gridy = 1;
         position.anchor = GridBagConstraints.CENTER;
-        var pnlAddAsset = makeAddAssetPanel();
-        pnlAdmin.add(pnlAddAsset, position);
-
-        position.gridy = 2;
-        position.anchor = GridBagConstraints.CENTER;
-        position.insets = new Insets(0, 0, 0, 50);
         var pnlChangePassword = makeChangePasswordPanel();
         pnlAdmin.add(pnlChangePassword, position);
 
-        position.gridx = 1;
-        position.gridy = 0;
-        position.anchor = GridBagConstraints.ABOVE_BASELINE;
-        position.insets = new Insets(0, 0, 25, 0);
+        position.insets = new Insets(0, 0, 0, 50);
+        position.gridy = 2;
+        position.anchor = GridBagConstraints.CENTER;
         var pnlCreateOrgUnit = makeCreateOrgUnitPanel();
         pnlAdmin.add(pnlCreateOrgUnit, position);
-//
-//        position.gridy = 1;
-//        position.anchor = GridBagConstraints.ABOVE_BASELINE;
-//        var pnlCreateOrgUnit1 = makeCreateOrgUnitPanel();
-//        pnlAdmin.add(pnlCreateOrgUnit1, position);
-//
-//        position.gridy = 2;
-//        position.anchor = GridBagConstraints.ABOVE_BASELINE;
-//        position.insets = new Insets(0, 0, 0, 0);
+
+        position.gridx = 1;
+        position.insets = new Insets(0, 0, 25, 0);
+//        position.gridy = 0;
+//        position.anchor = GridBagConstraints.CENTER;
 //        var pnlCreateOrgUnit2 = makeCreateOrgUnitPanel();
 //        pnlAdmin.add(pnlCreateOrgUnit2, position);
+
+        position.gridy = 1;
+        position.anchor = GridBagConstraints.CENTER;
+        var pnlEditOrgUnitCredits = makeEditOrgUnitCreditsPanel();
+        pnlAdmin.add(pnlEditOrgUnitCredits, position);
+
+        position.gridy = 2;
+        position.anchor = GridBagConstraints.CENTER;
+        position.insets = new Insets(0, 0, 0, 0);
+        var pnlAddAsset = makeAddAssetPanel();
+        pnlAdmin.add(pnlAddAsset, position);
+
     }
 
     //region Add User
@@ -303,8 +308,8 @@ public class GUIAdmin {
         pnlUpdatePasswordFields.setLayout(layout);
         pnlUpdatePasswordFields.setBackground(DARK_JUNGLE_GREEN);
 
-        pnlUpdatePasswordFields.setPreferredSize(new Dimension(PANEL_PREFERRED_WIDTH, BUTTON_PREFERRED_HEIGHT));
-        pnlUpdatePasswordFields.setMinimumSize(new Dimension(PANEL_MIN_WIDTH, BUTTON_PREFERRED_HEIGHT));
+        pnlUpdatePasswordFields.setPreferredSize(new Dimension(PANEL_PREFERRED_WIDTH, 50));
+        pnlUpdatePasswordFields.setMinimumSize(new Dimension(PANEL_MIN_WIDTH, 50));
 
         // Turn on automatically adding gaps between components
         layout.setAutoCreateGaps(true);
@@ -320,7 +325,7 @@ public class GUIAdmin {
 
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-//
+
         // The sequential group in turn contains two parallel groups.
         // One parallel group contains the labels, the other the text fields.
         hGroup.addGroup(layout.createParallelGroup().addComponent(lblUsername).addComponent(lblPassword));
@@ -362,10 +367,6 @@ public class GUIAdmin {
         btnUpdatePassword.setBackground(cust1);
 
         btnUpdatePassword.addActionListener(listener);
-
-        position.gridx = 0;
-        position.anchor = GridBagConstraints.LINE_START;
-        pnlButton.add(btnUpdatePassword, position);
 
         position.gridx = 1;
         position.anchor = GridBagConstraints.LINE_END;
@@ -638,7 +639,131 @@ public class GUIAdmin {
 
     //endregion
 
+    //region Edit Organisational Unit's Credits
+
+    /**
+     * Creates the whole edit Org Unit credits panel, including the label of the panel, the edit fields, and the buttons
+     * @return an edit Org Unit credits panel
+     */
+    private JPanel makeEditOrgUnitCreditsPanel() {
+        // pnlEditCredits will contain 3 sub-sections: The Panel title, the editable fields, and the save button
+        JPanel pnlEditCredits = new JPanel();
+        pnlEditCredits.setLayout(new GridBagLayout());
+        pnlEditCredits.setBackground(DARK_JUNGLE_GREEN);
+        pnlEditCredits.setBorder(CreatePanelBorder("Manage Organisational Unit's Credits"));
+        GridBagConstraints position = new GridBagConstraints();
+
+        position.gridy = 1;
+        position.insets = new Insets(0, 0, 20, 0);
+        pnlEditCredits.add(makeEditOrgUnitCreditsFieldsPanel(), position);
+
+        position.gridy = 2;
+        position.insets = new Insets(0, 0, 0, 0);
+        pnlEditCredits.add(makeEditOrgUnitCreditsButtonsPanel(), position);
+
+        return pnlEditCredits;
+    }
+
+    /**
+     * Adds the text components used to edit Org Unit credits to a panel.
+     * @return a panel containing labeled text components used to edit Org Unit credits.
+     */
+    private JPanel makeEditOrgUnitCreditsFieldsPanel() {
+        // All the text edit fields will be added to pnlCreateOrgUnitFields
+        JPanel pnlCreateOrgUnitFields = new JPanel();
+        GroupLayout layout = new GroupLayout(pnlCreateOrgUnitFields);
+        pnlCreateOrgUnitFields.setLayout(layout);
+        pnlCreateOrgUnitFields.setBackground(DARK_JUNGLE_GREEN);
+        pnlCreateOrgUnitFields.setPreferredSize(new Dimension(PANEL_PREFERRED_WIDTH, 50));
+        pnlCreateOrgUnitFields.setMinimumSize(new Dimension(PANEL_MIN_WIDTH, 50));
+
+        // Turn on automatically adding gaps between components
+        layout.setAutoCreateGaps(true);
+
+        JLabel lblOrgName = new JLabel("Organisational Unit");
+        JLabel lblCredits = new JLabel("Credits");
+
+        lblOrgName.setForeground(Color.white);
+        lblCredits.setForeground(Color.white);
+
+        cboxCreditsOrgUnit = new JComboBox<>(AccountTypes);
+        cboxCreditsOrgUnit = new JComboBox<>(getOrgUnitNames());
+        cboxCreditsOrgUnit.setEditable(false);
+        txtCredits = new JTextField(20);
+
+        cboxCreditsOrgUnit.addActionListener(listener);
+        cboxCreditsOrgUnit.setSelectedIndex(0);
+
+        // Create a sequential group for the horizontal axis.
+        GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+
+        // The sequential group in turn contains two parallel groups.
+        // One parallel group contains the labels, the other the text fields.
+        hGroup.addGroup(layout.createParallelGroup().addComponent(lblOrgName).addComponent(lblCredits));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(cboxCreditsOrgUnit).addComponent(txtCredits));
+        layout.setHorizontalGroup(hGroup);
+
+        // Create a sequential group for the vertical axis.
+        GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+
+        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(lblOrgName).addComponent(cboxCreditsOrgUnit));
+        vGroup.addGroup((layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(lblCredits).addComponent(txtCredits)));
+        layout.setVerticalGroup(vGroup);
+
+        return pnlCreateOrgUnitFields;
+    }
+
+    /**
+     * Adds the edit Org Unit credits button to a panel
+     * @return a panel containing edit Org Unit credits button.
+     */
+    private JPanel makeEditOrgUnitCreditsButtonsPanel(){
+        JPanel pnlButton = new JPanel();
+        pnlButton.setLayout(new GridBagLayout());
+        pnlButton.setBackground(DARK_JUNGLE_GREEN);
+        pnlButton.setPreferredSize(new Dimension(PANEL_PREFERRED_WIDTH, BUTTON_PREFERRED_HEIGHT));
+        pnlButton.setMinimumSize(new Dimension(PANEL_MIN_WIDTH, BUTTON_MIN_HEIGHT));
+        GridBagConstraints position = new GridBagConstraints();
+
+        btnUpdateCredits = new JButton("Update Credits");
+        btnUpdateCredits.setPreferredSize(new Dimension(BUTTON_PREFERRED_WIDTH, BUTTON_PREFERRED_HEIGHT));
+        btnUpdateCredits.setBackground(cust1);
+
+        btnUpdateCredits.addActionListener(listener);
+
+        position.gridx = 1;
+        position.anchor = GridBagConstraints.LINE_END;
+        pnlButton.add(btnUpdateCredits, position);
+
+        // add blank component to fill the space between the buttons
+        position.gridx = 1;
+        position.anchor = GridBagConstraints.CENTER;
+        position.weightx = 100.0;
+        position.gridwidth = GridBagConstraints.RELATIVE;
+        pnlButton.add(Box.createGlue(), position);
+
+        return pnlButton;
+    }
+
+    //endregion
+
     //region Helper methods
+
+    /**
+     * Updates the available fields for the org unit combo boxes.
+     */
+    private void updateOrgUnitComboBoxes(){
+        int userOrgIndex = cboxUserOrgUnitName.getSelectedIndex();
+        int creditOrgIndex = cboxCreditsOrgUnit.getSelectedIndex();
+
+        var orgUnitNamesModel = new DefaultComboBoxModel<>(getOrgUnitNames());
+        cboxUserOrgUnitName.setModel(orgUnitNamesModel);
+        cboxUserOrgUnitName.setSelectedIndex(userOrgIndex);
+        cboxCreditsOrgUnit.setModel(orgUnitNamesModel);
+        cboxCreditsOrgUnit.setSelectedIndex(creditOrgIndex);
+    }
 
     /**
      * @return a String[] of the organisation unit names
@@ -686,6 +811,8 @@ public class GUIAdmin {
                     setCreateOrgUnitComponentsEditable(true);
                 } else if (source == btnSaveNewOrgUnit) {
                     saveOrgUnitPressed();
+                } else if (source == btnUpdateCredits) {
+                    updateCreditsPressed();
                 }
             } else if (src instanceof JComboBox){
                 JComboBox source = (JComboBox) e.getSource();
@@ -698,6 +825,10 @@ public class GUIAdmin {
                     else
                         addUserIsMember = true;
                     setAddUserComponentsEditable(true);
+                } else if (source == cboxCreditsOrgUnit){
+                    // Set the credits text to the org unit's current credits
+                    var orgUnit = OrganisationUnits.get(cboxCreditsOrgUnit.getSelectedIndex());
+                    txtCredits.setText(Integer.toString(orgUnit.getCredits()));
                 }
             }
         }
@@ -810,9 +941,7 @@ public class GUIAdmin {
 
                     // Add the organisational unit to the combo box list
                     OrganisationUnits.add(new OrganisationalUnit(OrgUnitId));
-                    int selectedIndex = cboxUserOrgUnitName.getSelectedIndex();
-                    cboxUserOrgUnitName.setModel(new DefaultComboBoxModel<>(getOrgUnitNames()));
-                    cboxUserOrgUnitName.setSelectedIndex(selectedIndex);
+                    updateOrgUnitComboBoxes();
                 } else {
                     JOptionPane.showMessageDialog(pnlAdmin, orgUnitName + " could not be added. " +
                                     "Please check that the organisation unit does not already exist.",
@@ -821,6 +950,33 @@ public class GUIAdmin {
             } else {
                 JOptionPane.showMessageDialog(pnlAdmin, "Please enter name of the new organisational unit.",
                         "Create Organisational Unit", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+
+        /**
+         * When the save update Credits button is pressed, check that all fields are filled,
+         * and that the credits text is an int. If they are, create a new org unit type.
+         */
+        private void updateCreditsPressed() {
+            if (txtCredits.getText() != null && !txtCredits.getText().equals("")) {
+                int credits;
+                try {
+                    credits = Integer.parseInt(txtCredits.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(pnlAdmin, txtCredits.getText() + " is not a valid credit amount. " +
+                                    "Please type in a whole number.",
+                            "Edit Credits", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                OrganisationalUnit orgUnit = OrganisationUnits.get(cboxCreditsOrgUnit.getSelectedIndex());
+                admin.EditOrganisationalUnitCredits(orgUnit, credits);
+
+                JOptionPane.showMessageDialog(pnlAdmin, orgUnit.getName() + " now has " + credits + " credits!",
+                        "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
+
+            } else {
+                JOptionPane.showMessageDialog(pnlAdmin, "Please enter the number of credits the the organisational unit will be given.",
+                        "Edit Credits", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
