@@ -27,16 +27,16 @@ public class GUIAdmin {
 
     private final ITAdministrator admin;
     private final String[] AccountTypes = new String[]{AccountType.MEMBER.toString(), AccountType.ADMINISTRATOR.toString()};
-    private ArrayList<OrganisationalUnit> OrganisationUnits = new ArrayList<>();
+    private final ArrayList<OrganisationalUnit> OrganisationUnits = ITAdministrator.GetAllOrgUnits();
 
     private boolean addUserIsMember = true;
 
     public GUIAdmin(JPanel AdminTab, ITAdministrator admin){
 
-        // NEED TO GET ALL THE ORG UNITS
-        OrganisationUnits.add(admin.getOrganisationalUnit());
-        OrganisationUnits.add(new OrganisationalUnit("Dummy Org1", 0));
-        OrganisationUnits.add(new OrganisationalUnit("Dummy Org2", 0));
+//        // NEED TO GET ALL THE ORG UNITS
+//        OrganisationUnits.add(admin.getOrganisationalUnit());
+//        OrganisationUnits.add(new OrganisationalUnit("Dummy Org1", 0));
+//        OrganisationUnits.add(new OrganisationalUnit("Dummy Org2", 0));
 
         this.admin = admin;
 
@@ -69,6 +69,7 @@ public class GUIAdmin {
 
     }
 
+    //region Add User
     /**
      * Creates the whole Add User panel, including the label of the panel, the edit fields, and the buttons
      * @return an Add User panel
@@ -227,6 +228,9 @@ public class GUIAdmin {
         }
     }
 
+    //endregion
+
+    //region Add Asset type
     /**
      * Creates the whole Add asset type panel, including the label of the panel, the edit fields, and the buttons
      * @return an Add Asset panel
@@ -350,6 +354,8 @@ public class GUIAdmin {
         else
             txtAssetName.setBackground(UIManager.getColor("TextField.Background"));
     }
+
+    //endregion
 
     /**
      * @return a String[] of the organisation unit names

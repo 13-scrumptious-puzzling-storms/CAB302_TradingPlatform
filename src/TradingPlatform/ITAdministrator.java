@@ -1,6 +1,7 @@
 package TradingPlatform;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * An IT Administrator is a user that has extra permissions to manage Organisational units and users.
@@ -107,6 +108,42 @@ public class ITAdministrator extends User {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gets the details of all the organisational units. This method is in this class, because it is only
+     * used on the Administrator page for combo box drop downs.
+     * @return A
+     */
+    public static ArrayList<OrganisationalUnit> GetAllOrgUnits(){
+        // Get the user's data from the server
+        Request response = null;
+        try {
+            response = NetworkManager.GetResponse("OrganisationalUnitServer", "getAllOrgs");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        var allOrgUnits = new ArrayList<OrganisationalUnit>();
+
+        // Check for not null response
+        if (response != null && response.getDoubleString() != null) {
+            String[][] allOrgsDetails = response.getDoubleString();
+
+            // Convert each String[] into an orgUnit
+            for (String[] orgDetails : allOrgsDetails) {
+                int orgId = Integer.parseInt(orgDetails[0]);
+                String name = orgDetails[1];
+                int credits = Integer.parseInt(orgDetails[2]);
+                var orgUnit = new OrganisationalUnit(name, credits);
+                orgUnit.setId(orgId);
+
+                // Add it to the list of orgUnits
+                allOrgUnits.add(orgUnit);
+            }
+        }
+
+        return allOrgUnits;
     }
 
     @Override

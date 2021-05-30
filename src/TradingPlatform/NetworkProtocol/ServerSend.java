@@ -25,16 +25,24 @@ public class ServerSend implements Runnable {
         switch (className) {
             case "OrganisationalUnitServer":
                 switch (methodName) {
-                    case "getName":
+                    case "getName": {
                         // need to get Server Send working
                         JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(connection);
-                        Transmit(new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
+                        Transmit(new Request(className, methodName, new String[]{String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
                         //ServerSend(OrganisationalUnitServer.getName(Integer.parseInt(arguments[0])));
                         //ServerSend ...;
                         break;
-                    case "getCredits":
+                    }
+                    case "getCredits": {
                         //ServerSend ...;
                         break;
+                    }
+                    case "getAllOrgs": {
+                        var DBInterface = new JDBCOrganisationalUnit(connection);
+                        String[][] allOrgUnits = DBInterface.getAllOrganisationalUnits();
+                        Transmit(new Request(className, methodName, allOrgUnits));
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;
