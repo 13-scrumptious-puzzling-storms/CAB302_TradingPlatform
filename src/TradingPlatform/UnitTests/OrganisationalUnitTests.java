@@ -69,7 +69,7 @@ public class OrganisationalUnitTests {
     @Test
     public void UpdateOrganisationalUnitCredits1(){
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
-        unit.UpdateOrganisationalunitCredits( 1, 1276);
+        unit.UpdateOrganisationalUnitCredits( 1, 1276);
     }
 
 
@@ -77,7 +77,7 @@ public class OrganisationalUnitTests {
     public void UpdateOrganisationalUnitCredits2(){
         int credits = 230;
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
-        unit.UpdateOrganisationalunitCredits( 1, credits);
+        unit.UpdateOrganisationalUnitCredits( 1, credits);
         assert(unit.getOrganisationalUnitCredits(1) == credits);
     }
 

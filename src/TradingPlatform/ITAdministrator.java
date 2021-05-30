@@ -21,8 +21,8 @@ public class ITAdministrator extends User {
      * @param hashedPassword User's hashed password
      * @param unit Organisational unit that the user belongs to
      */
-    public void CreateNewMember(String username, String hashedPassword, OrganisationalUnit unit){
-        CreateUser(username, hashedPassword, unit, AccountType.MEMBER);
+    public boolean CreateNewMember(String username, String hashedPassword, OrganisationalUnit unit){
+        return CreateUser(username, hashedPassword, unit, AccountType.MEMBER);
     }
 
     /**
@@ -32,8 +32,8 @@ public class ITAdministrator extends User {
      * @param username Admin's username
      * @param hashedPassword Admin's hashed password
      */
-    public void CreateNewITAdmin(String username, String hashedPassword){
-        CreateUser(username, hashedPassword, this.getOrganisationalUnit(), AccountType.ADMINISTRATOR);
+    public boolean CreateNewITAdmin(String username, String hashedPassword){
+        return CreateUser(username, hashedPassword, this.getOrganisationalUnit(), AccountType.ADMINISTRATOR);
     }
 
     /**
@@ -44,13 +44,36 @@ public class ITAdministrator extends User {
      * @param unit Organisational unit that the user belongs to
      * @param accountType The user's account type (member or admin)
      */
-    private void CreateUser(String username, String hashedPassword, OrganisationalUnit unit, AccountType accountType){
+    private boolean CreateUser(String username, String hashedPassword, OrganisationalUnit unit, AccountType accountType){
+        boolean success;
         try {
-            NetworkManager.SendRequest("JDBCUserDataSource", "addUser",
+            Request response = NetworkManager.GetResponse("JDBCUserDataSource", "addUser",
                     new String[] {username, hashedPassword, accountType.name(), Integer.toString(unit.getID())});
-        } catch (IOException e) {
+            success = Boolean.parseBoolean(response.getArguments()[0]); // Whether the user was successfully added.
+        } catch (Exception e) {
             e.printStackTrace();
+            success = false;
         }
+        return success;
+    }
+
+    /**
+     * Creates a new organisational unit and adds it to the server.
+     * @param unitName The name of the new organisational unit.
+     * @return the orgUnitId of the created org, or -1 on failure.
+     */
+    public int CreateOrganisationalUnit(String unitName){
+        int newOrgId = -1;
+        try {
+            // Create a new orgUnit with 0 credits.
+            Request response = NetworkManager.GetResponse("OrganisationalUnitServer", "addOrgUnit",
+                    new String[] {unitName, "0"});
+            newOrgId = Integer.parseInt(response.getArguments()[0]); // Whether the user was successfully added.
+        } catch (Exception e) {
+            e.printStackTrace();
+            newOrgId = -1;
+        }
+        return newOrgId;
     }
 
     /**
@@ -59,7 +82,7 @@ public class ITAdministrator extends User {
      * @param unit The unit that will be edited.
      * @param credits The new amount of credits the unit will have.
      */
-    public void EditOrganisationalUnits(OrganisationalUnit unit, int credits){
+    public void EditOrganisationalUnitCredits(OrganisationalUnit unit, int credits){
         // Update the client program OrganisationalUnit instance's credits
         unit.setCredits(credits);
 
@@ -75,10 +98,10 @@ public class ITAdministrator extends User {
     /**
      * Edits the number of an asset that an organisational unit has.
      *
-     * @param oAsset The organisation asset that will be edited.
+     * @param assetType The type of asset that will be edited.
      * @param numAsset The new number of the asset that the organisation unit will have.
      */
-    public void EditOrganisationalAsset(OrganisationAsset oAsset, int numAsset){
+    public void EditOrganisationalAsset(AssetType assetType, int numAsset){
         // NOT YET IMPLEMENTED -- OrganisationAsset doesn't have a setQuantity method
     }
 

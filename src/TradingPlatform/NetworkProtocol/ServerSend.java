@@ -39,6 +39,13 @@ public class ServerSend implements Runnable {
                         Transmit(new Request(className, methodName, new String[]{String.valueOf(DBInterface.getOrganisationalUnitCredits(Integer.parseInt(arguments[0])))}));
                         break;
                     }
+                    case "setCredits": {
+                        JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(connection);
+                        int orgUnitId = Integer.parseInt(arguments[0]);
+                        int newCredits = Integer.parseInt(arguments[1]);
+                        DBInterface.UpdateOrganisationalUnitCredits(orgUnitId, newCredits);
+                        break;
+                    }
                     case "getOrganisationalUnit": {
                         var DBInterface = new JDBCOrganisationalUnit(connection);
                         OrganisationalUnit orgUnit = DBInterface.getOrganisationalUnit(Integer.parseInt(arguments[0]));
@@ -53,6 +60,12 @@ public class ServerSend implements Runnable {
                         var DBInterface = new JDBCOrganisationalUnit(connection);
                         String[][] allOrgUnits = DBInterface.getAllOrganisationalUnits();
                         Transmit(new Request(className, methodName, allOrgUnits));
+                        break;
+                    }
+                    case "addOrgUnit": {
+                        var DBInterface = new JDBCOrganisationalUnit(connection);
+                        int newOrgId = DBInterface.addOrganisationalUnit(arguments[0], Integer.parseInt(arguments[1]));
+                        Transmit(new Request(className, methodName, new String[]{ Integer.toString(newOrgId) }));
                         break;
                     }
                     default:
@@ -121,7 +134,8 @@ public class ServerSend implements Runnable {
                         String password = arguments[1];
                         AccountType accountType = AccountType.valueOf(arguments[2]);
                         int OrgUnitId = Integer.parseInt(arguments[3]);
-                        JDBCUserDataSource.addUser(username, password, accountType, OrgUnitId, connection);
+                        boolean success = JDBCUserDataSource.addUser(username, password, accountType, OrgUnitId, connection);
+                        Transmit(new Request(className, methodName, new String[]{ Boolean.toString(success)}));
                         break;
                     }
                     case "changePassword": {
