@@ -18,6 +18,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private static final String ORGID_HEADING = "OrganisationUnitID";
 
     private static final String GET_ALL_ORGANISATIONALUNIT_NAMES = "SELECT OrganisationUnitID, name, credits FROM OrganisationUnit";
+    private static final String GET_NUM_ORGANISATIONALUNITS_WITH_NAME = "SELECT COUNT(*) FROM OrganisationUnit where name=?";
 
     private static final String NAME_HEADING = "name";
     private static final String CREDITS_HEADING = "credits";
@@ -31,6 +32,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private PreparedStatement getOrganisationalUnit;
     private PreparedStatement getNewOrganisationalUnitID;
     private PreparedStatement getAllOrganisationUnitNames;
+    private PreparedStatement getNumOrganisationalUnitsWithName;
 
 
 
@@ -49,6 +51,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
             getOrganisationalUnitCredits = connection.prepareStatement(GET_ORGANISATIONALUNIT_CREDITS);
             getNewOrganisationalUnitID = connection.prepareStatement(GET_NEW_ORGANISATIONALUNIT_ID);
             getAllOrganisationUnitNames = connection.prepareStatement(GET_ALL_ORGANISATIONALUNIT_NAMES);
+            getNumOrganisationalUnitsWithName = connection.prepareStatement(GET_NUM_ORGANISATIONALUNITS_WITH_NAME);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -56,6 +59,13 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
     public int addOrganisationalUnit(String orgName, int orgCredits) {
         try {
+            // Check that there are no orgUnits with the given name
+            getNumOrganisationalUnitsWithName.setString(1, orgName);
+            ResultSet rs = getNumOrganisationalUnitsWithName.getResultSet();
+            if (rs.next())
+                if (rs.getInt(1) != 0)
+                    return -1; // There is already an org with the given name
+
             addOrganisationalUnit.clearParameters();
             addOrganisationalUnit.setString(1, orgName);
             addOrganisationalUnit.setInt(2, orgCredits);
@@ -161,6 +171,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         }
         return orgNames.toArray(new String[orgNames.size()][]);
     }
+
 
     //WHAT TO DO WITH THESE!?
     @Override

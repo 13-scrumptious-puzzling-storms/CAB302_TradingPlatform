@@ -58,6 +58,25 @@ public class ITAdministrator extends User {
     }
 
     /**
+     * Creates a new organisational unit and adds it to the server.
+     * @param unitName The name of the new organisational unit.
+     * @return the orgUnitId of the created org, or -1 on failure.
+     */
+    public int CreateOrganisationalUnit(String unitName){
+        int newOrgId = -1;
+        try {
+            // Create a new orgUnit with 0 credits.
+            Request response = NetworkManager.GetResponse("OrganisationalUnitServer", "addOrgUnit",
+                    new String[] {unitName, "0"});
+            newOrgId = Integer.parseInt(response.getArguments()[0]); // Whether the user was successfully added.
+        } catch (Exception e) {
+            e.printStackTrace();
+            newOrgId = -1;
+        }
+        return newOrgId;
+    }
+
+    /**
      * Edits the number of credits an organisational unit has.
      *
      * @param unit The unit that will be edited.
@@ -79,10 +98,10 @@ public class ITAdministrator extends User {
     /**
      * Edits the number of an asset that an organisational unit has.
      *
-     * @param oAsset The organisation asset that will be edited.
+     * @param assetType The type of asset that will be edited.
      * @param numAsset The new number of the asset that the organisation unit will have.
      */
-    public void EditOrganisationalAsset(OrganisationAsset oAsset, int numAsset){
+    public void EditOrganisationalAsset(AssetType assetType, int numAsset){
         // NOT YET IMPLEMENTED -- OrganisationAsset doesn't have a setQuantity method
     }
 

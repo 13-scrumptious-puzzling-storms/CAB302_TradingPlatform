@@ -54,6 +54,12 @@ public class ServerSend implements Runnable {
                         Transmit(new Request(className, methodName, allOrgUnits));
                         break;
                     }
+                    case "addOrgUnit": {
+                        var DBInterface = new JDBCOrganisationalUnit(connection);
+                        int newOrgId = DBInterface.addOrganisationalUnit(arguments[0], Integer.parseInt(arguments[1]));
+                        Transmit(new Request(className, methodName, new String[]{ Integer.toString(newOrgId) }));
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;
