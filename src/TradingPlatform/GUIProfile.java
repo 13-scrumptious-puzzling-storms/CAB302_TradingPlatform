@@ -268,7 +268,7 @@ public class GUIProfile {
         private void savePressed() {
             if (txtCurrentPassword.getText() != null && !txtCurrentPassword.getText().equals("")
                 && txtNewPassword.getText() != null && !txtNewPassword.getText().equals("")) {
-                if (user.ChangePassword(txtCurrentPassword.getText(), txtNewPassword.getText())){
+                if (user.ChangePassword(SHA256.hashPassword(txtCurrentPassword.getText()), SHA256.hashPassword(txtNewPassword.getText()))){
                     JOptionPane.showMessageDialog(pnlProfile, "Your password has been changed!",
                             "Change Password", JOptionPane.INFORMATION_MESSAGE);
                     setPasswordFieldsEditable(false);
