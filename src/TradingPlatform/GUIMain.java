@@ -99,13 +99,14 @@ public class GUIMain extends JFrame {
         JPanel homeTab = new JPanel();
         new GUIHome(homeTab);
 
-        new GUIOrgHome(orgTab);
+        JPanel orgHomeTab = new JPanel();
+        new GUIOrgHome(orgHomeTab, user);
 
         JPanel profileTab = new JPanel();
         new GUIProfile(profileTab, user);
 
         pagePane.add("Home", homeTab);
-        pagePane.add("Organisation Home", orgTab);
+        pagePane.add("Organisation Home", orgHomeTab);
         pagePane.add("My Profile", profileTab);
 
         if (user.getAccountType() == AccountType.ADMINISTRATOR){
@@ -144,8 +145,8 @@ public class GUIMain extends JFrame {
         homeTab.setBackground(DARK_JUNGLE_GREEN);
         homeTab.setForeground(Color.LIGHT_GRAY);
 
-        orgTab.setBackground(DARK_JUNGLE_GREEN);
-        orgTab.setForeground(Color.LIGHT_GRAY);
+        orgHomeTab.setBackground(DARK_JUNGLE_GREEN);
+        orgHomeTab.setForeground(Color.LIGHT_GRAY);
 
         profileTab.setBackground(DARK_JUNGLE_GREEN);
         profileTab.setForeground(Color.LIGHT_GRAY);

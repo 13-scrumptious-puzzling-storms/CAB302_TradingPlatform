@@ -117,10 +117,13 @@ public class OrganisationalUnit implements Serializable {
 
     /**
      * Returns entire set of assets owned by the organisational unit
-     * @param organisationID Organisational Unit's unique ID
      * @return allAssets
      */
-    public ArrayList<OrganisationAsset> getAssets(int organisationID){
+    public ArrayList<OrganisationAsset> getAssets() throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("OrganisationalUnitServer", "getAssets", new String[] {String.valueOf(organisationID)});
+        //turn response into ArrayList<>
+        //response.getArguments()[0];
+        //return response.getArguments()[0];
         return assetCollection;
     }
 
