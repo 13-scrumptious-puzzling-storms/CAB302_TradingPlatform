@@ -17,7 +17,6 @@ public class OrganisationalUnit implements Serializable {
     String organisationName;
     int organisationCredit;
     int organisationID;
-    ArrayList<OrganisationAsset> assetCollection;
 
     /**
      * Creates new instance of an organisational unit
@@ -30,13 +29,13 @@ public class OrganisationalUnit implements Serializable {
     }
 
     /**
-     * Creates new instance of an organisational unit
+     * Creates new instance of an organisational unit that already exists in the database
      * @param organisationID organisation's unique ID
      */
-    public OrganisationalUnit(int organisationID){
+    public OrganisationalUnit(int organisationID) throws IOException, ClassNotFoundException {
         this.organisationID = organisationID;
-
-        // GET CREDITS AND NAME FROM SERVER
+        this.organisationName = getName(organisationID);
+        this.organisationCredit = getCredits(organisationID);
     }
 
     /**
@@ -51,14 +50,6 @@ public class OrganisationalUnit implements Serializable {
         return organisationID;
     }
 
-    /**
-     * Sets the OrganisationalUnit's ID to id ****DELETE??***
-     *
-     * @param id the id of the Organisational Unit
-     */
-    public void setId(int id) {
-        organisationID = id;
-    }
 
     /**
      * Sets the OrganisationalUnit's name to name
@@ -74,16 +65,15 @@ public class OrganisationalUnit implements Serializable {
      *
      * @return  name of the given Organisational Unit
      */
-    public static String getName(int orgID) throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
-        return response.getArguments()[0];
-    }
-
-    /**
-     * @return the name of this Organisational unit
-     */
-    public String getName(){
-        return organisationName;
+    public static String getName(int orgID){
+        try {
+            Request response = networkManager.GetResponse("OrganisationalUnitServer", "getName", new String[]{String.valueOf(orgID)});
+            return response.getArguments()[0];
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -98,7 +88,16 @@ public class OrganisationalUnit implements Serializable {
     /**
      * Gets the OrganisationalUnit's organisationCredit
      */
-    public int getCredits() { return organisationCredit; }
+    public int getCredits(int orgID) {
+        try {
+            Request response = networkManager.GetResponse("OrganisationalUnitServer", "getCredits", new String[]{String.valueOf(orgID)});
+            return Integer.valueOf(response.getArguments()[0]);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     /**
      * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
@@ -130,10 +129,21 @@ public class OrganisationalUnit implements Serializable {
      * @return allAssets
      */
     public ArrayList<OrganisationAsset> getAssets() throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("OrganisationalUnitServer", "getAssets", new String[] {String.valueOf(organisationID)});
+        Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[] {String.valueOf(organisationID)});
+        String[][] result = response.getDoubleString();
+        ArrayList<OrganisationAsset> assetCollection = new ArrayList<OrganisationAsset>();
+        for (String[] i : result) {
+            //**Bella can't get any results - coming back to this later
+            System.out.println("method i is: " +i);
+            String asset = "pens";
+            int quantity = 0;
+            assetCollection.add(new OrganisationAsset(organisationID, asset, quantity));
+        }
+        //OrganisationAsset(int organisationAssetID, int organisationUnitID, AssetType assetType, int quantity)
         //turn response into ArrayList<>
         //response.getArguments()[0];
         //return response.getArguments()[0];
+
         return assetCollection;
     }
 

@@ -166,12 +166,8 @@ public class GUIMain extends JFrame {
 
     }
 
-
-
-    public static JScrollPane constructTable(String[][] data, String[] headingType){
-        DefaultTableModel model = new DefaultTableModel(data, headingType);
-        JTable sell_buyTable = new JTable(model);
-        JScrollPane tradesScrollTable = new JScrollPane(sell_buyTable);
+    public static JScrollPane tablePane(JTable table){
+        JScrollPane tradesScrollTable = new JScrollPane(table);
         tradesScrollTable.setBackground(cust3);
         tradesScrollTable.getVerticalScrollBar().setBackground(cust2);
         tradesScrollTable.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
@@ -180,10 +176,16 @@ public class GUIMain extends JFrame {
                 this.thumbColor = cust1;
             }
         });
-        JTableHeader anHeader = sell_buyTable.getTableHeader();
+        return tradesScrollTable;
+    }
+
+    public static JTable constructTable(String[][] data, String[] headingType){
+        DefaultTableModel model = new DefaultTableModel(data, headingType);
+        JTable table = new JTable(model);
+        JTableHeader anHeader = table.getTableHeader();
         anHeader.setBackground(cust1);
 
-        return tradesScrollTable;
+        return table;
     }
 
 }

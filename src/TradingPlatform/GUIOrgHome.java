@@ -40,14 +40,11 @@ public class GUIOrgHome{
         this.organisationalUnit = user.getOrganisationalUnit();
         this.organisationalUnitID = organisationalUnit.getID();
         this.orgName = organisationalUnit.getName(organisationalUnitID);
-        this.credits = organisationalUnit.getCredits();
+        this.credits = organisationalUnit.getCredits(organisationalUnitID);
         orgHomePanel(OrgHomeTab);
-
     }
 
     public void orgHomePanel(JPanel panel2) throws IOException, ClassNotFoundException {
-        //////USER INFO **
-        int orgID = 1;
 
         JTabbedPane tradesAssets = new JTabbedPane();
         tradesAssets.setBackground(cust3);
@@ -55,8 +52,10 @@ public class GUIOrgHome{
         GridBagConstraints position = new GridBagConstraints();
 
         //Retrieve trades buy and sell tables for organisational unit
-        JScrollPane TradesPaneSell = GUIMain.constructTable(TradeManager.getSellOrders(orgID),SellHeading );
-        JScrollPane TradesPaneBuy = GUIMain.constructTable(TradeManager.getBuyOrders(orgID), BuyHeading);
+        JTable sellTable = GUIMain.constructTable(TradeManager.getSellOrders(organisationalUnitID),SellHeading);
+        JScrollPane TradesPaneSell = GUIMain.tablePane(sellTable);
+        JTable buyTable = GUIMain.constructTable(TradeManager.getBuyOrders(organisationalUnitID), BuyHeading);
+        JScrollPane TradesPaneBuy = GUIMain.tablePane(buyTable);
 
         //Set up Trades tables in Trades tab
         JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
@@ -64,7 +63,7 @@ public class GUIOrgHome{
         tablesPane.setResizeWeight(0.5);
 
         //JPanel AssetsPanel = new JPanel();
-        JScrollPane Assets = GUIMain.constructTable(OrganisationAsset.getOrganisationalUnitAssetTable(orgID), AssetHeading);
+        JScrollPane Assets = GUIMain.tablePane(GUIMain.constructTable(OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID), AssetHeading));
 
         JButton removeButton = removeButton(panel2, position);
         JButton buyButton = buyAssetButton(panel2, position);
@@ -118,7 +117,7 @@ public class GUIOrgHome{
         position.gridy = 1;
         position.gridwidth = 3;
         position.anchor = GridBagConstraints.CENTER;
-        JButton removeButton = new JButton("Remove Buy/Sell Order");
+        JButton removeButton = new JButton("Cancel Buy/Sell Order");
         removeButton.setBackground(cust1);
         panel2.add(removeButton, position);
         removeButton.addActionListener(new ActionListener()

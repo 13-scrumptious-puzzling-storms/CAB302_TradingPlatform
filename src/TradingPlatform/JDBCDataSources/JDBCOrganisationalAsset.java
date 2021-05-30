@@ -23,6 +23,7 @@ public class JDBCOrganisationalAsset {
     private static final String ASSETTYPEID_HEADING = "assetTypeID";
     private static final String QUANTITY_HEADING = "Quantity";
     private static final String NAME_HEADING = "name";
+    private static final String ASSET_ID_HEADING = "assetTypeID";
 
 
     private PreparedStatement addOrganisationAsset;
@@ -119,11 +120,12 @@ public class JDBCOrganisationalAsset {
             }
 
             String[][] assets = new String[count][];
-            String[] ass = new String[2];
+            String[] ass = new String[3];
             int i = 0;
             while (rs.next()) {
-                ass[0] = rs.getString(NAME_HEADING);
-                ass[1] = String.valueOf(rs.getInt(QUANTITY_HEADING));
+                ass[0] = Integer.toString(rs.getInt(ASSET_ID_HEADING));
+                ass[1] = rs.getString(NAME_HEADING);
+                ass[2] = String.valueOf(rs.getInt(QUANTITY_HEADING));
                 assets[i] = ass;
                 i++;
             }

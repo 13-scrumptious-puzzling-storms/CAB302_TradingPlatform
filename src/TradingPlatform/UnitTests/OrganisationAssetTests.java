@@ -2,10 +2,12 @@ package TradingPlatform.UnitTests;
 
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.NetworkProtocol.DBConnection;
+import TradingPlatform.OrganisationAsset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 public class OrganisationAssetTests {
 
@@ -57,5 +59,6 @@ public class OrganisationAssetTests {
         unit.UpdateOrganisationAssetQuantity(orgAssetID, newQuantity);
         assert(unit.getOrganisationAssetQuantity(orgAssetID)== newQuantity);
     }
+
 
 }

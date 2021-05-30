@@ -1,12 +1,16 @@
 package TradingPlatform.UnitTests;
 
+import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
 import TradingPlatform.NetworkProtocol.DBConnection;
+import TradingPlatform.OrganisationAsset;
 import TradingPlatform.OrganisationalUnit;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 //
 public class OrganisationalUnitTests {
@@ -91,5 +95,11 @@ public class OrganisationalUnitTests {
         assert((unit.getOrganisationalUnitName(orgID).equals(orgName)));
     }
 
+    @Test
+    public void getAssets() throws IOException, ClassNotFoundException {
+        OrganisationalUnit unit = new OrganisationalUnit(2);
+        ArrayList<OrganisationAsset> response = unit.getAssets();
+        System.out.println("test response is: " + response);
+    }
 
 }

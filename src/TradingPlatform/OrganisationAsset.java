@@ -9,13 +9,12 @@ import java.util.ArrayList;
 public class OrganisationAsset {
     private int organisationAssetID;
     private int organisationUnitID;
-    private AssetType assetType;
+    private String assetType;
     private int quantity;
     private static NetworkManager networkManager = ClientApp.networkManager;
 
     // GUI OrganisationAsset Constructor
-    public OrganisationAsset(int organisationAssetID, int organisationUnitID, AssetType assetType, int quantity){
-        this.organisationAssetID = organisationAssetID;
+    public OrganisationAsset(int organisationUnitID, String assetType, int quantity){
         this.organisationUnitID = organisationUnitID;
         this.assetType = assetType;
         this.quantity = quantity;
@@ -57,7 +56,5 @@ public class OrganisationAsset {
         return quantity;
     }
 
-    public AssetType getAssetType() {
-        return assetType;
-    }
+    //public AssetType getAssetType() { return assetType;  }
 }

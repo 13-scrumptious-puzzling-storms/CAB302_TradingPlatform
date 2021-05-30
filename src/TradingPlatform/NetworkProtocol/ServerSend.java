@@ -19,7 +19,7 @@ public class ServerSend implements Runnable {
 
     }
 
-    public static void handleRequest(String className, String methodName, String[] arguments, Socket clientSocket) throws IOException {
+    public static void handleRequest(String className, String methodName, String[] arguments, Socket clientSocket) throws IOException, ClassNotFoundException {
         Connection connection = DBConnection.getInstance();
         System.out.println("Connection to database successful!");
         socket = clientSocket;
@@ -35,15 +35,16 @@ public class ServerSend implements Runnable {
                         break;
                     }
                     case "getCredits": {
-                        //ServerSend ...;
+                        var DBInterface = new JDBCOrganisationalUnit(connection);
+                        Transmit(new Request(className, methodName, new String[]{String.valueOf(DBInterface.getOrganisationalUnitCredits(Integer.parseInt(arguments[0])))}));
                         break;
                     }
                     case "getOrganisationalUnit": {
                         var DBInterface = new JDBCOrganisationalUnit(connection);
                         OrganisationalUnit orgUnit = DBInterface.getOrganisationalUnit(Integer.parseInt(arguments[0]));
                         String[] orgUnitDetails = new String[] {
-                                orgUnit.getName(),
-                                Integer.toString(orgUnit.getCredits())
+                                orgUnit.getName(Integer.parseInt(arguments[0])),
+                                Integer.toString(orgUnit.getCredits(Integer.parseInt(arguments[0])))
                         };
                         Transmit(new Request(className, methodName, orgUnitDetails));
                         break;

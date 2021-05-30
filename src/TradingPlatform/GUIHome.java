@@ -63,7 +63,7 @@ public class GUIHome extends JFrame{
         sellButton.setMinimumSize(new Dimension(50, 50));
         buyButton.addActionListener(this::sellActionListener);
 
-        JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
+        JScrollPane TradesPaneSell = GUIMain.tablePane(GUIMain.constructTable(data, BuyHeading));
         TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
         TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 

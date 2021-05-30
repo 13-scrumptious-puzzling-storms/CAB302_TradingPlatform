@@ -16,13 +16,6 @@ public class AssetType {
         this.assetName = assetName;
     }
 
-    /**
-     * grabs the asset from the db
-     * @param assetId The assetID of the asset.
-     */
-    public AssetType(int assetId){
-        this.assetId = assetId;
-    }
 
     /**
      * returns the name of the asset as a string
