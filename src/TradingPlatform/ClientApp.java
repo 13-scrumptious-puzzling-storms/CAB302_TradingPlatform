@@ -24,13 +24,10 @@ public class ClientApp {
         guiLogin = new GUILogin();
         Thread guiLoginThread = new Thread(guiLogin);
         guiLoginThread.start();
-
-        // networkTest();
     }
 
     public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
         loggedIn = true;
-//        userID = 1; // for testing purposes
         User user = new User(userID);
         guiLogin.terminate();
         guiMain = new GUIMain(user);
