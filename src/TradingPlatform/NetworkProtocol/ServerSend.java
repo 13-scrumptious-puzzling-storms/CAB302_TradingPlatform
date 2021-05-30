@@ -2,6 +2,7 @@ package TradingPlatform.NetworkProtocol;
 
 import TradingPlatform.AccountType;
 import TradingPlatform.JDBCDataSources.*;
+import TradingPlatform.OrganisationalUnit;
 import TradingPlatform.Request;
 
 import java.io.BufferedOutputStream;
@@ -25,16 +26,34 @@ public class ServerSend implements Runnable {
         switch (className) {
             case "OrganisationalUnitServer":
                 switch (methodName) {
-                    case "getName":
+                    case "getName": {
                         // need to get Server Send working
                         JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(connection);
-                        Transmit(new Request(className, methodName, new String[] {String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
+                        Transmit(new Request(className, methodName, new String[]{String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
                         //ServerSend(OrganisationalUnitServer.getName(Integer.parseInt(arguments[0])));
                         //ServerSend ...;
                         break;
-                    case "getCredits":
+                    }
+                    case "getCredits": {
                         //ServerSend ...;
                         break;
+                    }
+                    case "getOrganisationalUnit": {
+                        var DBInterface = new JDBCOrganisationalUnit(connection);
+                        OrganisationalUnit orgUnit = DBInterface.getOrganisationalUnit(Integer.parseInt(arguments[0]));
+                        String[] orgUnitDetails = new String[] {
+                                orgUnit.getName(),
+                                Integer.toString(orgUnit.getCredits())
+                        };
+                        Transmit(new Request(className, methodName, orgUnitDetails));
+                        break;
+                    }
+                    case "getAllOrgs": {
+                        var DBInterface = new JDBCOrganisationalUnit(connection);
+                        String[][] allOrgUnits = DBInterface.getAllOrganisationalUnits();
+                        Transmit(new Request(className, methodName, allOrgUnits));
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;
@@ -112,9 +131,10 @@ public class ServerSend implements Runnable {
                         break;
                     }
                     case "adminChangeUserPassword": {
-                        int userId = Integer.parseInt(arguments[0]);
+                        String username = arguments[0];
                         String password = arguments[1];
-                        JDBCUserDataSource.adminChangeUserPassword(userId, password, connection);
+                        boolean success = JDBCUserDataSource.adminChangeUserPassword(username, password, connection);
+                        Transmit(new Request(className, methodName, new String[]{ Boolean.toString(success) }));
                         break;
                     }
                     default:

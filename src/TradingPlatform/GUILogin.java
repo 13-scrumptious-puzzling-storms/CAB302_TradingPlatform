@@ -2,10 +2,7 @@ package TradingPlatform;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.io.IOException;
 
 public class GUILogin extends JFrame implements ActionListener, FocusListener, Runnable {
@@ -53,10 +50,6 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
     public void run() {
         try { displayJFrame(); }
         catch (IOException e) { e.printStackTrace(); }
-    }
-
-    public static void terminate() {
-        // doesnt close yet
     }
 
     private void displayJFrame() throws IOException {
@@ -207,5 +200,10 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
                 passwordField.setText(passwordText);
             }
         }
+    }
+
+    public static void terminate() {
+        jframe.setVisible(false);
+        jframe.dispose();
     }
 }

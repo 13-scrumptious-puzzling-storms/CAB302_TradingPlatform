@@ -34,6 +34,9 @@ public class OrganisationalUnit implements Serializable {
      * @param organisationID organisation's unique ID
      */
     public OrganisationalUnit(int organisationID){
+        this.organisationID = organisationID;
+
+        // GET CREDITS AND NAME FROM SERVER
     }
 
     /**
@@ -67,13 +70,20 @@ public class OrganisationalUnit implements Serializable {
     }
 
     /**
-     * Returns the OrganisationalUnit's name
+     * Returns the given OrganisationalUnit's name
      *
-     * @return  name of the Organisational Unit
+     * @return  name of the given Organisational Unit
      */
-    public String getName(int orgID) throws IOException, ClassNotFoundException {
+    public static String getName(int orgID) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
         return response.getArguments()[0];
+    }
+
+    /**
+     * @return the name of this Organisational unit
+     */
+    public String getName(){
+        return organisationName;
     }
 
     /**

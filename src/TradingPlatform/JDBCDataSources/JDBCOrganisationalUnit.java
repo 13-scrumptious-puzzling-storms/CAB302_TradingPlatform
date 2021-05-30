@@ -5,6 +5,7 @@ import TradingPlatform.OrganisationalUnit;
 
 //import java.lang.constant.Constable;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
@@ -16,8 +17,11 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private static final String GET_NEW_ORGANISATIONALUNIT_ID = "SELECT * FROM OrganisationUnit WHERE name=?";
     private static final String ORGID_HEADING = "OrganisationUnitID";
 
+    private static final String GET_ALL_ORGANISATIONALUNIT_NAMES = "SELECT OrganisationUnitID, name, credits FROM OrganisationUnit";
+
     private static final String NAME_HEADING = "name";
     private static final String CREDITS_HEADING = "credits";
+    private static final String ID_HEADING = "OrganisationUnitID";
 
 
     private PreparedStatement addOrganisationalUnit;
@@ -26,6 +30,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private PreparedStatement getOrganisationalUnitCredits;
     private PreparedStatement getOrganisationalUnit;
     private PreparedStatement getNewOrganisationalUnitID;
+    private PreparedStatement getAllOrganisationUnitNames;
 
 
 
@@ -43,7 +48,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
             getOrganisationalUnitName = connection.prepareStatement(GET_ORGANISATIONALUNIT_NAME);
             getOrganisationalUnitCredits = connection.prepareStatement(GET_ORGANISATIONALUNIT_CREDITS);
             getNewOrganisationalUnitID = connection.prepareStatement(GET_NEW_ORGANISATIONALUNIT_ID);
-
+            getAllOrganisationUnitNames = connection.prepareStatement(GET_ALL_ORGANISATIONALUNIT_NAMES);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -137,6 +142,25 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         }
     }
 
+    // Returns the names of the organisation units, as well as their id's
+    // This is for the IT Admin when editing org Units / adding users
+    public String[][] getAllOrganisationalUnits(){
+        ArrayList<String[]> orgNames = new ArrayList<>();
+        try {
+            ResultSet rs = getAllOrganisationUnitNames.executeQuery();
+            while (rs.next()){
+                // Add the name and id to the list
+                orgNames.add(new String[]{
+                        Integer.toString(rs.getInt(ID_HEADING)),
+                        rs.getString(NAME_HEADING),
+                        Integer.toString(rs.getInt(CREDITS_HEADING))
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orgNames.toArray(new String[orgNames.size()][]);
+    }
 
     //WHAT TO DO WITH THESE!?
     @Override

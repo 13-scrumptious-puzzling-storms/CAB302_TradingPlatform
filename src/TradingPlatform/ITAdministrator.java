@@ -1,6 +1,7 @@
 package TradingPlatform;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * An IT Administrator is a user that has extra permissions to manage Organisational units and users.
@@ -97,16 +98,56 @@ public class ITAdministrator extends User {
     /**
      * Updates the given user's password.
      * 
-     * @param user the user who's password will be changed
+     * @param username the user who's password will be changed
      * @param newHashedPassword the hash of the user's new password
      */
-    public void ChangeUserPassword(User user, String newHashedPassword){
+    public boolean ChangeUserPassword(String username, String newHashedPassword){
+        boolean success;
         try {
-            NetworkManager.SendRequest("JDBCUserDataSource", "adminChangeUserPassword",
-                    new String[] {Integer.toString(user.getUserID()), newHashedPassword});
-        } catch (IOException e) {
+            Request response = NetworkManager.GetResponse("JDBCUserDataSource", "adminChangeUserPassword",
+                    new String[] {username, newHashedPassword});
+            success = Boolean.parseBoolean(response.getArguments()[0]); // Whether the password was successfully updated.
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+        }
+        return success;
+    }
+
+    /**
+     * Gets the details of all the organisational units. This method is in this class, because it is only
+     * used on the Administrator page for combo box drop downs.
+     * @return A
+     */
+    public static ArrayList<OrganisationalUnit> GetAllOrgUnits(){
+        // Get the user's data from the server
+        Request response = null;
+        try {
+            response = NetworkManager.GetResponse("OrganisationalUnitServer", "getAllOrgs");
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        var allOrgUnits = new ArrayList<OrganisationalUnit>();
+
+        // Check for not null response
+        if (response != null && response.getDoubleString() != null) {
+            String[][] allOrgsDetails = response.getDoubleString();
+
+            // Convert each String[] into an orgUnit
+            for (String[] orgDetails : allOrgsDetails) {
+                int orgId = Integer.parseInt(orgDetails[0]);
+                String name = orgDetails[1];
+                int credits = Integer.parseInt(orgDetails[2]);
+                var orgUnit = new OrganisationalUnit(name, credits);
+                orgUnit.setId(orgId);
+
+                // Add it to the list of orgUnits
+                allOrgUnits.add(orgUnit);
+            }
+        }
+
+        return allOrgUnits;
     }
 
     @Override

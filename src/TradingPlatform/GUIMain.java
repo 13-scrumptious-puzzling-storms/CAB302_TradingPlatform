@@ -13,6 +13,10 @@ public class GUIMain extends JFrame {
      */
     private static final long serialVersionUID = 692675871418401803L;
 
+    // Screen Ratio
+    private static final float WIDTH_RATIO = 1.5f;
+    private static final float HEIGHT_RATIO = 1.25f;
+
     // Colours
     public static final Color cust1 = new Color(38,139,133);
     public static final Color cust2 = new Color(51,61,68);
@@ -134,10 +138,19 @@ public class GUIMain extends JFrame {
         getContentPane().add(mainframe);
         getContentPane().setBackground(DARK_JUNGLE_GREEN);
 
-        setPreferredSize(new Dimension(width, height));
+        // Get size of device screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        float screenWidth = (float)screenSize.getWidth();
+        float screenHeight = (float)screenSize.getHeight();
+        int windowWidth = (int)(screenWidth / WIDTH_RATIO);
+        int windowHeight = (int)(screenHeight / HEIGHT_RATIO);
+
+        setPreferredSize(new Dimension(windowWidth, windowHeight));
         setLocation(new Point(0, 0));
         pack();
         setVisible(true);
+        setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+
         orgTab.setAutoscrolls(true);
 
         pagePane.setForeground(Color.BLACK);
