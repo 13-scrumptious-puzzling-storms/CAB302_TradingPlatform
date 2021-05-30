@@ -38,6 +38,13 @@ public class ServerSend implements Runnable {
                         //ServerSend ...;
                         break;
                     }
+                    case "setCredits": {
+                        JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(connection);
+                        int orgUnitId = Integer.parseInt(arguments[0]);
+                        int newCredits = Integer.parseInt(arguments[1]);
+                        DBInterface.UpdateOrganisationalUnitCredits(orgUnitId, newCredits);
+                        break;
+                    }
                     case "getOrganisationalUnit": {
                         var DBInterface = new JDBCOrganisationalUnit(connection);
                         OrganisationalUnit orgUnit = DBInterface.getOrganisationalUnit(Integer.parseInt(arguments[0]));

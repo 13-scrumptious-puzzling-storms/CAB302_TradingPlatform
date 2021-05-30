@@ -82,7 +82,7 @@ public class ITAdministrator extends User {
      * @param unit The unit that will be edited.
      * @param credits The new amount of credits the unit will have.
      */
-    public void EditOrganisationalUnits(OrganisationalUnit unit, int credits){
+    public void EditOrganisationalUnitCredits(OrganisationalUnit unit, int credits){
         // Update the client program OrganisationalUnit instance's credits
         unit.setCredits(credits);
 
