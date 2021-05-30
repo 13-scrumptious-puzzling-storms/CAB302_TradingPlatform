@@ -98,16 +98,20 @@ public class ITAdministrator extends User {
     /**
      * Updates the given user's password.
      * 
-     * @param user the user who's password will be changed
+     * @param username the user who's password will be changed
      * @param newHashedPassword the hash of the user's new password
      */
-    public void ChangeUserPassword(User user, String newHashedPassword){
+    public boolean ChangeUserPassword(String username, String newHashedPassword){
+        boolean success;
         try {
-            NetworkManager.SendRequest("JDBCUserDataSource", "adminChangeUserPassword",
-                    new String[] {Integer.toString(user.getUserID()), newHashedPassword});
-        } catch (IOException e) {
+            Request response = NetworkManager.GetResponse("JDBCUserDataSource", "adminChangeUserPassword",
+                    new String[] {username, newHashedPassword});
+            success = Boolean.parseBoolean(response.getArguments()[0]); // Whether the password was successfully updated.
+        } catch (Exception e) {
             e.printStackTrace();
+            success = false;
         }
+        return success;
     }
 
     /**
