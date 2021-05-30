@@ -1,5 +1,7 @@
 package TradingPlatform;
 
+import TradingPlatform.NetworkProtocol.ServerApp;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -36,16 +38,21 @@ public class NetworkManager implements Runnable {
         return Receive();
     }
 
-    private static void transmit(Request request) throws IOException {
-        socket = new Socket(HOST_ADDRESS, PORT);
-        System.out.println("Successfully connected to server!");
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-        objectOutputStream.writeObject(request);
-        System.out.println("Request sent. Class: '" + request.getClassName() + "' Method: '" + request.getMethodName() + "' Arguments: '" + request.getArguments() + "'");
-        objectOutputStream.flush();
-        if (!receive) {
-            objectOutputStream.close();
-            System.out.println("Connection closed.\n");
+    private static void transmit(Request request) {
+        try {
+            socket = new Socket(HOST_ADDRESS, PORT);
+            System.out.println("Successfully connected to server!");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            objectOutputStream.writeObject(request);
+            System.out.println("Request sent. Class: '" + request.getClassName() + "' Method: '" + request.getMethodName() + "' Arguments: '" + request.getArguments() + "'");
+            objectOutputStream.flush();
+            if (!receive) {
+                objectOutputStream.close();
+                System.out.println("Connection closed.\n");
+            }
+        }
+        catch (Exception ex) {
+            ClientApp.displayError("Failed to connect to server. \nThe server appears to be offline.\n");
         }
     }
 

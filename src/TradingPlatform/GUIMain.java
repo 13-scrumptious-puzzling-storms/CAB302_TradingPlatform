@@ -105,9 +105,16 @@ public class GUIMain extends JFrame {
         new GUIProfile(profileTab, user);
 
         pagePane.add("Home", homeTab);
-
         pagePane.add("Organisation Home", orgTab);
         pagePane.add("My Profile", profileTab);
+
+        if (user.getAccountType() == AccountType.ADMINISTRATOR){
+            JPanel adminTab = new JPanel();
+            new GUIAdmin(adminTab, new ITAdministrator(user.getUserID()));
+            pagePane.add("Admin", adminTab);
+            adminTab.setBackground(DARK_JUNGLE_GREEN);
+            adminTab.setForeground(Color.LIGHT_GRAY);
+        }
 
         position.weighty = 0;
         position.gridy = 0;

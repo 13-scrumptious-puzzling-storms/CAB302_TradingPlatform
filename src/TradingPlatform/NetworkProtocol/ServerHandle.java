@@ -44,6 +44,7 @@ public class ServerHandle implements Runnable {
                     System.out.println("Connection does not request a response. Closing socket.\nConnection Closed.");
                     objectInputStream.close();
                 }
+                // I wish I had set this up to just send the Request object rather than unpacking it ... :(
                 serverSendRunnable.handleRequest(clientRequest.getClassName(), clientRequest.getMethodName(), clientRequest.getArguments(), socket);
             }
         }

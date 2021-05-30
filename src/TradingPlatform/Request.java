@@ -24,14 +24,14 @@ public class Request implements Serializable {
         this.response = response;
     }
 
-    public Request(String className, String methodName, String[] arguments) {
-        this(className, methodName);
-        this.arguments = arguments;
-    }
-
     public Request(String className, String methodName, String[][] doubleString) {
         this(className, methodName);
         this.doubleString = doubleString;
+    }
+
+    public Request(String className, String methodName, String[] arguments) {
+        this(className, methodName);
+        this.arguments = arguments;
     }
 
     public Request(String className, String methodName, String[] arguments, Boolean response) {

@@ -1,21 +1,49 @@
 package TradingPlatform;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class ClientApp {
 
     public static NetworkManager networkManager;
+    private static GUILogin guiLogin;
+    private static GUIMain guiMain;
+
+    private static Boolean loggedIn;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+        loggedIn = false;
+
         // Initialise the client-side network protocol
         networkManager = new NetworkManager();
         Thread networkThread = new Thread(networkManager);
         networkThread.start();
 
-        networkTest();
-        // Get the logged in user
-        User user = new User(1);
-        new GUIMain(user);
+        // Get user login. Also this will change from thread to invokeLater {} soon
+        guiLogin = new GUILogin();
+        Thread guiLoginThread = new Thread(guiLogin);
+        guiLoginThread.start();
+
+        // networkTest();
+    }
+
+    public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
+        loggedIn = true;
+//        userID = 1; // for testing purposes
+        User user = new User(userID);
+        guiLogin.terminate();
+        guiMain = new GUIMain(user);
+    }
+
+    public static void displayError(String errorMessage) {
+        Component parentComponent;
+        if (loggedIn) {
+            parentComponent = guiLogin;
+        } else {
+            parentComponent = guiMain;
+        }
+        JOptionPane.showConfirmDialog(parentComponent, errorMessage, "Warning", JOptionPane.PLAIN_MESSAGE, JOptionPane.WARNING_MESSAGE);
     }
 
     private static void networkTest() throws IOException, ClassNotFoundException {

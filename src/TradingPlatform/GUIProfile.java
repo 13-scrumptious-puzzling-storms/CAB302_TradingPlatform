@@ -29,8 +29,8 @@ public class GUIProfile {
     }
 
     /**
-     * Makes a JPanel consisting of the user's information, and text fields to change
-     * their password in a grid bag layout.
+     * Makes a JPanel consisting of the user's information, text fields to change
+     * their password, as well as buttons to change and save their password in a grid bag layout.
      */
     private void profilePanel(JPanel ProfilePanel){
         pnlProfile = ProfilePanel;
@@ -66,14 +66,14 @@ public class GUIProfile {
         JPanel pnlUserDetails = new JPanel();
         GroupLayout layout = new GroupLayout(pnlUserDetails);
         pnlUserDetails.setLayout(layout);
-        pnlUserDetails.setBackground(cust2);
+        pnlUserDetails.setBackground(DARK_JUNGLE_GREEN);
 
         // Turn on automatically adding gaps between components
         layout.setAutoCreateGaps(true);
 
         // Turn on automatically creating gaps between components that touch
         // the edge of the container and the container.
-        layout.setAutoCreateContainerGaps(true);
+//        layout.setAutoCreateContainerGaps(true);
 
         JLabel lblUsername = new JLabel("Username");
         JLabel lblOrgUnitName = new JLabel("Organisation Unit");
@@ -138,6 +138,12 @@ public class GUIProfile {
         txtUsername.setBackground(UIManager.getColor("TextField.Background"));
         txtOrgUnitName.setBackground(UIManager.getColor("TextField.Background"));
         txtAccountType.setBackground(UIManager.getColor("TextField.Background"));
+
+        txtUsername.setMinimumSize(new Dimension(500, 20));
+        txtOrgUnitName.setMinimumSize(new Dimension(500, 20));
+        txtAccountType.setMinimumSize(new Dimension(500, 20));
+        txtCurrentPassword.setMinimumSize(new Dimension(500, 20));
+        txtNewPassword.setMinimumSize(new Dimension(500, 20));
 
         txtUsername.setForeground(Color.WHITE);
         txtOrgUnitName.setForeground(Color.WHITE);
@@ -263,18 +269,21 @@ public class GUIProfile {
             if (txtCurrentPassword.getText() != null && !txtCurrentPassword.getText().equals("")
                 && txtNewPassword.getText() != null && !txtNewPassword.getText().equals("")) {
                 if (user.ChangePassword(txtCurrentPassword.getText(), txtNewPassword.getText())){
-                    JOptionPane.showMessageDialog(pnlProfile, "Your password has been changed!", "Change Password", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(pnlProfile, "Your password has been changed!",
+                            "Change Password", JOptionPane.INFORMATION_MESSAGE);
                     setPasswordFieldsEditable(false);
                     btnSave.setEnabled(false);
                     btnChangePassword.setEnabled(true);
                     clearPasswordFields();
                 }
                 else {
-                    JOptionPane.showMessageDialog(pnlProfile, "Invalid current password! Please try again.", "Change Password", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(pnlProfile, "Invalid current password! Please try again.",
+                            "Change Password", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else {
-                JOptionPane.showMessageDialog(pnlProfile, "Please enter your current and new passwords.", "Change Password", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(pnlProfile, "Please enter your current and new passwords.",
+                        "Change Password", JOptionPane.WARNING_MESSAGE);
             }
         }
     }

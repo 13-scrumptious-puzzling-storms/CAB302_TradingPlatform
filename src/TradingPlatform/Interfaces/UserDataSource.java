@@ -22,9 +22,9 @@ public interface UserDataSource {
     /**
      * Changes the user's password.
      *
-     * @param currentPassword The user's current password.
-     * @param newPassword The user's new password.
+     * @param currentHashedPassword The user's current password.
+     * @param newHashedPassword The user's new password.
      * @return True if the password was successfully changed.
      */
-    boolean ChangePassword(String currentPassword, String newPassword);
+    boolean ChangePassword(String currentHashedPassword, String newHashedPassword);
 }
