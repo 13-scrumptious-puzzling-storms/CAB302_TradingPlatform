@@ -312,22 +312,4 @@ public class JDBCTradeDataSource implements TradeDataSource {
         }
         return null;
     }
-
-//    @Override
-//    public String getOrganisation(int tradeId) {
-//        try {
-//            getOrg.clearParameters();
-//            getOrg.setInt(1, tradeId);
-//            ResultSet rs = getOrg.executeQuery();
-//
-//            if (rs.next()) {
-//                int orgId = rs.getInt("");
-//                return orgId;
-//            }
-//        }
-//        catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//        return null;
-//    }
 }

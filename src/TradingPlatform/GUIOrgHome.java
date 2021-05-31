@@ -21,7 +21,7 @@ import static TradingPlatform.GUIMain.FONT;
 
 public class GUIOrgHome{
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        ClientApp.launchProgram(2);
+        ClientApp.launchProgram(1);
     }
 
     public String BuyHeading[] = {"Buy Orders","Quantity", "Price",};
@@ -118,8 +118,8 @@ public class GUIOrgHome{
         position.insets = new Insets(0, 0, 20, 0);
         position.gridx = 2;
         position.gridy = 1;
-        position.gridwidth = 3;
-        position.anchor = GridBagConstraints.CENTER;
+        position.gridwidth = 1;
+        position.anchor = GridBagConstraints.LINE_END;
         JButton removeButton = new JButton("Cancel Buy Order");
         removeButton.setBackground(cust1);
         panel2.add(removeButton, position);
@@ -139,7 +139,7 @@ public class GUIOrgHome{
         position.insets = new Insets(0, 0, 20, 0);
         position.gridx = 3;
         position.gridy = 1;
-        position.gridwidth = 3;
+        position.gridwidth = 1;
         position.anchor = GridBagConstraints.CENTER;
         JButton removeButton = new JButton("Cancel Sell Order");
         removeButton.setBackground(cust1);

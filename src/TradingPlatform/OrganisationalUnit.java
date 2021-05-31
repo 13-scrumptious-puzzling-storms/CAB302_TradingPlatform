@@ -148,9 +148,9 @@ public class OrganisationalUnit implements Serializable {
             ArrayList<OrganisationAsset> assetCollection = new ArrayList<OrganisationAsset>();
             for (String[] i : result) {
                 //**Bella can't get any results - coming back to this later
-                System.out.println("method i[0] is: " + i[0]);
-                System.out.println("method i[1] is: " + i[1]);
-                System.out.println("method i[2] is: " + i[2]);
+                //System.out.println("method i[0] is: " + i[0]);
+                //System.out.println("method i[1] is: " + i[1]);
+                //System.out.println("method i[2] is: " + i[2]);
                 String asset = "pens";
                 int quantity = 0;
                 assetCollection.add(new OrganisationAsset(organisationID, asset, quantity));
