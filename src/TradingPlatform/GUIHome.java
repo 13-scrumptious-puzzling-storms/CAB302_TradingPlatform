@@ -56,7 +56,15 @@ public class GUIHome extends JFrame{
         buyButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         buyButton.setPreferredSize(new Dimension(200, 100));
         buyButton.setMinimumSize(new Dimension(50, 50));
-        buyButton.addActionListener(this::buyActionListener);
+        buyButton.addActionListener(e -> {
+            try {
+                buyActionListener(e);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+        });
 
         JButton sellButton = new JButton("Sell Assets");
         sellButton.setFont(new Font("Verdana", Font.PLAIN, 16));
@@ -90,7 +98,7 @@ public class GUIHome extends JFrame{
         panel.setBackground(cust1);
     }
 
-    public void buyActionListener(ActionEvent e){
+    public void buyActionListener(ActionEvent e) throws IOException, ClassNotFoundException {
         String event = e.getActionCommand();
         if(event == "Buy Assets") {
             GUIOrder.buyPopup();

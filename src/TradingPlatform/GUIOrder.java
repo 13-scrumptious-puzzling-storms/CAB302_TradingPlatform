@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import static TradingPlatform.GUIMain.*;
 import static java.awt.GridBagConstraints.CENTER;
@@ -31,7 +32,7 @@ public class GUIOrder extends JFrame{
     private static JFrame sell;
 
 
-    public static void buyPopup(){
+    public static void buyPopup() throws IOException, ClassNotFoundException {
         buy = new JFrame("Buy");
         buy.setSize(new Dimension(width/2, height/2));
         popUp = new PopupFactory();
@@ -45,9 +46,8 @@ public class GUIOrder extends JFrame{
         quantity = new JLabel("Quantity: ");
         price = new JLabel("Price: ");
 
-        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
-//        String[] data =
-        itemNameInput = new JComboBox(petStrings);
+        String[] data = AssetType.getAllAssetNames();
+        itemNameInput = new JComboBox(data);
         itemNameInput.setPreferredSize(new Dimension(width/4, 20));
         quantityInput = new JTextField();
         quantityInput.setPreferredSize(new Dimension(width/4, 20));

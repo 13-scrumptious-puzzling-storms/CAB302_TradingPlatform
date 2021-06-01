@@ -84,6 +84,34 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             ") as r2 on (r2.assetTypeID = a.assetTypeID AND \n" +
             "    (r1.createdTime < r2.createdTime OR (r1.createdTime = r2.createdTime AND r1.tradeReconId < r2.tradeReconId)))\n" +
             "where r2.tradeReconId is null and r1.tradeReconId is not null;";
+    private static final String COUNT_RECENT_ASSET_RECONCILE = "" +
+            "select \n" +
+            "  count(a.name) as num\n" +
+            "from AssetType a \n" +
+            "left join (\n" +
+            "    select \n" +
+            "        oa.assetTypeID\n" +
+            "        , s.price\n" +
+            "        , r.tradeReconId\n" +
+            "        , r.quantity\n" +
+            "        , r.createdTime \n" +
+            "    from TradeRecon r\n" +
+            "    left join TradeOrders s on s.tradeOrderID = r.sellOrderId\n" +
+            "    left join OrganisationAsset oa on oa.organisationAssetID = s.organisationAssetID\n" +
+            ") as r1 on (r1.assetTypeID = a.assetTypeID)\n" +
+            "left join (\n" +
+            "    select \n" +
+            "        oa.assetTypeID\n" +
+            "        , s.price\n" +
+            "        , r.tradeReconId\n" +
+            "        , r.quantity\n" +
+            "        , r.createdTime \n" +
+            "    from TradeRecon r\n" +
+            "    left join TradeOrders s on s.tradeOrderID = r.sellOrderId\n" +
+            "    left join OrganisationAsset oa on oa.organisationAssetID = s.organisationAssetID\n" +
+            ") as r2 on (r2.assetTypeID = a.assetTypeID AND \n" +
+            "    (r1.createdTime < r2.createdTime OR (r1.createdTime = r2.createdTime AND r1.tradeReconId < r2.tradeReconId)))\n" +
+            "where r2.tradeReconId is null and r1.tradeReconId is not null;";
 
     private static PreparedStatement insertRecon;
 //    private static PreparedStatement getBuyOrSellOrders;
@@ -92,6 +120,7 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
     private static PreparedStatement getMatchingBuyOrder;
     private static PreparedStatement getReconcilableAssetTypeIds;
     private static PreparedStatement getMostRecentAssetReconcileInfo;
+    private static PreparedStatement countRecentAssetReconcile;
 
     private Connection connection;
 
@@ -106,6 +135,7 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             getMatchingBuyOrder = connection.prepareStatement(GET_MATCHING_BUY_ORDER);
             getReconcilableAssetTypeIds = connection.prepareStatement(GET_RECONCILABLE_ASSET_TYPE_IDS);
             getMostRecentAssetReconcileInfo = connection.prepareStatement(GET_MOST_RECENT_ASSET_RECONCILE_INFO);
+            countRecentAssetReconcile = connection.prepareStatement(COUNT_RECENT_ASSET_RECONCILE);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -163,23 +193,35 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
     }
 
     @Override
-    public Map<AssetType, String[]> getMostRecentAssetTypeTradeDetails() {
-        HashMap<AssetType, String[]> assetPrices = new HashMap<>();
+    public String[][] getMostRecentAssetTypeTradeDetails() {
+
+//        HashMap<AssetType, String[]> assetPrices = new HashMap<>();
         try {
             ResultSet rs = getMostRecentAssetReconcileInfo.executeQuery();
+            ResultSet count = countRecentAssetReconcile.executeQuery();
+            int num = 0;
+            if(count.next()){
+                num = count.getInt("num");
+            }
+
+            String[][] assetPrices = new String[num][];
+            int i = 0;
             while (rs.next()) {
-                AssetType type = new AssetType(rs.getString("name"));
+//                AssetType type = new AssetType(rs.getString("name"));
+                String name = rs.getString("name");
                 String price = rs.getString("price");
                 String quantity = rs.getString("quantity");
                 String createdTime = rs.getString("createdTime");
-                String[] details = new String[]{ price, quantity, createdTime };
-                assetPrices.put(type, details);
+                String[] details = new String[]{ name, price, quantity, createdTime };
+                assetPrices[i] = details;
+                i++;
             }
             rs.close();
+            return assetPrices;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return assetPrices;
+        return null;
     }
 
 

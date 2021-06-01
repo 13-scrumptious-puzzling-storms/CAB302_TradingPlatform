@@ -1,6 +1,7 @@
 package TradingPlatform.NetworkProtocol;
 
 import TradingPlatform.AccountType;
+import TradingPlatform.AssetType;
 import TradingPlatform.JDBCDataSources.*;
 import TradingPlatform.OrganisationalUnit;
 import TradingPlatform.Request;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Connection;
+import java.util.Map;
 
 public class ServerSend implements Runnable {
     private static Socket socket;
@@ -150,6 +152,30 @@ public class ServerSend implements Runnable {
                         String password = arguments[1];
                         boolean success = JDBCUserDataSource.adminChangeUserPassword(username, password, connection);
                         Transmit(new Request(className, methodName, new String[]{ Boolean.toString(success) }));
+                        break;
+                    }
+                    default:
+                        System.out.println("Invalid Method");
+                        break;
+                }
+            case "JDBCAssetType":
+                switch (methodName){
+                    case "getAllAssetNames": {
+                        JDBCAssetType DBInterface = new JDBCAssetType(connection);
+                        String[] response = (DBInterface.getAllAssetNames());
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    default:
+                        System.out.println("Invalid Method");
+                        break;
+                }
+            case "JDBCTradeReconcileSource":
+                switch (methodName){
+                    case "getMostRecentAssetTypeTradeDetails": {
+                        JDBCTradeReconcileSource DBInterface = new JDBCTradeReconcileSource(connection);
+                        String[][] response = (DBInterface.getMostRecentAssetTypeTradeDetails());
+                        Transmit(new Request(className, methodName, response));
                         break;
                     }
                     default:
