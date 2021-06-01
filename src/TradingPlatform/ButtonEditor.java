@@ -5,6 +5,7 @@ import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 class ButtonEditor extends DefaultCellEditor {
 
@@ -45,7 +46,13 @@ class ButtonEditor extends DefaultCellEditor {
     public Object getCellEditorValue() {
         if (isPushed) {
             //JOptionPane.showMessageDialog(button, label + ": Ouch!");
-            GUIOrder.buyPopup();
+            try {
+                GUIOrder.buyPopup();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         isPushed = false;
         return label;

@@ -1,5 +1,9 @@
 package TradingPlatform;
 
+import java.io.IOException;
+
+import static TradingPlatform.ClientApp.networkManager;
+
 /**
  * Creates a new instance of an asset
  */
@@ -23,5 +27,10 @@ public class AssetType {
      */
     public String toString(){
         return assetName;
+    }
+
+    public static String[] getAllAssetNames() throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("JDBCAssetType", "getAllAssetNames", new String[]{});
+        return response.getArguments();
     }
 }

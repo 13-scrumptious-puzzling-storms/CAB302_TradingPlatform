@@ -9,10 +9,14 @@ public class JDBCAssetType {
     private static final String INSERT_ASSETTYPE = "INSERT INTO AssetType (name) VALUES (?);";
     private static final String GET_ASSETNAME = "SELECT name FROM AssetType WHERE assetTypeID=?";
     private static final String NAME_HEADING = "name";
+    private static final String GET_ALL_ASSETNAMES = "SELECT name FROM AssetType";
+    private static final String COUNT_ASSETS = "SELECT count(name) as num FROM AssetType";
 
 
     private PreparedStatement addAssetType;
     private PreparedStatement getAssetName;
+    private PreparedStatement getAllAssetNames;
+    private PreparedStatement countAssets;
 
 
     private Connection connection;
@@ -25,7 +29,8 @@ public class JDBCAssetType {
             // Preparing Statement
             addAssetType = connection.prepareStatement(INSERT_ASSETTYPE);
             getAssetName = connection.prepareStatement(GET_ASSETNAME);
-
+            getAllAssetNames = connection.prepareStatement(GET_ALL_ASSETNAMES);
+            countAssets = connection.prepareStatement(COUNT_ASSETS);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -66,6 +71,30 @@ public class JDBCAssetType {
                 return name;
             }
         } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public String[] getAllAssetNames(){
+        try{
+            int num = 0;
+            ResultSet count = countAssets.executeQuery();
+            if(count.next()){
+                num = count.getInt("num");
+            }
+
+            ResultSet rs = getAllAssetNames.executeQuery();
+            String[] assets = new String[num];
+            int i = 0;
+            if (rs.next()){
+                String name = rs.getString(NAME_HEADING);
+                assets[i] = name;
+                i++;
+            }
+            return assets;
+        }
+        catch (SQLException throwables){
             throwables.printStackTrace();
         }
         return null;
