@@ -46,6 +46,7 @@ public class GUIOrder extends JFrame{
         price = new JLabel("Price: ");
 
         String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+//        String[] data =
         itemNameInput = new JComboBox(petStrings);
         itemNameInput.setPreferredSize(new Dimension(width/4, 20));
         quantityInput = new JTextField();
