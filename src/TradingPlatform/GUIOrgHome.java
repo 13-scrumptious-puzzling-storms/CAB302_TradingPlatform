@@ -3,6 +3,8 @@ package TradingPlatform;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static TradingPlatform.GUIMain.tabHeight;
 import static TradingPlatform.GUIMain.tabWidth;
@@ -21,7 +24,7 @@ import static TradingPlatform.GUIMain.FONT;
 
 public class GUIOrgHome{
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        ClientApp.launchProgram(1);
+        ClientApp.launchProgram(3);
     }
 
     public String BuyHeading[] = {"Buy Orders","Quantity", "Price",};
@@ -63,10 +66,22 @@ public class GUIOrgHome{
         tablesPane.setResizeWeight(0.5);
 
         //JPanel AssetsPanel = new JPanel();
-        JScrollPane Assets = GUIMain.tablePane(GUIMain.constructTable(OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID), AssetHeading));
+        String[][] OrgAssets = OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID);
+        int size = OrgAssets.length;
+        String[] OrgAssetID = new String[size]; //array that stores OrganisationAssetID's for given array
+        String[][] AssetItemQuantity = new String[size][]; //array that stores AssetItem and AssetQuantity
+        String[] assets = new String[2]; //temporary array
+        for(int i = 0; i<size; i++){
+            OrgAssetID[i] = OrgAssets[i][0];
+            assets[0] = OrgAssets[i][1];
+            assets[1] = OrgAssets[i][2];
+            AssetItemQuantity[i] = assets;
+        }
+        JTable assetTable = GUIMain.constructTable(AssetItemQuantity, AssetHeading);
+        JScrollPane Assets = GUIMain.tablePane(assetTable);
 
-        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position);
-        JButton removeSellOrderButton = removeSellOrderButton(panel2, position);
+        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position, buyTable);
+        JButton removeSellOrderButton = removeSellOrderButton(panel2, position, sellTable);
         JButton buyButton = buyAssetButton(panel2, position);
         JButton sellButton = sellAssetButton(panel2, position);
         creditsLabel(panel2, position);
@@ -113,7 +128,7 @@ public class GUIOrgHome{
         pageScroll.add(panel2);
     }
 
-    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position){
+    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
         position.gridx = 2;
@@ -127,14 +142,19 @@ public class GUIOrgHome{
         {
             public void actionPerformed(ActionEvent e)
             {
-                // display buy popup
-                System.out.println("Just pressed the remove buy button");
+                int selectedRow = table.getSelectedRow();
+                if(selectedRow == -1){
+                    JOptionPane.showMessageDialog(null, "Please select one row from the 'Buy Orders' table to cancel order.");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow));
+                }
             }
         });
         return removeButton;
     }
 
-    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position){
+    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
         position.gridx = 3;
@@ -148,12 +168,18 @@ public class GUIOrgHome{
         {
             public void actionPerformed(ActionEvent e)
             {
-                // display buy popup
-                System.out.println("Just pressed the remove sell button");
+                int selectedRow = table.getSelectedRow();
+                if(selectedRow == -1){
+                    JOptionPane.showMessageDialog(null, "Please select one row from the 'Sell Orders' table to cancel order.");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow));
+                }
             }
         });
         return removeButton;
     }
+
 
     private JButton buyAssetButton(JPanel panel2, GridBagConstraints position){
         //Create Buy Asset Button

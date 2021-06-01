@@ -39,8 +39,7 @@ public class OrganisationAsset {
     // Get Methods below ...
     public static String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[] {String.valueOf(orgID)});
-        String[][] result = response.getDoubleString();
-        return result;
+        return response.getDoubleString();
     }
 
 
