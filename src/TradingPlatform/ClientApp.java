@@ -21,10 +21,10 @@ public class ClientApp {
         networkThread.start();
 
         // Get user login. Also this will change from thread to invokeLater {} soon
-        //guiLogin = new GUILogin();
-        //Thread guiLoginThread = new Thread(guiLogin);
-        //guiLoginThread.start();
-        launchProgram(3);
+        guiLogin = new GUILogin();
+        Thread guiLoginThread = new Thread(guiLogin);
+        guiLoginThread.start();
+//        launchProgram(3);
     }
 
     public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
