@@ -77,19 +77,36 @@ public class ServerSend implements Runnable {
                 break;
             case "JDBCOrganisationalAsset":
                 switch (methodName) {
+                    case "addOrganisationAsset": {
+                        JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
+                        DBInterface.addOrganisationAsset(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]));
+                        break;
+                    }
                     case "getOrganisationAssetsQuantity": {
                         JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
                         String[][] response = (DBInterface.getOrganisationAssetsQuantity(Integer.parseInt(arguments[0])));
                         Transmit(new Request(className, methodName, response));
                         break;
                     }
+                    case "updateOrganisationAssetsQuantity": {
+                        JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
+                        DBInterface.UpdateOrganisationAssetQuantity(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
+                        break;
+                    }
                     case "getAssetType": {
                         // ServerSend
                         break;
                     }
-                    case "addAssetType": {
-                        var DBInterface = new JDBCAssetType(connection);
-                        DBInterface.addAssetType(arguments[0]);
+                    case "getOrganisationAssetId": {
+                        var DBInterface = new JDBCOrganisationalAsset(connection);
+                        int orgAssetId = DBInterface.getOrganisationAssetId(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
+                        Transmit(new Request(className, methodName, new String[]{Integer.toString(orgAssetId)}));
+                        break;
+                    }
+                    case "getOrganisationAssetQuantity": {
+                        var DBInterface = new JDBCOrganisationalAsset(connection);
+                        int orgAssetQuantity = DBInterface.getOrganisationAssetQuantity(Integer.parseInt(arguments[0]));
+                        Transmit(new Request(className, methodName, new String[]{Integer.toString(orgAssetQuantity)}));
                         break;
                     }
                     default:
@@ -164,6 +181,23 @@ public class ServerSend implements Runnable {
                         JDBCAssetType DBInterface = new JDBCAssetType(connection);
                         String[] response = (DBInterface.getAllAssetNames());
                         Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    case "getAllAssets": {
+                        JDBCAssetType DBInterface = new JDBCAssetType(connection);
+                        String[][] response = (DBInterface.getAllAssetTypes());
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    case "getAssetId": {
+                        JDBCAssetType DBInterface = new JDBCAssetType(connection);
+                        int id = (DBInterface.getAssetId(arguments[0]));
+                        Transmit(new Request(className, methodName, new String[]{Integer.toString(id)}));
+                        break;
+                    }
+                    case "addAssetType": {
+                        var DBInterface = new JDBCAssetType(connection);
+                        DBInterface.addAssetType(arguments[0]);
                         break;
                     }
                     default:

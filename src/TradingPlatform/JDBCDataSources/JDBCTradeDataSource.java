@@ -261,7 +261,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             }
 //            HashSet<Integer> assets = new HashSet<Integer>();
 
-            String[][] assets = new String[count][];
+            String[][] assets = new String[count+1][];
             String[] ass = new String[4];
             int i = 0;
             while (rs.next()) {
@@ -297,7 +297,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 count = 0;
             }
 
-            String[][] assets = new String[count][];
+            String[][] assets = new String[count+1][];
             String[] ass = new String[4];
 
             int i = 0;

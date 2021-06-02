@@ -23,9 +23,9 @@ import static TradingPlatform.GUIMain.FONT;
 
 
 public class GUIOrgHome{
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        ClientApp.launchProgram(3);
-    }
+//    public static void main(String[] args) throws IOException, ClassNotFoundException {
+//        ClientApp.launchProgram(2);
+//    }
 
     public String BuyHeading[] = {"Buy Orders","Quantity", "Price",};
     public String SellHeading[] = {"Sell Orders","Quantity","Price"};

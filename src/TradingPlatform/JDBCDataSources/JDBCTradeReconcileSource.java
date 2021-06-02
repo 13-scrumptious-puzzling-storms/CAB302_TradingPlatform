@@ -204,7 +204,7 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
                 num = count.getInt("num");
             }
 
-            String[][] assetPrices = new String[num][];
+            String[][] assetPrices = new String[num+1][];
             int i = 0;
             while (rs.next()) {
 //                AssetType type = new AssetType(rs.getString("name"));
