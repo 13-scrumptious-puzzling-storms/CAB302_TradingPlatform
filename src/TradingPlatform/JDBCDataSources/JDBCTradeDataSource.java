@@ -261,7 +261,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             }
 //            HashSet<Integer> assets = new HashSet<Integer>();
 
-            String[][] assets = new String[count+1][];
+            String[][] assets = new String[count][];
             int i = 0;
             while (rs.next()) {
                 String[] ass = new String[4];
@@ -288,7 +288,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
 
             countOrders.clearParameters();
             countOrders.setInt(1, orgUnitId);
-            countOrders.setString(2, "false");
+            countOrders.setString(2, "true");
             ResultSet num = countOrders.executeQuery();
             int count;
             if (num.next()) {

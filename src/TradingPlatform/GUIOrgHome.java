@@ -3,23 +3,12 @@ package TradingPlatform;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Arrays;
 
-import static TradingPlatform.GUIMain.tabHeight;
-import static TradingPlatform.GUIMain.tabWidth;
-import static TradingPlatform.GUIMain.cust1;
-import static TradingPlatform.GUIMain.cust2;
-import static TradingPlatform.GUIMain.cust3;
-import static TradingPlatform.GUIMain.FONT;
+import static TradingPlatform.GUIMain.*;
 
 
 public class GUIOrgHome{
@@ -59,11 +48,11 @@ public class GUIOrgHome{
         int buySize = tradesBuy.length;
         String[] tradeIDBuy = new String[buySize]; //array that stores organisationAssetID's for buy orders
         String[][] buyData = new String[buySize][]; //array that stores data to be displayed in buyTrades table
-        String[] buy = new String[3]; //temporary array
         try {
             for (int i = 0; i < buySize; i++) {
                 if(tradesBuy[i]!= null) {
                     tradeIDBuy[i] = tradesBuy[0][i];
+                    String[] buy = new String[3]; //temporary array
                     buy[0] = tradesBuy[i][1];
                     buy[1] = tradesBuy[i][2];
                     buy[2] = tradesBuy[i][3];
@@ -79,14 +68,14 @@ public class GUIOrgHome{
 
         //Retrieve trades sell table for organisational unit
         String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
-        int sellSize = tradesBuy.length;
+        int sellSize = tradesSell.length;
         String[] tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
         String[][] sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
-        String[] sell = new String[3]; //temporary array
         try {
             for (int i = 0; i < sellSize; i++) {
                 if (tradesSell[i]!= null) {
                     tradeIDSell[i] = tradesSell[0][i];
+                    String[] sell = new String[3]; //temporary array
                     sell[0] = tradesSell[i][1];
                     sell[1] = tradesSell[i][2];
                     sell[2] = tradesSell[i][3];
@@ -110,9 +99,9 @@ public class GUIOrgHome{
         int size = OrgAssets.length;
         String[] OrgAssetID = new String[size]; //array that stores OrganisationAssetID's for given array
         String[][] AssetItemQuantity = new String[size][]; //array that stores AssetItem and AssetQuantity
-        String[] assets = new String[2]; //temporary array
         for(int i = 0; i<size; i++){
             OrgAssetID[i] = OrgAssets[i][0];
+            String[] assets = new String[2]; //temporary array
             assets[0] = OrgAssets[i][1];
             assets[1] = OrgAssets[i][2];
             AssetItemQuantity[i] = assets;
