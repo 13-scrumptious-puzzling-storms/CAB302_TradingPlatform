@@ -166,6 +166,18 @@ public class ServerSend implements Runnable {
                         Transmit(new Request(className, methodName, response));
                         break;
                     }
+                    case "getAllAssets": {
+                        JDBCAssetType DBInterface = new JDBCAssetType(connection);
+                        String[][] response = (DBInterface.getAllAssetTypes());
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    case "getAssetId": {
+                        JDBCAssetType DBInterface = new JDBCAssetType(connection);
+                        int id = (DBInterface.getAssetId(arguments[0]));
+                        Transmit(new Request(className, methodName, new String[]{Integer.toString(id)}));
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;
