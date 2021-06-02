@@ -175,6 +175,7 @@ public class ServerSend implements Runnable {
                         System.out.println("Invalid Method");
                         break;
                 }
+                break;
             case "JDBCAssetType":
                 switch (methodName){
                     case "getAllAssetNames": {
@@ -204,6 +205,7 @@ public class ServerSend implements Runnable {
                         System.out.println("Invalid Method");
                         break;
                 }
+                break;
             case "JDBCTradeReconcileSource":
                 switch (methodName){
                     case "getMostRecentAssetTypeTradeDetails": {
@@ -216,6 +218,7 @@ public class ServerSend implements Runnable {
                         System.out.println("Invalid Method");
                         break;
                 }
+                break;
             default:
                 System.out.println("Invalid Class");
                 break;
