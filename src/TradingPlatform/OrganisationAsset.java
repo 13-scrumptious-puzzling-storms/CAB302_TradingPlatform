@@ -47,12 +47,41 @@ public class OrganisationAsset {
         return organisationAssetID;
     }
 
+    // Gets the orgAssetId for a given unit and asset type, or -1 on error or if the unit doesn't have any of that asset
+    public static int getOrganisationAssetID(OrganisationalUnit orgUnit, AssetType AssetType){
+        try {
+            Request response = NetworkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetId",
+                    new String[]{ Integer.toString(orgUnit.getID()), Integer.toString(AssetType.getAssetId()) } );
+            // String[id] response
+            return Integer.parseInt(response.getArguments()[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public int getOrganisationUnitID() {
         return organisationUnitID;
     }
 
     public int getQuantity() {
         return quantity;
+    }
+
+    /**
+     * Gets the quantity of the given organisation asset
+     * @param orgAssetId the id of the organisation asset
+     * @return the quantity of this asset that the org asset's unit has, or -1 on error
+     */
+    public static int getQuantity(int orgAssetId){
+        try {
+            Request response = NetworkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetQuantity",
+                    new String[]{ Integer.toString(orgAssetId) });
+            return Integer.parseInt(response.getArguments()[0]);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     //public AssetType getAssetType() { return assetType;  }

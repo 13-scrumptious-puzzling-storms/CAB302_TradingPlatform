@@ -77,19 +77,19 @@ public class ITAdministrator extends User {
     }
 
     /**
-     * Edits the number of credits an organisational unit has.
+     * Edits the number of credits an organisational orgUnit has.
      *
-     * @param unit The unit that will be edited.
-     * @param credits The new amount of credits the unit will have.
+     * @param orgUnit The orgUnit that will be edited.
+     * @param credits The new amount of credits the orgUnit will have.
      */
-    public void EditOrganisationalUnitCredits(OrganisationalUnit unit, int credits){
+    public void EditOrganisationalUnitCredits(OrganisationalUnit orgUnit, int credits){
         // Update the client program OrganisationalUnit instance's credits
-        unit.setCredits(credits);
+        orgUnit.setCredits(credits);
 
         // Update the credits in the server
         try {
             NetworkManager.SendRequest("OrganisationalUnitServer", "setCredits",
-                    new String[] {Integer.toString(unit.getID()), Integer.toString(credits)});
+                    new String[] {Integer.toString(orgUnit.getID()), Integer.toString(credits)});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,11 +98,25 @@ public class ITAdministrator extends User {
     /**
      * Edits the number of an asset that an organisational unit has.
      *
+     * @param orgUnit The organisation unit that will be edited.
      * @param assetType The type of asset that will be edited.
      * @param numAsset The new number of the asset that the organisation unit will have.
      */
-    public void EditOrganisationalAsset(AssetType assetType, int numAsset){
-        // NOT YET IMPLEMENTED -- OrganisationAsset doesn't have a setQuantity method
+    public void EditOrganisationalAsset(OrganisationalUnit orgUnit, AssetType assetType, int numAsset){
+        try {
+            int orgAssetId = OrganisationAsset.getOrganisationAssetID(orgUnit, assetType);
+
+            // If id is -1, then the unit doesn't have any of the asset yet, so create a new org asset
+            if (orgAssetId == -1) {
+                NetworkManager.SendRequest("JDBCOrganisationalAsset", "addOrganisationAsset",
+                        new String[] {Integer.toString(orgUnit.getID()), Integer.toString(assetType.getAssetId()), Integer.toString(numAsset)});
+            } else {
+                NetworkManager.SendRequest("JDBCOrganisationalAsset", "updateOrganisationAssetsQuantity",
+                        new String[] {Integer.toString(orgAssetId), Integer.toString(numAsset)});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -112,7 +126,7 @@ public class ITAdministrator extends User {
      */
     public void CreateNewAssetType(String assetName) {
         try {
-            NetworkManager.SendRequest("JDBCOrganisationalAsset", "addAssetType", new String[] {assetName});
+            NetworkManager.SendRequest("JDBCAssetType", "addAssetType", new String[] {assetName});
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -38,11 +38,17 @@ public class GUIAdmin {
     private JTextField txtCredits;
     private JButton btnUpdateCredits;
 
+    private JComboBox<String> cboxAssetsOrgUnit;
+    private JComboBox<String> cboxOrgAssetsAsset;
+    private JTextField txtOrgAssetQuantity;
+    private JButton btnUpdateOrgAsset;
+
     private final adminActionListener listener = new adminActionListener();
 
     private final ITAdministrator admin;
     private final String[] AccountTypes = new String[]{AccountType.MEMBER.toString(), AccountType.ADMINISTRATOR.toString()};
     private final ArrayList<OrganisationalUnit> OrganisationUnits = ITAdministrator.GetAllOrgUnits();
+    private final ArrayList<AssetType> assetTypes = AssetType.getAllAssetTypes();
 
     private boolean addUserIsMember = true;
 
@@ -89,10 +95,10 @@ public class GUIAdmin {
 
         position.gridx = 1;
         position.insets = new Insets(0, 0, 25, 0);
-//        position.gridy = 0;
-//        position.anchor = GridBagConstraints.CENTER;
-//        var pnlCreateOrgUnit2 = makeCreateOrgUnitPanel();
-//        pnlAdmin.add(pnlCreateOrgUnit2, position);
+        position.gridy = 0;
+        position.anchor = GridBagConstraints.CENTER;
+        var pnlEditOrgAssets = makeEditOrgAssetsPanel();
+        pnlAdmin.add(pnlEditOrgAssets, position);
 
         position.gridy = 1;
         position.anchor = GridBagConstraints.CENTER;
@@ -669,13 +675,13 @@ public class GUIAdmin {
      * @return a panel containing labeled text components used to edit Org Unit credits.
      */
     private JPanel makeEditOrgUnitCreditsFieldsPanel() {
-        // All the text edit fields will be added to pnlCreateOrgUnitFields
-        JPanel pnlCreateOrgUnitFields = new JPanel();
-        GroupLayout layout = new GroupLayout(pnlCreateOrgUnitFields);
-        pnlCreateOrgUnitFields.setLayout(layout);
-        pnlCreateOrgUnitFields.setBackground(DARK_JUNGLE_GREEN);
-        pnlCreateOrgUnitFields.setPreferredSize(new Dimension(PANEL_PREFERRED_WIDTH, 50));
-        pnlCreateOrgUnitFields.setMinimumSize(new Dimension(PANEL_MIN_WIDTH, 50));
+        // All the text edit fields will be added to pnlEditOrgUnitCreditsFields
+        JPanel pnlEditOrgUnitCreditsFields = new JPanel();
+        GroupLayout layout = new GroupLayout(pnlEditOrgUnitCreditsFields);
+        pnlEditOrgUnitCreditsFields.setLayout(layout);
+        pnlEditOrgUnitCreditsFields.setBackground(DARK_JUNGLE_GREEN);
+        pnlEditOrgUnitCreditsFields.setPreferredSize(new Dimension(PANEL_PREFERRED_WIDTH, 50));
+        pnlEditOrgUnitCreditsFields.setMinimumSize(new Dimension(PANEL_MIN_WIDTH, 50));
 
         // Turn on automatically adding gaps between components
         layout.setAutoCreateGaps(true);
@@ -686,7 +692,6 @@ public class GUIAdmin {
         lblOrgName.setForeground(Color.white);
         lblCredits.setForeground(Color.white);
 
-        cboxCreditsOrgUnit = new JComboBox<>(AccountTypes);
         cboxCreditsOrgUnit = new JComboBox<>(getOrgUnitNames());
         cboxCreditsOrgUnit.setEditable(false);
         txtCredits = new JTextField(20);
@@ -712,7 +717,7 @@ public class GUIAdmin {
                 .addComponent(lblCredits).addComponent(txtCredits)));
         layout.setVerticalGroup(vGroup);
 
-        return pnlCreateOrgUnitFields;
+        return pnlEditOrgUnitCreditsFields;
     }
 
     /**
@@ -749,6 +754,124 @@ public class GUIAdmin {
 
     //endregion
 
+    //region Edit Organisational Unit's Assets
+
+    /**
+     * Creates the whole edit Org Unit credits panel, including the label of the panel, the edit fields, and the buttons
+     * @return an edit Org Unit credits panel
+     */
+    private JPanel makeEditOrgAssetsPanel() {
+        // pnlEditOrgAssets will contain 3 sub-sections: The Panel title, the editable fields, and the save button
+        JPanel pnlEditOrgAssets = new JPanel();
+        pnlEditOrgAssets.setLayout(new GridBagLayout());
+        pnlEditOrgAssets.setBackground(DARK_JUNGLE_GREEN);
+        pnlEditOrgAssets.setBorder(CreatePanelBorder("Manage Organisational Unit's Assets"));
+        GridBagConstraints position = new GridBagConstraints();
+
+        position.gridy = 1;
+        position.insets = new Insets(0, 0, 20, 0);
+        pnlEditOrgAssets.add(makeEditOrgAssetsFieldsPanel(), position);
+
+        position.gridy = 2;
+        position.insets = new Insets(0, 0, 0, 0);
+        pnlEditOrgAssets.add(makeEditOrgAssetsButtonsPanel(), position);
+
+        return pnlEditOrgAssets;
+    }
+
+    /**
+     * Adds the text components used to edit Org Unit Assets to a panel.
+     * @return a panel containing labeled text components used to edit Org Unit Assets.
+     */
+    private JPanel makeEditOrgAssetsFieldsPanel() {
+        // All the text edit fields will be added to pnlEditOrgAssetsFields
+        JPanel pnlEditOrgAssetsFields = new JPanel();
+        GroupLayout layout = new GroupLayout(pnlEditOrgAssetsFields);
+        pnlEditOrgAssetsFields.setLayout(layout);
+        pnlEditOrgAssetsFields.setBackground(DARK_JUNGLE_GREEN);
+        pnlEditOrgAssetsFields.setPreferredSize(new Dimension(PANEL_PREFERRED_WIDTH, 85));
+        pnlEditOrgAssetsFields.setMinimumSize(new Dimension(PANEL_MIN_WIDTH, 85));
+
+        // Turn on automatically adding gaps between components
+        layout.setAutoCreateGaps(true);
+
+        JLabel lblOrgName = new JLabel("Organisational Unit");
+        JLabel lblAsset = new JLabel("Asset");
+        JLabel lblNumAsset = new JLabel("Quantity");
+
+        lblOrgName.setForeground(Color.white);
+        lblAsset.setForeground(Color.white);
+        lblNumAsset.setForeground(Color.white);
+
+        cboxAssetsOrgUnit = new JComboBox<>(getOrgUnitNames());
+        cboxAssetsOrgUnit.setEditable(false);
+        cboxOrgAssetsAsset = new JComboBox<>(getAssetNames());
+        cboxOrgAssetsAsset.setEditable(false);
+        txtOrgAssetQuantity = new JTextField(20);
+
+        cboxAssetsOrgUnit.addActionListener(listener);
+        cboxAssetsOrgUnit.setSelectedIndex(0);
+        cboxOrgAssetsAsset.addActionListener(listener);
+        cboxOrgAssetsAsset.setSelectedIndex(0);
+
+        // Create a sequential group for the horizontal axis.
+        GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+
+        // The sequential group in turn contains two parallel groups.
+        // One parallel group contains the labels, the other the text fields.
+        hGroup.addGroup(layout.createParallelGroup().addComponent(lblOrgName).addComponent(lblAsset).addComponent(lblNumAsset));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(cboxAssetsOrgUnit).addComponent(cboxOrgAssetsAsset).addComponent(txtOrgAssetQuantity));
+        layout.setHorizontalGroup(hGroup);
+
+        // Create a sequential group for the vertical axis.
+        GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+
+        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(lblOrgName).addComponent(cboxAssetsOrgUnit));
+        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(lblAsset).addComponent(cboxOrgAssetsAsset));
+        vGroup.addGroup((layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(lblNumAsset).addComponent(txtOrgAssetQuantity)));
+        layout.setVerticalGroup(vGroup);
+
+        return pnlEditOrgAssetsFields;
+    }
+
+    /**
+     * Adds the edit Org Unit credits button to a panel
+     * @return a panel containing edit Org Unit credits button.
+     */
+    private JPanel makeEditOrgAssetsButtonsPanel(){
+        JPanel pnlButton = new JPanel();
+        pnlButton.setLayout(new GridBagLayout());
+        pnlButton.setBackground(DARK_JUNGLE_GREEN);
+        pnlButton.setPreferredSize(new Dimension(PANEL_PREFERRED_WIDTH, BUTTON_PREFERRED_HEIGHT));
+        pnlButton.setMinimumSize(new Dimension(PANEL_MIN_WIDTH, BUTTON_MIN_HEIGHT));
+        GridBagConstraints position = new GridBagConstraints();
+
+        btnUpdateOrgAsset = new JButton("Update Org Asset");
+        btnUpdateOrgAsset.setPreferredSize(new Dimension(BUTTON_PREFERRED_WIDTH, BUTTON_PREFERRED_HEIGHT));
+        btnUpdateOrgAsset.setBackground(cust1);
+
+        btnUpdateOrgAsset.addActionListener(listener);
+
+        position.gridx = 1;
+        position.anchor = GridBagConstraints.LINE_END;
+        pnlButton.add(btnUpdateOrgAsset, position);
+
+        // add blank component to fill the space between the buttons
+        position.gridx = 1;
+        position.anchor = GridBagConstraints.CENTER;
+        position.weightx = 100.0;
+        position.gridwidth = GridBagConstraints.RELATIVE;
+        pnlButton.add(Box.createGlue(), position);
+
+        return pnlButton;
+    }
+
+
+    //endregion
+
     //region Helper methods
 
     /**
@@ -757,12 +880,26 @@ public class GUIAdmin {
     private void updateOrgUnitComboBoxes(){
         int userOrgIndex = cboxUserOrgUnitName.getSelectedIndex();
         int creditOrgIndex = cboxCreditsOrgUnit.getSelectedIndex();
+        int assetOrgIndex = cboxCreditsOrgUnit.getSelectedIndex();
 
         var orgUnitNamesModel = new DefaultComboBoxModel<>(getOrgUnitNames());
         cboxUserOrgUnitName.setModel(orgUnitNamesModel);
         cboxUserOrgUnitName.setSelectedIndex(userOrgIndex);
         cboxCreditsOrgUnit.setModel(orgUnitNamesModel);
         cboxCreditsOrgUnit.setSelectedIndex(creditOrgIndex);
+        cboxAssetsOrgUnit.setModel(orgUnitNamesModel);
+        cboxAssetsOrgUnit.setSelectedIndex(assetOrgIndex);
+    }
+
+    /**
+     * Updates the available assets in the asset combo boxes.
+     */
+    private void updateAssetComboBoxes(){
+        int orgAssetIndex = cboxOrgAssetsAsset.getSelectedIndex();
+
+        var assetNamesModel = new DefaultComboBoxModel<>(getAssetNames());
+        cboxOrgAssetsAsset.setModel(assetNamesModel);
+        cboxOrgAssetsAsset.setSelectedIndex(orgAssetIndex);
     }
 
     /**
@@ -774,6 +911,17 @@ public class GUIAdmin {
             orgNames[i] = OrganisationUnits.get(i).organisationName;
         }
         return orgNames;
+    }
+
+    /**
+     * @return a String[] of the asset types
+     */
+    private String[] getAssetNames(){
+        String[] assetNames = new String[assetTypes.size()];
+        for (int i = 0; i < assetTypes.size(); i++) {
+            assetNames[i] = assetTypes.get(i).getAssetName();
+        }
+        return assetNames;
     }
 
     // Creates a titled border with a white centered title
@@ -813,6 +961,8 @@ public class GUIAdmin {
                     saveOrgUnitPressed();
                 } else if (source == btnUpdateCredits) {
                     updateCreditsPressed();
+                } else if (source == btnUpdateOrgAsset) {
+                    updateOrgAssetQuantityPressed();
                 }
             } else if (src instanceof JComboBox){
                 JComboBox source = (JComboBox) e.getSource();
@@ -829,6 +979,9 @@ public class GUIAdmin {
                     // Set the credits text to the org unit's current credits
                     var orgUnit = OrganisationUnits.get(cboxCreditsOrgUnit.getSelectedIndex());
                     txtCredits.setText(Integer.toString(orgUnit.getCredits()));
+                } else if (source == cboxAssetsOrgUnit || source == cboxOrgAssetsAsset){
+                    // Set the num assets text field to the number of that type of assets that the org has
+                    setTxtNumOrgAsset();
                 }
             }
         }
@@ -881,12 +1034,24 @@ public class GUIAdmin {
         private void saveAssetPressed() {
             if (txtAssetName.getText() != null && !txtAssetName.getText().equals("")) {
                 String assetName = txtAssetName.getText();
-                admin.CreateNewAssetType(assetName);
+                AssetType asset = new AssetType(assetName);
 
-                JOptionPane.showMessageDialog(pnlAdmin, assetName + " has been added as a new Asset Type!",
-                        "New Asset Type", JOptionPane.INFORMATION_MESSAGE);
-                txtAssetName.setText("");
-                setAddAssetComponentsEditable(false);
+                // Check that the asset does not exist
+                if (asset.getAssetId() == -1) {
+                    admin.CreateNewAssetType(assetName);
+
+                    JOptionPane.showMessageDialog(pnlAdmin, assetName + " has been added as a new Asset Type!",
+                            "New Asset Type", JOptionPane.INFORMATION_MESSAGE);
+                    txtAssetName.setText("");
+                    setAddAssetComponentsEditable(false);
+                    assetTypes.add(asset);
+                    updateAssetComboBoxes(); // Update the asset combo boxes
+                }
+                else {
+                    // Asset already exists
+                    JOptionPane.showMessageDialog(pnlAdmin, assetName + " already exists! Please try a different name.",
+                            "New Asset Type", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 JOptionPane.showMessageDialog(pnlAdmin, "Please enter name of the new asset.",
                         "Create Asset", JOptionPane.WARNING_MESSAGE);
@@ -974,6 +1139,56 @@ public class GUIAdmin {
                 JOptionPane.showMessageDialog(pnlAdmin, orgUnit.getName() + " now has " + credits + " credits!",
                         "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
 
+            } else {
+                JOptionPane.showMessageDialog(pnlAdmin, "Please enter the number of credits the the organisational unit will be given.",
+                        "Edit Credits", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+
+        /**
+         * Updates the number of org assets text field to be how many assets the org has of the chosen type
+         */
+        private void setTxtNumOrgAsset(){
+            try {
+                var orgUnit = OrganisationUnits.get(cboxAssetsOrgUnit.getSelectedIndex());
+                var asset = assetTypes.get(cboxOrgAssetsAsset.getSelectedIndex());
+                int orgAssetId = OrganisationAsset.getOrganisationAssetID(orgUnit, asset);
+
+                // If id is -1, then the unit doesn't have any of the asset yet, set the quantity to 0
+                if (orgAssetId == -1){
+                    txtOrgAssetQuantity.setText(Integer.toString(0));
+                } else {
+                    txtOrgAssetQuantity.setText(Integer.toString(OrganisationAsset.getQuantity(orgAssetId)));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * When the update Org Assets button is pressed, check that all fields are filled,
+         * and that the quantity text is an int. If they are, update the quantity the org has of that asset.
+         * If the org Unit doesn't have any of that asset, create a new org asset for that org.
+         */
+        private void updateOrgAssetQuantityPressed() {
+
+            if (txtOrgAssetQuantity.getText() != null && !txtOrgAssetQuantity.getText().equals("")) {
+                int quantity;
+                try {
+                    quantity = Integer.parseInt(txtOrgAssetQuantity.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(pnlAdmin, txtOrgAssetQuantity.getText() + " is not a valid credit amount. " +
+                                    "Please type in a whole number.",
+                            "Edit Credits", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                var orgUnit = OrganisationUnits.get(cboxAssetsOrgUnit.getSelectedIndex());
+                var asset = assetTypes.get(cboxOrgAssetsAsset.getSelectedIndex());
+
+                admin.EditOrganisationalAsset(orgUnit, asset, quantity);
+
+                JOptionPane.showMessageDialog(pnlAdmin, orgUnit.getName() + " now has " + quantity + " " + asset + "(s)!",
+                        "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(pnlAdmin, "Please enter the number of credits the the organisational unit will be given.",
                         "Edit Credits", JOptionPane.WARNING_MESSAGE);
