@@ -262,9 +262,9 @@ public class JDBCTradeDataSource implements TradeDataSource {
 //            HashSet<Integer> assets = new HashSet<Integer>();
 
             String[][] assets = new String[count+1][];
-            String[] ass = new String[4];
             int i = 0;
             while (rs.next()) {
+                String[] ass = new String[4];
                 ass[0] = String.valueOf(rs.getInt("tradeOrderID"));
                 ass[1] = rs.getString("name");
                 ass[2] = String.valueOf(rs.getInt("quantity"));
@@ -297,11 +297,10 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 count = 0;
             }
 
-            String[][] assets = new String[count+1][];
-            String[] ass = new String[4];
-
+            String[][] assets = new String[count][];
             int i = 0;
             while (rs.next()) {
+                String[] ass = new String[4];
                 ass[0] = String.valueOf(rs.getInt("tradeOrderID"));
                 ass[1] = rs.getString("name");
                 ass[2] = String.valueOf(rs.getInt("quantity"));
@@ -309,7 +308,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 assets[i] = ass;
                 i++;
             }
-            System.out.println("getSellOrders"+Arrays.deepToString(assets));
+            System.out.println("getSellOrders!!!!!!!!! okay"+Arrays.deepToString(assets));
             return assets;
         }
         catch (SQLException throwables){

@@ -54,10 +54,50 @@ public class GUIOrgHome{
         panel2.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
-        //Retrieve trades buy and sell tables for organisational unit
-        JTable sellTable = GUIMain.constructTable(TradeManager.getSellOrders(organisationalUnitID),SellHeading);
+        //Retrieve trades buy table for organisational unit
+        String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
+        int buySize = tradesBuy.length;
+        String[] tradeIDBuy = new String[buySize]; //array that stores organisationAssetID's for buy orders
+        String[][] buyData = new String[buySize][]; //array that stores data to be displayed in buyTrades table
+        String[] buy = new String[3]; //temporary array
+        try {
+            for (int i = 0; i < buySize; i++) {
+                if(tradesBuy[i]!= null) {
+                    tradeIDBuy[i] = tradesBuy[0][i];
+                    buy[0] = tradesBuy[i][1];
+                    buy[1] = tradesBuy[i][2];
+                    buy[2] = tradesBuy[i][3];
+                    buyData[i] = buy;
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        JTable sellTable = GUIMain.constructTable(buyData,SellHeading);
         JScrollPane TradesPaneSell = GUIMain.tablePane(sellTable);
-        JTable buyTable = GUIMain.constructTable(TradeManager.getBuyOrders(organisationalUnitID), BuyHeading);
+
+        //Retrieve trades sell table for organisational unit
+        String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
+        int sellSize = tradesBuy.length;
+        String[] tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
+        String[][] sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
+        String[] sell = new String[3]; //temporary array
+        try {
+            for (int i = 0; i < sellSize; i++) {
+                if (tradesSell[i]!= null) {
+                    tradeIDSell[i] = tradesSell[0][i];
+                    sell[0] = tradesSell[i][1];
+                    sell[1] = tradesSell[i][2];
+                    sell[2] = tradesSell[i][3];
+                    sellData[i] = sell;
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        JTable buyTable = GUIMain.constructTable(sellData, BuyHeading);
         JScrollPane TradesPaneBuy = GUIMain.tablePane(buyTable);
 
         //Set up Trades tables in Trades tab
@@ -80,8 +120,9 @@ public class GUIOrgHome{
         JTable assetTable = GUIMain.constructTable(AssetItemQuantity, AssetHeading);
         JScrollPane Assets = GUIMain.tablePane(assetTable);
 
-        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position, buyTable);
-        JButton removeSellOrderButton = removeSellOrderButton(panel2, position, sellTable);
+        //create buttons
+        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position, buyTable, tradeIDBuy);
+        JButton removeSellOrderButton = removeSellOrderButton(panel2, position, sellTable, tradeIDSell);
         JButton buyButton = buyAssetButton(panel2, position);
         JButton sellButton = sellAssetButton(panel2, position);
         creditsLabel(panel2, position);
@@ -128,13 +169,13 @@ public class GUIOrgHome{
         pageScroll.add(panel2);
     }
 
-    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
+    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table, String[] tradeIDBuy){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
-        position.gridx = 2;
+        position.gridx = 3;
         position.gridy = 1;
         position.gridwidth = 1;
-        position.anchor = GridBagConstraints.LINE_END;
+        position.anchor = GridBagConstraints.CENTER;
         JButton removeButton = new JButton("Cancel Buy Order");
         removeButton.setBackground(cust1);
         panel2.add(removeButton, position);
@@ -147,20 +188,20 @@ public class GUIOrgHome{
                     JOptionPane.showMessageDialog(null, "Please select one row from the 'Buy Orders' table to cancel order.");
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow));
+                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow) + "with tradeID" + String.valueOf(tradeIDBuy[selectedRow]));
                 }
             }
         });
         return removeButton;
     }
 
-    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
+    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table, String[] tradeIDSell){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
-        position.gridx = 3;
+        position.gridx = 2;
         position.gridy = 1;
         position.gridwidth = 1;
-        position.anchor = GridBagConstraints.CENTER;
+        position.anchor = GridBagConstraints.LINE_END;
         JButton removeButton = new JButton("Cancel Sell Order");
         removeButton.setBackground(cust1);
         panel2.add(removeButton, position);
@@ -173,7 +214,8 @@ public class GUIOrgHome{
                     JOptionPane.showMessageDialog(null, "Please select one row from the 'Sell Orders' table to cancel order.");
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow));
+                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow) + "with tradeID" + String.valueOf(tradeIDSell[selectedRow]));
+
                 }
             }
         });
@@ -196,6 +238,11 @@ public class GUIOrgHome{
             {
                 // display buy popup
                 System.out.println("Just pressed the buy button");
+                try {
+                    GUIOrder.buyPopup();
+                } catch (Exception m) {
+                    m.printStackTrace();
+                }
             }
         });
         buyButton.setVisible(false);

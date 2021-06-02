@@ -24,7 +24,7 @@ public class ClientApp {
         //guiLogin = new GUILogin();
         //Thread guiLoginThread = new Thread(guiLogin);
         //guiLoginThread.start();
-        launchProgram(3);
+        launchProgram(2);
     }
 
     public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
