@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static TradingPlatform.GUIMain.*;
 import static java.awt.GridBagConstraints.*;
@@ -72,6 +73,7 @@ public class GUIHome extends JFrame{
         sellButton.setMinimumSize(new Dimension(50, 50));
         buyButton.addActionListener(this::sellActionListener);
 
+        System.out.println(" this is iiadfnkjsdflak  !!!!!!!! "+ Arrays.deepToString(TradeManager.getMostRecentAssetTypeTradeDetails()));
         JScrollPane TradesPaneSell = GUIMain.tablePane(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableHeading));
         TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
         TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));

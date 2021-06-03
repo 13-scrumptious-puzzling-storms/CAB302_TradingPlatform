@@ -56,9 +56,9 @@ public class TradeManager {
     }
 
     public static String[][] getMostRecentAssetTypeTradeDetails() throws IOException, ClassNotFoundException {
-//        Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getMostRecentAssetTypeTradeDetails", new String[]{});
-//        return response.getDoubleString();
-        return null;
+        Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getMostRecentAssetTypeTradeDetails", new String[]{});
+        return response.getDoubleString();
+//        return null;
     }
 
 
