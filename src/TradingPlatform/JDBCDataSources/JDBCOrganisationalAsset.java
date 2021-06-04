@@ -123,9 +123,9 @@ public class JDBCOrganisationalAsset {
             }
 
             String[][] assets = new String[count][];
-            String[] ass = new String[3];
             int i = 0;
             while (rs.next()) {
+                String[] ass = new String[3];
                 ass[0] = Integer.toString(rs.getInt(ASSET_ID_HEADING));
                 ass[1] = rs.getString(NAME_HEADING);
                 ass[2] = String.valueOf(rs.getInt(QUANTITY_HEADING));

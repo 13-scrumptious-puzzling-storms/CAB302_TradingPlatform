@@ -1,34 +1,24 @@
 package TradingPlatform;
 
+import TradingPlatform.NetworkProtocol.ServerSend;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Arrays;
 
-import static TradingPlatform.GUIMain.tabHeight;
-import static TradingPlatform.GUIMain.tabWidth;
-import static TradingPlatform.GUIMain.cust1;
-import static TradingPlatform.GUIMain.cust2;
-import static TradingPlatform.GUIMain.cust3;
-import static TradingPlatform.GUIMain.FONT;
+import static TradingPlatform.GUIMain.*;
 
 
 public class GUIOrgHome{
-//    public static void main(String[] args) throws IOException, ClassNotFoundException {
-//        ClientApp.launchProgram(2);
-//    }
 
-    public String BuyHeading[] = {"Buy Orders","Quantity", "Price",};
-    public String SellHeading[] = {"Sell Orders","Quantity","Price"};
+
+    public String BuyHeading[] = {"Buy Orders","Quantity","Remaining Quantity", "Price",};
+    public String SellHeading[] = {"Sell Orders","Quantity","Remaining Quantity", "Price"};
     public String AssetHeading[] = {"Asset Item","Quantity"};
 
     private User user;
@@ -36,8 +26,21 @@ public class GUIOrgHome{
     int organisationalUnitID;
     int credits;
     String orgName;
+    JTabbedPane tradesAssets;
+    DefaultTableModel buyTableModel;
+    JScrollPane TradesPaneBuy;
+    JTable buyTable;
+    JSplitPane tablesPane;
 
+    JScrollPane TradesPaneSell;
 
+    /**
+     * GUIOrg home constructor, adding the organisational home tab to pane
+     * @param OrgHomeTab Tab which to add organisational home contents
+     * @param user User that belongs to the organisational unit
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public GUIOrgHome(JPanel OrgHomeTab, User user) throws IOException, ClassNotFoundException {
         this.user = user;
         this.organisationalUnit = user.getOrganisationalUnit();
@@ -47,21 +50,72 @@ public class GUIOrgHome{
         orgHomePanel(OrgHomeTab);
     }
 
+    /**
+     * Main method for adding components to Tab (buttons, tables, labels)
+     * @param panel2 panel to add all components to
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void orgHomePanel(JPanel panel2) throws IOException, ClassNotFoundException {
 
-        JTabbedPane tradesAssets = new JTabbedPane();
+        tradesAssets = new JTabbedPane();
         tradesAssets.setBackground(cust3);
         panel2.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
-        //Retrieve trades buy and sell tables for organisational unit
-        JTable sellTable = GUIMain.constructTable(TradeManager.getSellOrders(organisationalUnitID),SellHeading);
-        JScrollPane TradesPaneSell = GUIMain.tablePane(sellTable);
-        JTable buyTable = GUIMain.constructTable(TradeManager.getBuyOrders(organisationalUnitID), BuyHeading);
-        JScrollPane TradesPaneBuy = GUIMain.tablePane(buyTable);
+        //Retrieve trades buy table for organisational unit
+        String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
+        int buySize = tradesBuy.length;
+        String[] tradeIDBuy = new String[buySize]; //array that stores organisationAssetID's for buy orders
+        String[][] buyData = new String[buySize][]; //array that stores data to be displayed in buyTrades table
+        try {
+            for (int i = 0; i < buySize; i++) {
+                if(tradesBuy[i]!= null) {
+                    tradeIDBuy[i] = tradesBuy[i][0];
+                    String[] buy = new String[4]; //temporary array
+                    buy[0] = tradesBuy[i][1];
+                    buy[1] = tradesBuy[i][2];
+                    buy[2] = tradesBuy[i][3];
+                    buy[3] = tradesBuy[i][4];
+                    buyData[i] = buy;
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        buyTableModel = GUIMain.constructTable(buyData,BuyHeading);
+        buyTable = tableCreator(buyTableModel);
+        TradesPaneBuy = GUIMain.tablePane(buyTable);
+
+        //Retrieve trades sell table for organisational unit
+        String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
+        int sellSize = tradesSell.length;
+        String[] tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
+        String[][] sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
+        try {
+            for (int i = 0; i < sellSize; i++) {
+                if (tradesSell[i]!= null) {
+                    tradeIDSell[i] = tradesSell[i][0];
+                    String[] sell = new String[4]; //temporary array
+                    sell[0] = tradesSell[i][1];
+                    sell[1] = tradesSell[i][2];
+                    sell[2] = tradesSell[i][3];
+                    sell[3] = tradesSell[i][4];
+
+                    sellData[i] = sell;
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        DefaultTableModel sellTableModel = GUIMain.constructTable(sellData, SellHeading);
+        JTable sellTable = tableCreator(sellTableModel);
+        TradesPaneSell = tablePane(sellTable);
 
         //Set up Trades tables in Trades tab
-        JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
+        tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
         tablesPane.setDividerLocation(tabWidth/2);
         tablesPane.setResizeWeight(0.5);
 
@@ -70,18 +124,19 @@ public class GUIOrgHome{
         int size = OrgAssets.length;
         String[] OrgAssetID = new String[size]; //array that stores OrganisationAssetID's for given array
         String[][] AssetItemQuantity = new String[size][]; //array that stores AssetItem and AssetQuantity
-        String[] assets = new String[2]; //temporary array
         for(int i = 0; i<size; i++){
             OrgAssetID[i] = OrgAssets[i][0];
+            String[] assets = new String[2]; //temporary array
             assets[0] = OrgAssets[i][1];
             assets[1] = OrgAssets[i][2];
             AssetItemQuantity[i] = assets;
         }
-        JTable assetTable = GUIMain.constructTable(AssetItemQuantity, AssetHeading);
-        JScrollPane Assets = GUIMain.tablePane(assetTable);
+        DefaultTableModel assetTableModel = GUIMain.constructTable(AssetItemQuantity, AssetHeading);
+        JScrollPane Assets = GUIMain.tablePane(tableCreator(assetTableModel));
 
-        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position, buyTable);
-        JButton removeSellOrderButton = removeSellOrderButton(panel2, position, sellTable);
+        //create buttons
+        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position, buyTable, tradeIDBuy, buyData);
+        JButton removeSellOrderButton = removeSellOrderButton(panel2, position, sellTable, tradeIDSell, sellData);
         JButton buyButton = buyAssetButton(panel2, position);
         JButton sellButton = sellAssetButton(panel2, position);
         creditsLabel(panel2, position);
@@ -91,6 +146,7 @@ public class GUIOrgHome{
         JLabel orgName = new JLabel(name);
         orgName.setForeground(Color.white);
         orgName.setFont(new Font(FONT, Font.PLAIN, 18));
+        position.insets = new Insets(0, 0, 0, 0);
         position.gridx = 1;
         position.gridy = 2;
         position.anchor = GridBagConstraints.LINE_START;
@@ -128,13 +184,13 @@ public class GUIOrgHome{
         pageScroll.add(panel2);
     }
 
-    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
+    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table, String[] tradeIDBuy, String[][] tradeData){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
-        position.gridx = 2;
+        position.gridx = 3;
         position.gridy = 1;
         position.gridwidth = 1;
-        position.anchor = GridBagConstraints.LINE_END;
+        position.anchor = GridBagConstraints.CENTER;
         JButton removeButton = new JButton("Cancel Buy Order");
         removeButton.setBackground(cust1);
         panel2.add(removeButton, position);
@@ -147,20 +203,62 @@ public class GUIOrgHome{
                     JOptionPane.showMessageDialog(null, "Please select one row from the 'Buy Orders' table to cancel order.");
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow));
+                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow) + "with tradeID" + String.valueOf(tradeIDBuy[selectedRow]));
+                    int result = JOptionPane.showConfirmDialog(null,"Cancel trade buy order of "+tradeData[selectedRow][1]+" "+tradeData[selectedRow][0]+"?", "Cancel trade",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    if(result == JOptionPane.YES_OPTION){
+                        System.out.print("Trade cancelled");
+                        try {
+                            TradeManager.setCancel(Integer.valueOf(tradeIDBuy[selectedRow])); //cancel order
+
+                            String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
+                            int sellSize = tradesBuy.length;
+                            String[] tradeIDBuy = new String[sellSize]; //array that stores organisationAssetID's for buy orders
+                            String[][] buyData = new String[sellSize][]; //array that stores data to be displayed in buyTrades table
+                            for (int i = 0; i < sellSize; i++) {
+                                if (tradesBuy[i]!= null) {
+                                    tradeIDBuy[i] = tradesBuy[0][i];
+                                    String[] buy = new String[3]; //temporary array
+                                    buy[0] = tradesBuy[i][1];
+                                    buy[1] = tradesBuy[i][2];
+                                    buy[2] = tradesBuy[i][3];
+                                    buyData[i] = buy;
+                                }
+                            }
+                            //buyTableModel = GUIMain.constructTable(buyData, BuyHeading);
+                            //buyTable = tableCreator(buyTableModel);
+                            //TradesPaneBuy = GUIMain.tablePane(buyTable);
+                            //tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
+
+                            //DefaultTableModel tableModel = (DefaultTableModel) table. getModel();
+                            //tableModel.setRowCount(sellSize-1);
+                            //tableModel.setRowCount(sellSize);
+
+                            //restore credits (add remaining quantity*price)
+                            //int newCredits = credits + Integer.valueOf(tradeData[selectedRow][2])*Integer.valueOf(tradeData[selectedRow][3]);
+                            //OrganisationalUnit.UpdateOrganisationalUnitCredits(organisationalUnitID, newCredits);
+                            //update credits label
+                            //creditsLabel(panel2, position);
+                        } catch (Exception m) {
+                            m.printStackTrace();
+                        }
+                    }else {
+                        JOptionPane.showMessageDialog(null, "Trade cancellation unsuccessful");
+                    }
                 }
             }
         });
         return removeButton;
     }
 
-    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
+    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table, String[] tradeIDSell, String[][] tradeData){
         //Create Remove Buy/Sell Button
-        position.insets = new Insets(0, 0, 20, 0);
-        position.gridx = 3;
+        position.insets = new Insets(0, 80, 20, 0);
+        position.gridx = 2;
         position.gridy = 1;
         position.gridwidth = 1;
-        position.anchor = GridBagConstraints.CENTER;
+        position.anchor = GridBagConstraints.LINE_START;
         JButton removeButton = new JButton("Cancel Sell Order");
         removeButton.setBackground(cust1);
         panel2.add(removeButton, position);
@@ -173,7 +271,40 @@ public class GUIOrgHome{
                     JOptionPane.showMessageDialog(null, "Please select one row from the 'Sell Orders' table to cancel order.");
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow));
+                    int result = JOptionPane.showConfirmDialog(null,"Cancel trade sell order of "+tradeData[selectedRow][1]+" "+tradeData[selectedRow][0]+"?", "Cancel trade",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    if(result == JOptionPane.YES_OPTION){
+                        System.out.print("Trade cancelled");
+                        try {
+                            TradeManager.setCancel(Integer.valueOf(tradeIDSell[selectedRow])); //cancel order
+
+                            String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
+                            int sellSize = tradesSell.length;
+                            String[] tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
+                            String[][] sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
+                            for (int i = 0; i < sellSize; i++) {
+                                if (tradesSell[i]!= null) {
+                                    tradeIDSell[i] = tradesSell[0][i];
+                                    String[] sell = new String[3]; //temporary array
+                                    sell[0] = tradesSell[i][1];
+                                    sell[1] = tradesSell[i][2];
+                                    sell[2] = tradesSell[i][3];
+                                    sellData[i] = sell;
+                                }
+                            }
+                            //Update Sell Order Table
+                            //DefaultTableModel tableModel = (DefaultTableModel) table. getModel();
+                            //tableModel.setRowCount(0);
+                            //restore the remaining quantity of the asset
+                            //update assets table
+                        } catch (Exception m) {
+                            m.printStackTrace();
+                        }
+
+                    }else {
+                        JOptionPane.showMessageDialog(null, "Trade cancellation unsuccessful");
+                    }
                 }
             }
         });
@@ -196,6 +327,11 @@ public class GUIOrgHome{
             {
                 // display buy popup
                 System.out.println("Just pressed the buy button");
+                try {
+                    GUIOrder.buyPopup();
+                } catch (Exception m) {
+                    m.printStackTrace();
+                }
             }
         });
         buyButton.setVisible(false);
@@ -222,6 +358,7 @@ public class GUIOrgHome{
 
     private void creditsLabel(JPanel panel2, GridBagConstraints position){
         //Credits Label
+        //credits = organisationalUnit.getCredits(organisationalUnitID);
         String creditsLabel = "Credits: " + String.valueOf(credits);
         JLabel credits = new JLabel(creditsLabel);
         credits.setForeground(Color.white);

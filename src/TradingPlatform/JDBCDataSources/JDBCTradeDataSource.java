@@ -20,11 +20,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private static final String GET_BUY_ORDERS = "SELECT o.*, a.organisationUnitId, name FROM TradeOrders AS o \n" +
             "LEFT JOIN organisationAsset AS a ON a.organisationAssetID = o.organisationAssetID \n" +
             "LEFT JOIN assetType AS t ON a.assetTypeId = t.assetTypeId\n" +
-            "WHERE a.organisationUnitId=? AND isSellOrder='false';";
+            "WHERE a.organisationUnitId=? AND isSellOrder='false' AND cancelled='false';";
     private static final String GET_SELL_ORDERS = "SELECT o.*, a.organisationUnitId, name FROM TradeOrders AS o \n" +
             "LEFT JOIN organisationAsset AS a ON a.organisationAssetID = o.organisationAssetID \n" +
             "LEFT JOIN assetType AS t ON a.assetTypeId = t.assetTypeId\n" +
-            "WHERE a.organisationUnitId=? AND isSellOrder='true';";
+            "WHERE a.organisationUnitId=? AND isSellOrder='true' AND cancelled='false';";
     private static final String COUNT_ORDER_ROWS = "SELECT count(organisationUnitId) as num FROM TradeOrders as o\n" +
             "left join organisationAsset as a on a.organisationAssetID = o.organisationAssetID\n" +
             "WHERE organisationUnitId=? and isSellOrder=?;";
@@ -206,14 +206,16 @@ public class JDBCTradeDataSource implements TradeDataSource {
 
     //~~~~~TO FIX METHODS UNDER THIS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @Override
-    public void setCancel(int tradeId){
+    public Boolean setCancel(int tradeId){
         try {
             setCancelled.clearParameters();
             setCancelled.setInt(1, tradeId);
             setCancelled.executeUpdate();
+            return true;
         }
         catch (SQLException throwables){
             throwables.printStackTrace();
+            return false;
         }
     }
 
@@ -261,20 +263,23 @@ public class JDBCTradeDataSource implements TradeDataSource {
             }
 //            HashSet<Integer> assets = new HashSet<Integer>();
 
-            String[][] assets = new String[count+1][];
-            String[] ass = new String[4];
+            String[][] assets = new String[count][];
             int i = 0;
             while (rs.next()) {
+                String[] ass = new String[5];
                 ass[0] = String.valueOf(rs.getInt("tradeOrderID"));
                 ass[1] = rs.getString("name");
                 ass[2] = String.valueOf(rs.getInt("quantity"));
-                ass[3] = String.valueOf(rs.getInt("price"));
+                ass[3] = String.valueOf(rs.getInt("remainingQuantity"));
+                ass[4] = String.valueOf(rs.getInt("price"));
                 assets[i] = ass;
                 i++;
             }
+            System.out.println("Buy assets are: " + Arrays.deepToString(assets));
             return assets;
         }
         catch (SQLException throwables){
+            System.out.println("Into the catch");
             throwables.printStackTrace();
         }
         return null;
@@ -288,7 +293,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
 
             countOrders.clearParameters();
             countOrders.setInt(1, orgUnitId);
-            countOrders.setString(2, "false");
+            countOrders.setString(2, "true");
             ResultSet num = countOrders.executeQuery();
             int count;
             if (num.next()) {
@@ -297,19 +302,18 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 count = 0;
             }
 
-            String[][] assets = new String[count+1][];
-            String[] ass = new String[4];
-
+            String[][] assets = new String[count][];
             int i = 0;
             while (rs.next()) {
+                String[] ass = new String[5];
                 ass[0] = String.valueOf(rs.getInt("tradeOrderID"));
                 ass[1] = rs.getString("name");
                 ass[2] = String.valueOf(rs.getInt("quantity"));
-                ass[3] = String.valueOf(rs.getInt("price"));
+                ass[3] = String.valueOf(rs.getInt("remainingQuantity"));
+                ass[4] = String.valueOf(rs.getInt("price"));
                 assets[i] = ass;
                 i++;
             }
-            System.out.println("getSellOrders"+Arrays.deepToString(assets));
             return assets;
         }
         catch (SQLException throwables){

@@ -94,6 +94,12 @@ public class ServerSend implements Runnable {
                         Transmit(new Request(className, methodName, new String[]{ Integer.toString(newOrgId) }));
                         break;
                     }
+                    case "UpdateOrganisationalUnitCredits": {
+                        JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(connection);
+                        Boolean successful = DBInterface.UpdateOrganisationalUnitCredits(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
+                        Transmit(new Request(className, methodName, new String[]{ Boolean.toString(successful) }));
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;
@@ -140,16 +146,24 @@ public class ServerSend implements Runnable {
                 break;
             case "JDBCTradeDataSource":
                 switch(methodName){
-                    case "getSellOrders":
-                        JDBCTradeDataSource DBInterface = new JDBCTradeDataSource(connection);
+                    case "getSellOrders": {
+                        var DBInterface = new JDBCTradeDataSource(connection);
                         String[][] response = (DBInterface.getSellOrders(Integer.parseInt(arguments[0])));
                         Transmit(new Request(className, methodName, response));
                         break;
-                    case "getBuyOrders":
-                        JDBCTradeDataSource DBInterface1 = new JDBCTradeDataSource(connection);
+                    }
+                    case "getBuyOrders": {
+                        var DBInterface1 = new JDBCTradeDataSource(connection);
                         String[][] response1 = (DBInterface1.getBuyOrders(Integer.parseInt(arguments[0])));
                         Transmit(new Request(className, methodName, response1));
                         break;
+                    }
+                    case "setCancel": {
+                        var DBInterface2 = new JDBCTradeDataSource(connection);
+                        Boolean completed = DBInterface2.setCancel(Integer.parseInt(arguments[0]));
+                        Transmit(new Request(className, methodName, new String[]{Boolean.toString(completed)}));
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;

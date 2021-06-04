@@ -161,7 +161,12 @@ public class TestDatabaseFunctions {
             "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (7, 7, 50, 40, 'false', 3, 'false', '2021-05-21 18:17:00.000')",
             "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (8, 8, 50, 15, 'false', 1, 'false', '2021-05-21 18:18:00.000')",
             "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (9, 9, 50, 15, 'true', 1, 'false', '2021-05-21 18:19:00.000')",
-            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (10, 10, 50, 15, 'true', 1, 'false', '2021-05-21 18:20:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (10, 1, 50, 15, 'true', 1, 'false', '2021-05-21 18:20:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (11, 2, 40, 40, 'false', 1, 'false', '2021-05-21 18:20:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (12, 3, 35, 35, 'false', 1, 'false', '2021-05-21 18:20:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (13, 2, 26, 26, 'false', 1, 'false', '2021-05-21 18:20:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (14, 1, 3, 3, 'true', 1, 'false', '2021-05-21 18:20:00.000')",
+            "INSERT INTO TradeOrders (tradeOrderID, organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (15, 2, 3, 3, 'true', 1, 'false', '2021-05-21 18:20:00.000')",
 
 //Table: TradeRecon
             "CREATE TABLE TradeRecon (\n" +

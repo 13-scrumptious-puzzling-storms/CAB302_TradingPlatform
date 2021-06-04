@@ -1,9 +1,5 @@
 package TradingPlatform.Interfaces;
 
-import TradingPlatform.AssetType;
-
-import java.util.HashSet;
-
 public interface TradeDataSource {
 
     void addTradeOrder(int orgAssetId, int quantity, boolean type, int price);
@@ -46,7 +42,7 @@ public interface TradeDataSource {
 
     int getRemaining(int tradeId);
 
-    void setCancel(int tradeId);
+    Boolean setCancel(int tradeId);
 
     Boolean getCancel(int tradeId);
 
