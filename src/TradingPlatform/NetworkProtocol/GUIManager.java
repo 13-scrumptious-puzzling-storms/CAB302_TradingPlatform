@@ -1,18 +1,19 @@
 package TradingPlatform.NetworkProtocol;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.regex.Pattern;
 
-public class GUIManager extends JFrame implements ActionListener, Runnable {
+/**
+ * Responsible for the frontend and backend of the Server's GUI.
+ * Uses ServerConfig for the backend of data getting & setting.
+ */
+public class GUIManager extends JFrame implements ActionListener {
     // Screen Sizing
     private static final float SCREEN_RATIO = 2;
     private static final float WINDOW_RATIO = 2;
@@ -57,10 +58,12 @@ public class GUIManager extends JFrame implements ActionListener, Runnable {
     private static JFrame jframe;
     private static Boolean onStartup;
 
-    // Refer to WIRING FOR GOOD COMMENTS
-
-    @Override
-    public void run() {
+    /**
+     * Constructor for GUIManager.
+     * Attempts to initialise ServerConfig for backend data
+     * and begin the method for GUI creation.
+     */
+    public GUIManager() {
         try {
             serverConfig = new ServerConfig();
             displayJFrame();
@@ -69,6 +72,14 @@ public class GUIManager extends JFrame implements ActionListener, Runnable {
         }
     }
 
+    /**
+     * Builds the entire graphical user interface for the Login.
+     * Initialises JFrame, panels, buttons, labels etc.
+     * Sets JFrame and UIManager parameters.
+     *
+     * @throws IOException if method changeProps() fails to update the values
+     * of the properties.
+     */
     private void displayJFrame() throws IOException {
         // Initialise JFrame
         jframe = new JFrame("SPS Trading Platform SERVER");
@@ -128,6 +139,12 @@ public class GUIManager extends JFrame implements ActionListener, Runnable {
         UIManager.put("OptionPane.noButtonText", "Cancel");
     }
 
+    /**
+     * Creates the console panel.
+     * Initialises labels, textFields and buttons.
+     * Adds the constructed console panel to provided JPanel panel.
+     * @param panel The parent panel which has the Login panel added to it.
+     */
     private void consolePanel(JPanel panel) {
         // Static Labels
         Color staticTextColour = WHITE;
