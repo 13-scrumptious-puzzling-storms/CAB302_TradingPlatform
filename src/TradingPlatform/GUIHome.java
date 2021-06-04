@@ -57,6 +57,7 @@ public class GUIHome extends JFrame{
         buyButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         buyButton.setPreferredSize(new Dimension(200, 100));
         buyButton.setMinimumSize(new Dimension(50, 50));
+        buyButton.setBackground(cust1);
         buyButton.addActionListener(e -> {
             try {
                 buyActionListener(e);
@@ -71,6 +72,7 @@ public class GUIHome extends JFrame{
         sellButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         sellButton.setPreferredSize(new Dimension(200, 100));
         sellButton.setMinimumSize(new Dimension(50, 50));
+        sellButton.setBackground(cust1);
         buyButton.addActionListener(this::sellActionListener);
 
         System.out.println(" this is iiadfnkjsdflak  !!!!!!!! "+ Arrays.deepToString(TradeManager.getMostRecentAssetTypeTradeDetails()));

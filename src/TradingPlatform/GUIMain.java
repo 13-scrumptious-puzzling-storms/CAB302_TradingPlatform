@@ -80,6 +80,8 @@ public class GUIMain extends JFrame {
     public GUIMain(User user) throws IOException, ClassNotFoundException {
         super("SPS Trading");
         UIManager.put("TabbedPane.selected", cust1);
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("Button.background", cust1);
 //        JFrame.setDefaultLookAndFeelDecorated(false);
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
