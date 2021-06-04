@@ -141,14 +141,16 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return null;
     }
 
-    public void UpdateOrganisationalUnitCredits(int OrgUnitID, int updatedCredits){
+    public Boolean UpdateOrganisationalUnitCredits(int OrgUnitID, int updatedCredits){
         try{
             updateOrganisationalUnitCredits.clearParameters();
             updateOrganisationalUnitCredits.setInt(1, updatedCredits);
             updateOrganisationalUnitCredits.setInt(2, OrgUnitID);
             updateOrganisationalUnitCredits.executeUpdate();
+            return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            return false;
         }
     }
 

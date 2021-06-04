@@ -77,4 +77,9 @@ public class TradeManager {
         Request response = networkManager.GetResponse("JDBCTradeDataSource", "getBuyOrders", new String[] {String.valueOf(orgID)});
         return response.getDoubleString();
     }
+
+    public static Boolean setCancel(int tradeID) throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("JDBCTradeDataSource", "setCancel", new String[] {String.valueOf(tradeID)});
+        return response.getResponse();
+    }
 }

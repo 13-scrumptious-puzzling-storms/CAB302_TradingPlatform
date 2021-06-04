@@ -14,27 +14,28 @@ public class OrganisationAsset {
     private static NetworkManager networkManager = ClientApp.networkManager;
 
     // GUI OrganisationAsset Constructor
+
+    /**
+     * Organisation Asset constructor with given organisational unit ID, asset type, and quantity
+     * @param organisationUnitID organisational unit ID belonging to organisation unit which owns the asset
+     * @param assetType asset type that the organisation unit owns
+     * @param quantity quantity of assets that the organisational unit owns
+     */
     public OrganisationAsset(int organisationUnitID, String assetType, int quantity){
         this.organisationUnitID = organisationUnitID;
         this.assetType = assetType;
         this.quantity = quantity;
     }
 
+    /**
+     *
+     */
     public OrganisationAsset() {
-
+            this.organisationUnitID = 0;
+            this.assetType = "";
+            this.quantity = 0;
     }
 
-    // JDBC Constructor
-//    public OrganisationAsset(int OrganisationAssetID, Connection connection){
-//        // Get OrganisationAsset data from database ...
-//
-//        // Get fields from database ... fill this in
-//
-//
-//        // result set rs ...
-//        int assetTypeId = rs.getInt("AssetTypeID");
-//        assetType = new AssetType(assetTypeId);
-//    }
 
     // Get Methods below ...
     public static String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
