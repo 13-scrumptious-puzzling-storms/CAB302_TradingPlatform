@@ -9,6 +9,7 @@ public class ClientApp {
     public static NetworkManager networkManager;
     private static GUILogin guiLogin;
     private static GUIMain guiMain;
+
     private static Boolean loggedIn;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {

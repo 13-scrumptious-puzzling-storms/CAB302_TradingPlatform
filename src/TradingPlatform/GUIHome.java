@@ -75,8 +75,7 @@ public class GUIHome extends JFrame{
         sellButton.setBackground(cust1);
         buyButton.addActionListener(this::sellActionListener);
 
-        System.out.println(" this is iiadfnkjsdflak  !!!!!!!! "+ Arrays.deepToString(TradeManager.getMostRecentAssetTypeTradeDetails()));
-        JScrollPane TradesPaneSell = GUIMain.tablePane(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableHeading));
+        JScrollPane TradesPaneSell = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableHeading)));
         TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
         TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
