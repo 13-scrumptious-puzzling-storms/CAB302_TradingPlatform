@@ -10,8 +10,8 @@ import java.util.Properties;
 
 /**
  * Establishes a connection with the database.
- * This class is extended upon the work of
- * @author Malcolm Corney
+ * This class is based upon the work of
+ * @author Malcolm Corney.
  */
 public class DBConnection {
     /**
@@ -20,16 +20,29 @@ public class DBConnection {
     private static Connection instance;
 
     private static String propsFile = "./db.props";
+
+    /**
+     * Sets the instance to null (since the parameters to connect to DB will have changed).
+     * Also sets the String propsFile to String file.
+     * @param file the new String file.
+     */
     public static void setPropsFile(String file) {
         propsFile = file;
         instance = null;
     }
 
     private static Boolean isConnected = false;
+
+    /**
+     * @return returns a Bool indicating whether DBConnection was able to
+     * establish a connection to the database using the specified
+     * .props parameters.
+     */
     public static Boolean getIsConnected() { return isConnected; }
 
     /**
      * Constructor initialises the connection.
+     * If connection is successful, Bool isConnected is set to true.
      */
     private DBConnection() {
         Properties props = new Properties();
