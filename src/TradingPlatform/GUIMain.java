@@ -79,6 +79,9 @@ public class GUIMain extends JFrame {
 
     public GUIMain(User user) throws IOException, ClassNotFoundException {
         super("SPS Trading");
+        UIManager.put("TabbedPane.selected", cust1);
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("Button.background", cust1);
 //        JFrame.setDefaultLookAndFeelDecorated(false);
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -98,7 +101,6 @@ public class GUIMain extends JFrame {
         GridBagConstraints position = new GridBagConstraints();
 
         JTabbedPane pagePane = new JTabbedPane();
-        UIManager.put("TabbedPane.selectedBackground", cust1);
 
         JPanel homeTab = new JPanel();
         new GUIHome(homeTab);
@@ -154,7 +156,7 @@ public class GUIMain extends JFrame {
         orgTab.setAutoscrolls(true);
 
         pagePane.setForeground(Color.BLACK);
-        pagePane.setBackgroundAt(1, cust1);
+        pagePane.setBackground(cust3);
         homeTab.setBackground(DARK_JUNGLE_GREEN);
         homeTab.setForeground(Color.LIGHT_GRAY);
 

@@ -20,17 +20,18 @@ public class ClientApp {
         Thread networkThread = new Thread(networkManager);
         networkThread.start();
 
-        // Get user login. Also this will change from thread to invokeLater {} soon
-        //guiLogin = new GUILogin();
-        //Thread guiLoginThread = new Thread(guiLogin);
-        //guiLoginThread.start();
-        launchProgram(2);
+        // Initialise the login GUI and get user.
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                guiLogin = new GUILogin();
+            }
+        });
     }
 
     public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
         loggedIn = true;
         User user = new User(userID);
-        //guiLogin.terminate();
+        guiLogin.terminate();
         guiMain = new GUIMain(user);
     }
 

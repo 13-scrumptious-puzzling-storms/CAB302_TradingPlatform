@@ -5,7 +5,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-public class GUILogin extends JFrame implements ActionListener, FocusListener, Runnable {
+/**
+ * Responsible for the frontend and backend of the Client's Login.
+ */
+public class GUILogin extends JFrame implements ActionListener, FocusListener {
     // Screen Sizing
     private static final float WIDTH_RATIO = 4.5f;
     private static final int HEIGHT_RATIO = 2;
@@ -45,14 +48,18 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
     public static JFrame jframe;
     private static NetworkManager networkManager = ClientApp.networkManager;
 
-    // Refer to WIRING FOR GOOD COMMENTS
-    @Override
-    public void run() {
-        try { displayJFrame(); }
-        catch (IOException e) { e.printStackTrace(); }
+    /**
+     * Constructor invokes the initial GUI method.
+     */
+    public GUILogin() {
+        displayJFrame();
     }
 
-    private void displayJFrame() throws IOException {
+    /**
+     * Builds the entire graphical user interface for the Login.
+     * Initialises JFrame, panels, buttons, labels etc.
+     */
+    private void displayJFrame() {
         // Initialise JFrame
         jframe = new JFrame("SPS Trading Platform");
         jframe.setDefaultLookAndFeelDecorated(false);
@@ -88,6 +95,12 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         jframe.setVisible(true);
     }
 
+    /**
+     * Creates the login panel.
+     * Initialises labels, textFields and buttons.
+     * Adds the constructed login panel to provided JPanel panel.
+     * @param panel The parent panel which has the Login panel added to it.
+     */
     private void loginPanel(JPanel panel) {
         // Labels
         JLabel headerLabel = newLabel("SPS Trading", FONT_HEADER, OCEAN_GREEN);
@@ -118,6 +131,14 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         panel.add(buttonPanel); //panel.add(buttonPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * A convenience method to create a new label.
+     *
+     * @param text The text of the new label.
+     * @param font The font of the new label.
+     * @param textColour The text colour of the new label.
+     * @return Returns the newly created label.
+     */
     private static JLabel newLabel(String text, Font font, Color textColour) {
         JLabel label = new JLabel(text);
         label.setFont(font);
@@ -125,6 +146,16 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         return label;
     }
 
+    /**
+     * A convenience method to create a new text field.
+     * Adds a focus listener to the field to detect mouse clicks.
+     *
+     * @param initialText The initial text of the text field.
+     * @param font The font of the text field.
+     * @param textColour The colour of the text of the text field.
+     * @param fieldColour The background colour of the text field.
+     * @return Returns the newly created text field.
+     */
     private JTextField newTextField(String initialText, Font font, Color textColour, Color fieldColour) {
         JTextField textField = new JTextField(initialText);
         textField.setBorder(BorderFactory.createEmptyBorder());
@@ -135,6 +166,16 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         return textField;
     }
 
+    /**
+     * A convenience method to create a new button.
+     * Adds an action listner to detect when button is pressed.
+     *
+     * @param text The text of the button.
+     * @param font The font of the button.
+     * @param textColour The text colour of the button.
+     * @param btnColour The colour of the button.
+     * @return Returns the newly create button.
+     */
     private JButton newButton(String text, Font font, Color textColour, Color btnColour) {
         JButton button = new JButton(text);
         button.setBorder(BorderFactory.createEmptyBorder());
@@ -145,12 +186,27 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         return button;
     }
 
+    /**
+     * A convenience method to crate a new panel.
+     *
+     * @param bg The background colour of the panel.
+     * @return Returns the newly created panel.
+     */
     private static JPanel newPanel(Color bg) {
         JPanel panel = new JPanel();
         panel.setBackground(bg);
         return panel;
     }
 
+    /**
+     * Attempts to login the user into the main application.
+     * Uses username and password from the text fields and
+     * sends these to the server. If valid login, the user
+     * will be logged in.
+     *
+     * @throws IOException if Client fails to connect to the Server.
+     * @throws ClassNotFoundException if Server's response is not a valid Request object.
+     */
     private void attemptLogin() throws IOException, ClassNotFoundException {
         String username = usernameField.getText();
         String hashedPass = SHA256.hashPassword(passwordField.getText());
@@ -164,6 +220,11 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         }
     }
 
+    /**
+     * Detects when the Login button is pressed.
+     *
+     * @param e Action event e.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource(); // Get the event source
@@ -176,6 +237,12 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         }
     }
 
+    /**
+     * Detects when the text fields are clicked, i.e.,
+     * when they become the 'focus'.
+     *
+     * @param e Focus event e.
+     */
     @Override
     public void focusGained(FocusEvent e) {
         Object src = e.getSource();
@@ -189,6 +256,12 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         }
     }
 
+    /**
+     * Detects when something other than the currently selected
+     * text field is selected, i.e., when the text fields lose
+     * 'focus'.
+     * @param e The focus event e.
+     */
     @Override
     public void focusLost(FocusEvent e) {
         Object src = e.getSource();
@@ -202,6 +275,9 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener, R
         }
     }
 
+    /**
+     * Method to terminate the Login GUI.
+     */
     public static void terminate() {
         jframe.setVisible(false);
         jframe.dispose();

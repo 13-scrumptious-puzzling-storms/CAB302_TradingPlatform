@@ -3,9 +3,18 @@ package TradingPlatform;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Hashes Strings and returns hashed Strings.
+ */
 public class SHA256 {
-
-    // Source https://www.baeldung.com/sha-256-hashing-java
+    /**
+     * Hashes the provided String password using the SHA256 algorithm.
+     * Returns the resulting hashed String.
+     *
+     * @param password The String password to hash.
+     * @return The hashed String of the password.
+     * @author https://www.baeldung.com/sha-256-hashing-java.
+     */
     public static String hashPassword(String password) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -17,10 +26,5 @@ public class SHA256 {
             ex.printStackTrace();
             return password;
         }
-    }
-
-    public static void main(String[] args) {
-        String testEncode = "toor";
-        System.out.println(hashPassword(testEncode));
     }
 }
