@@ -10,15 +10,39 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Connection;
 
+/**
+ * A part of the Server side network protocol.
+ * Handles the requests received by ServerHandle and sends
+ * back a reply to the Client if the request requires so.
+ * Runs on a separate thread.
+ */
 public class ServerSend implements Runnable {
     private static Socket socket;
+    public static volatile Boolean isWorking = false;
 
     @Override
     public void run() {
 
     }
 
+    /**
+     * Will execute the requests received from Clients.
+     * It will invoke a server-side method as requested by the Client.
+     * The class to access is className, the method of the class to
+     * invoke is methodName, the arguments of the method (if any)
+     * is an array of Strings arguments. If the Clients requires a
+     * response, a Request will be prepared and the reply will be sent
+     * using the Client's socket clientSocket. ServerSend also indicates
+     * with Boolean isWorking, whether or not it is busy handling a request.
+     *
+     * @param className the class the server will access.
+     * @param methodName the method of the class to invoke.
+     * @param arguments the arguments of the method (if any).
+     * @param clientSocket the Client's socket.
+     * @throws IOException if Client's socket is invalid.
+     */
     public static void handleRequest(String className, String methodName, String[] arguments, Socket clientSocket) throws IOException {
+        isWorking = true;
         Connection connection = DBConnection.getInstance();
         System.out.println("Connection to database successful!");
         socket = clientSocket;
@@ -26,15 +50,12 @@ public class ServerSend implements Runnable {
             case "OrganisationalUnitServer":
                 switch (methodName) {
                     case "getName": {
-                        // need to get Server Send working
                         JDBCOrganisationalUnit DBInterface = new JDBCOrganisationalUnit(connection);
                         Transmit(new Request(className, methodName, new String[]{String.valueOf(DBInterface.getOrganisationalUnitName(Integer.parseInt(arguments[0])))}));
-                        //ServerSend(OrganisationalUnitServer.getName(Integer.parseInt(arguments[0])));
-                        //ServerSend ...;
                         break;
                     }
                     case "getCredits": {
-                        //ServerSend ...;
+                        // ...
                         break;
                     }
                     case "getAllOrgs": {
@@ -57,7 +78,7 @@ public class ServerSend implements Runnable {
                         break;
                     }
                     case "getAssetType": {
-                        // ServerSend
+                        // ...
                         break;
                     }
                     case "addAssetType": {
@@ -129,12 +150,20 @@ public class ServerSend implements Runnable {
                         System.out.println("Invalid Method");
                         break;
                 }
+                break;
             default:
                 System.out.println("Invalid Class");
                 break;
         }
     }
 
+    /**
+     * Attempts to reply to a Client with the prepared Request from
+     * handleRequest() (if there is one).
+     *
+     * @param request the prepared reply to send to the client.
+     * @throws IOException if Client's socket is invalid.
+     */
     public static void Transmit(Request request) throws IOException {
         System.out.println("Request required response. Sending response ...");
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()))) {
@@ -142,6 +171,6 @@ public class ServerSend implements Runnable {
             objectOutputStream.flush();
         }
         System.out.println("Connection closed.");
+        isWorking = false;
     }
-
 }
