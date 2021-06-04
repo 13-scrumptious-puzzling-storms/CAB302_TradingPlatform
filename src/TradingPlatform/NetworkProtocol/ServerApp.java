@@ -1,9 +1,6 @@
 package TradingPlatform.NetworkProtocol;
 
-import TradingPlatform.GUILogin;
-
 import javax.swing.*;
-import java.io.IOException;
 
 public class ServerApp {
 
