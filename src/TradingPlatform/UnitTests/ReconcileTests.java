@@ -27,7 +27,8 @@ public class ReconcileTests {
 
     @AfterAll
     public static void DeleteTestDb(){
-        TestDatabaseFunctions.CloseDatabase();
+
+        //TestDatabaseFunctions.CloseDatabase();
     }
 
     @Test

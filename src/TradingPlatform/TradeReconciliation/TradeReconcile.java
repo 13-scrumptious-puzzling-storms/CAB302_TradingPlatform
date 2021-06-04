@@ -89,13 +89,13 @@ public class TradeReconcile implements Runnable {
                             int tradePrice = quantity * sellOrder.getPrice();
                             int sellOrgUnitId = orgAssetSource.getOrganisationAssetOrgUnitID(sellOrder.getOrganisationAssetId());
                             int sellOrgCurrentCredits = orgUnitSource.getOrganisationalUnitCredits(sellOrgUnitId);
-                            orgUnitSource.UpdateOrganisationalunitCredits(sellOrgUnitId, sellOrgCurrentCredits + tradePrice);
+                            orgUnitSource.UpdateOrganisationalUnitCredits(sellOrgUnitId, sellOrgCurrentCredits + tradePrice);
 
                             // Refund the buying organisation unit the difference between the sell order price and the buy order price
                             int priceDiff = (quantity * buyOrder.getPrice()) - tradePrice;
                             int buyOrgUnitId = orgAssetSource.getOrganisationAssetOrgUnitID(buyOrder.getOrganisationAssetId());
                             int buyOrgCurrentCredits = orgUnitSource.getOrganisationalUnitCredits(buyOrgUnitId);
-                            orgUnitSource.UpdateOrganisationalunitCredits(buyOrgUnitId, buyOrgCurrentCredits + priceDiff);
+                            orgUnitSource.UpdateOrganisationalUnitCredits(buyOrgUnitId, buyOrgCurrentCredits + priceDiff);
 
                             // Give the assets to the buyer
                             int buyOrgAssetQuantity = orgAssetSource.getOrganisationAssetQuantity(buyOrder.getOrganisationAssetId());

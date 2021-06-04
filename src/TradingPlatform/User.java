@@ -2,6 +2,8 @@ package TradingPlatform;
 
 import TradingPlatform.Interfaces.UserDataSource;
 
+import java.io.IOException;
+
 /**
  * A user is a part of an organisational unit, and has their own username, password,
  * and account type.
@@ -16,7 +18,7 @@ public class User implements UserDataSource {
      * Instantiates a user from their userid, getting their information from the database
      * @param userID The user's userid
      */
-    public User(int userID){
+    public User(int userID) throws IOException, ClassNotFoundException {
         this.userID = userID;
 
         // Get the user's data from the server

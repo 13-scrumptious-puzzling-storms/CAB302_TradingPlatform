@@ -17,12 +17,14 @@ public class JDBCOrganisationalAsset {
     private static final String GET_ORG_ASSETS_TABLE_COUNT = "SELECT count(name) as num, name FROM organisationAsset AS o\n" +
             "LEFT JOIN assetType as a ON o.assetTypeId = a.assetTypeId\n"+
             "WHERE o.organisationUnitId = ?";
+    private static final String GET_ORGANISATIONASSET_ID = "SELECT OrganisationAssetID FROM OrganisationAsset WHERE organisationUnitID=? and assetTypeID=?";
 
 
     private static final String ORGID_HEADING = "organisationUnitID";
     private static final String ASSETTYPEID_HEADING = "assetTypeID";
     private static final String QUANTITY_HEADING = "Quantity";
     private static final String NAME_HEADING = "name";
+    private static final String ASSET_ID_HEADING = "assetTypeID";
 
 
     private PreparedStatement addOrganisationAsset;
@@ -32,6 +34,7 @@ public class JDBCOrganisationalAsset {
     private PreparedStatement getOrganisationAssetQuantity;
     private PreparedStatement getOrganisationAssetsTable;
     private PreparedStatement getOrgAssetsTableCount;
+    private PreparedStatement getOrgAssetId;
 
 
     private Connection connection;
@@ -49,6 +52,7 @@ public class JDBCOrganisationalAsset {
             getOrganisationAssetQuantity = connection.prepareStatement(GET_ORGANISATIONASSET_QUANTITY);
             getOrganisationAssetsTable = connection.prepareStatement(GET_ORG_ASSETS_TABLE);
             getOrgAssetsTableCount = connection.prepareStatement(GET_ORG_ASSETS_TABLE_COUNT);
+            getOrgAssetId = connection.prepareStatement(GET_ORGANISATIONASSET_ID);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -119,11 +123,12 @@ public class JDBCOrganisationalAsset {
             }
 
             String[][] assets = new String[count][];
-            String[] ass = new String[2];
+            String[] ass = new String[3];
             int i = 0;
             while (rs.next()) {
-                ass[0] = rs.getString(NAME_HEADING);
-                ass[1] = String.valueOf(rs.getInt(QUANTITY_HEADING));
+                ass[0] = Integer.toString(rs.getInt(ASSET_ID_HEADING));
+                ass[1] = rs.getString(NAME_HEADING);
+                ass[2] = String.valueOf(rs.getInt(QUANTITY_HEADING));
                 assets[i] = ass;
                 i++;
             }
@@ -172,5 +177,21 @@ public class JDBCOrganisationalAsset {
         }
     }
 
+    // Gets the orgAssetId for a given org and asset type, or -1 on error
+    public int getOrganisationAssetId(int orgUnitId, int assetTypeId){
+        int assetId = -1;
+        try {
+            getOrgAssetId.clearParameters();
+            getOrgAssetId.setInt(1, orgUnitId);
+            getOrgAssetId.setInt(2, assetTypeId);
+            var rs = getOrgAssetId.executeQuery();
 
+            if (rs.next()){
+                assetId = rs.getInt(1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return assetId;
+    }
 }

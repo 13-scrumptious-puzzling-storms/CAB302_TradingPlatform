@@ -79,6 +79,9 @@ public class GUIMain extends JFrame {
 
     public GUIMain(User user) throws IOException, ClassNotFoundException {
         super("SPS Trading");
+        UIManager.put("TabbedPane.selected", cust1);
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("Button.background", cust1);
 //        JFrame.setDefaultLookAndFeelDecorated(false);
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -98,18 +101,18 @@ public class GUIMain extends JFrame {
         GridBagConstraints position = new GridBagConstraints();
 
         JTabbedPane pagePane = new JTabbedPane();
-        UIManager.put("TabbedPane.selectedBackground", cust1);
 
         JPanel homeTab = new JPanel();
         new GUIHome(homeTab);
 
-        new GUIOrgHome(orgTab);
+        JPanel orgHomeTab = new JPanel();
+        new GUIOrgHome(orgHomeTab, user);
 
         JPanel profileTab = new JPanel();
         new GUIProfile(profileTab, user);
 
         pagePane.add("Home", homeTab);
-        pagePane.add("Organisation Home", orgTab);
+        pagePane.add("Organisation Home", orgHomeTab);
         pagePane.add("My Profile", profileTab);
 
         if (user.getAccountType() == AccountType.ADMINISTRATOR){
@@ -153,24 +156,20 @@ public class GUIMain extends JFrame {
         orgTab.setAutoscrolls(true);
 
         pagePane.setForeground(Color.BLACK);
-        pagePane.setBackgroundAt(1, cust1);
+        pagePane.setBackground(cust3);
         homeTab.setBackground(DARK_JUNGLE_GREEN);
         homeTab.setForeground(Color.LIGHT_GRAY);
 
-        orgTab.setBackground(DARK_JUNGLE_GREEN);
-        orgTab.setForeground(Color.LIGHT_GRAY);
+        orgHomeTab.setBackground(DARK_JUNGLE_GREEN);
+        orgHomeTab.setForeground(Color.LIGHT_GRAY);
 
         profileTab.setBackground(DARK_JUNGLE_GREEN);
         profileTab.setForeground(Color.LIGHT_GRAY);
 
     }
 
-
-
-    public static JScrollPane constructTable(String[][] data, String[] headingType){
-        DefaultTableModel model = new DefaultTableModel(data, headingType);
-        JTable sell_buyTable = new JTable(model);
-        JScrollPane tradesScrollTable = new JScrollPane(sell_buyTable);
+    public static JScrollPane tablePane(JTable table){
+        JScrollPane tradesScrollTable = new JScrollPane(table);
         tradesScrollTable.setBackground(cust3);
         tradesScrollTable.getVerticalScrollBar().setBackground(cust2);
         tradesScrollTable.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
@@ -179,10 +178,16 @@ public class GUIMain extends JFrame {
                 this.thumbColor = cust1;
             }
         });
-        JTableHeader anHeader = sell_buyTable.getTableHeader();
+        return tradesScrollTable;
+    }
+
+    public static JTable constructTable(String[][] data, String[] headingType){
+        DefaultTableModel model = new DefaultTableModel(data, headingType);
+        JTable table = new JTable(model);
+        JTableHeader anHeader = table.getTableHeader();
         anHeader.setBackground(cust1);
 
-        return tradesScrollTable;
+        return table;
     }
 
 }

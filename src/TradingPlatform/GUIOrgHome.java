@@ -3,6 +3,8 @@ package TradingPlatform;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static TradingPlatform.GUIMain.tabHeight;
 import static TradingPlatform.GUIMain.tabWidth;
@@ -20,54 +23,31 @@ import static TradingPlatform.GUIMain.FONT;
 
 
 public class GUIOrgHome{
+//    public static void main(String[] args) throws IOException, ClassNotFoundException {
+//        ClientApp.launchProgram(2);
+//    }
 
     public String BuyHeading[] = {"Buy Orders","Quantity", "Price",};
     public String SellHeading[] = {"Sell Orders","Quantity","Price"};
     public String AssetHeading[] = {"Asset Item","Quantity"};
 
-    //Temp data stuff
-    String data[][] = {{"Vinod","MCA","Computer"},
-            {"Deepak","PGDCA","History"},
-            {"Ranjan","M.SC.","Biology"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"}};
-
-    int credits = 2342;
-    String orgName = "Organisational Unit Name";
+    private User user;
+    OrganisationalUnit organisationalUnit;
+    int organisationalUnitID;
+    int credits;
+    String orgName;
 
 
-    public GUIOrgHome(JPanel OrgHomeTab) throws IOException, ClassNotFoundException {
+    public GUIOrgHome(JPanel OrgHomeTab, User user) throws IOException, ClassNotFoundException {
+        this.user = user;
+        this.organisationalUnit = user.getOrganisationalUnit();
+        this.organisationalUnitID = organisationalUnit.getID();
+        this.orgName = organisationalUnit.getName(organisationalUnitID);
+        this.credits = organisationalUnit.getCredits(organisationalUnitID);
         orgHomePanel(OrgHomeTab);
     }
 
     public void orgHomePanel(JPanel panel2) throws IOException, ClassNotFoundException {
-        //////USER INFO **
-        int orgID = 1;
 
         JTabbedPane tradesAssets = new JTabbedPane();
         tradesAssets.setBackground(cust3);
@@ -75,8 +55,10 @@ public class GUIOrgHome{
         GridBagConstraints position = new GridBagConstraints();
 
         //Retrieve trades buy and sell tables for organisational unit
-        JScrollPane TradesPaneSell = GUIMain.constructTable(TradeManager.getSellOrders(orgID),SellHeading );
-        JScrollPane TradesPaneBuy = GUIMain.constructTable(TradeManager.getBuyOrders(orgID), BuyHeading);
+        JTable sellTable = GUIMain.constructTable(TradeManager.getSellOrders(organisationalUnitID),SellHeading);
+        JScrollPane TradesPaneSell = GUIMain.tablePane(sellTable);
+        JTable buyTable = GUIMain.constructTable(TradeManager.getBuyOrders(organisationalUnitID), BuyHeading);
+        JScrollPane TradesPaneBuy = GUIMain.tablePane(buyTable);
 
         //Set up Trades tables in Trades tab
         JSplitPane tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
@@ -84,11 +66,24 @@ public class GUIOrgHome{
         tablesPane.setResizeWeight(0.5);
 
         //JPanel AssetsPanel = new JPanel();
-        JScrollPane Assets = GUIMain.constructTable(OrganisationAsset.getOrganisationalUnitAssetTable(orgID), AssetHeading);
+        String[][] OrgAssets = OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID);
+        int size = OrgAssets.length;
+        String[] OrgAssetID = new String[size]; //array that stores OrganisationAssetID's for given array
+        String[][] AssetItemQuantity = new String[size][]; //array that stores AssetItem and AssetQuantity
+        String[] assets = new String[2]; //temporary array
+        for(int i = 0; i<size; i++){
+            OrgAssetID[i] = OrgAssets[i][0];
+            assets[0] = OrgAssets[i][1];
+            assets[1] = OrgAssets[i][2];
+            AssetItemQuantity[i] = assets;
+        }
+        JTable assetTable = GUIMain.constructTable(AssetItemQuantity, AssetHeading);
+        JScrollPane Assets = GUIMain.tablePane(assetTable);
 
-        removeButton(panel2, position);
-        buyAssetButton(panel2, position);
-        sellAssetButton(panel2, position);
+        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position, buyTable);
+        JButton removeSellOrderButton = removeSellOrderButton(panel2, position, sellTable);
+        JButton buyButton = buyAssetButton(panel2, position);
+        JButton sellButton = sellAssetButton(panel2, position);
         creditsLabel(panel2, position);
 
         //Organisation name label
@@ -109,53 +104,88 @@ public class GUIOrgHome{
         panel2.add(tradesAssets, position);
         tradesAssets.add("Trades", tablesPane);
         tradesAssets.add("Assets", Assets);
+        tradesAssets.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+                int selectedTab = tabbedPane.getSelectedIndex();
+                if (selectedTab == 0) {
+                    removeBuyOrderButton.setVisible(true);
+                    removeSellOrderButton.setVisible(true);
+                    buyButton.setVisible(false);
+                    sellButton.setVisible(false);
+                }
+                else if (selectedTab == 1) {
+                    removeBuyOrderButton.setVisible(false);
+                    removeSellOrderButton.setVisible(false);
+                    buyButton.setVisible(true);
+                    sellButton.setVisible(true);
+                }
+            }
+        });
         tradesAssets.setPreferredSize(new Dimension(tabWidth, tabHeight));
         tradesAssets.setMinimumSize(new Dimension(tabWidth/2, tabHeight/2));
         JScrollPane pageScroll = new JScrollPane();
         pageScroll.add(panel2);
     }
 
-    public static JScrollPane constructTable(String[][] data, String[] headingType){
-        DefaultTableModel model = new DefaultTableModel(data, headingType);
-        JTable table = new JTable(model);
-        JScrollPane tradesScrollTable = new JScrollPane(table);
-        tradesScrollTable.setBackground(cust3);
-        tradesScrollTable.getVerticalScrollBar().setBackground(cust2);
-        tradesScrollTable.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
-            @Override
-            protected void configureScrollBarColors() {
-                this.thumbColor = cust1;
-            }
-        });
-
-        return tradesScrollTable;
-    }
-
-    private void removeButton(JPanel panel2, GridBagConstraints position){
+    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
         position.gridx = 2;
         position.gridy = 1;
-        position.gridwidth = 3;
-        position.anchor = GridBagConstraints.CENTER;
-        JButton removeButton = new JButton("Remove Buy/Sell Order");
+        position.gridwidth = 1;
+        position.anchor = GridBagConstraints.LINE_END;
+        JButton removeButton = new JButton("Cancel Buy Order");
         removeButton.setBackground(cust1);
         panel2.add(removeButton, position);
         removeButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                // display buy popup
-                System.out.println("Just pressed the remove button");
+                int selectedRow = table.getSelectedRow();
+                if(selectedRow == -1){
+                    JOptionPane.showMessageDialog(null, "Please select one row from the 'Buy Orders' table to cancel order.");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow));
+                }
             }
         });
+        return removeButton;
     }
 
-    private void buyAssetButton(JPanel panel2, GridBagConstraints position){
+    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
+        //Create Remove Buy/Sell Button
+        position.insets = new Insets(0, 0, 20, 0);
+        position.gridx = 3;
+        position.gridy = 1;
+        position.gridwidth = 1;
+        position.anchor = GridBagConstraints.CENTER;
+        JButton removeButton = new JButton("Cancel Sell Order");
+        removeButton.setBackground(cust1);
+        panel2.add(removeButton, position);
+        removeButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                int selectedRow = table.getSelectedRow();
+                if(selectedRow == -1){
+                    JOptionPane.showMessageDialog(null, "Please select one row from the 'Sell Orders' table to cancel order.");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow));
+                }
+            }
+        });
+        return removeButton;
+    }
+
+
+    private JButton buyAssetButton(JPanel panel2, GridBagConstraints position){
         //Create Buy Asset Button
         position.gridwidth = 1;
-        position.gridx = 1;
-        position.gridy = 0;
+        position.gridx = 2;
+        position.gridy = 1;
         position.anchor = GridBagConstraints.LINE_END;
         JButton buyButton = new JButton("Buy Assets");
         buyButton.setBackground(cust1);
@@ -168,13 +198,15 @@ public class GUIOrgHome{
                 System.out.println("Just pressed the buy button");
             }
         });
+        buyButton.setVisible(false);
+        return buyButton;
     }
 
-    private void sellAssetButton(JPanel panel2, GridBagConstraints position){
+    private JButton sellAssetButton(JPanel panel2, GridBagConstraints position){
         //Create Sell Asset Button
         position.gridx = 3;
-        position.gridy = 0;
-        position.anchor = GridBagConstraints.LINE_START;
+        position.gridy = 1;
+        position.anchor = GridBagConstraints.CENTER;
         JButton sellButton = new JButton("Sell Assets");
         sellButton.setBackground(cust1);
         panel2.add(sellButton, position);
@@ -184,6 +216,8 @@ public class GUIOrgHome{
                 System.out.println("Just pressed the sell button");
             }
         });
+        sellButton.setVisible(false);
+        return sellButton;
     }
 
     private void creditsLabel(JPanel panel2, GridBagConstraints position){

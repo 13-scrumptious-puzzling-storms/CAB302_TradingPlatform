@@ -7,6 +7,7 @@ import TradingPlatform.TradeReconciliation.TradeRecon;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,6 +85,46 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             ") as r2 on (r2.assetTypeID = a.assetTypeID AND \n" +
             "    (r1.createdTime < r2.createdTime OR (r1.createdTime = r2.createdTime AND r1.tradeReconId < r2.tradeReconId)))\n" +
             "where r2.tradeReconId is null and r1.tradeReconId is not null;";
+    private static final String COUNT_RECENT_ASSET_RECONCILE = "" +
+            "select \n" +
+            "  count(a.name) as num\n" +
+            "from AssetType a \n" +
+            "left join (\n" +
+            "    select \n" +
+            "        oa.assetTypeID\n" +
+            "        , s.price\n" +
+            "        , r.tradeReconId\n" +
+            "        , r.quantity\n" +
+            "        , r.createdTime \n" +
+            "    from TradeRecon r\n" +
+            "    left join TradeOrders s on s.tradeOrderID = r.sellOrderId\n" +
+            "    left join OrganisationAsset oa on oa.organisationAssetID = s.organisationAssetID\n" +
+            ") as r1 on (r1.assetTypeID = a.assetTypeID)\n" +
+            "left join (\n" +
+            "    select \n" +
+            "        oa.assetTypeID\n" +
+            "        , s.price\n" +
+            "        , r.tradeReconId\n" +
+            "        , r.quantity\n" +
+            "        , r.createdTime \n" +
+            "    from TradeRecon r\n" +
+            "    left join TradeOrders s on s.tradeOrderID = r.sellOrderId\n" +
+            "    left join OrganisationAsset oa on oa.organisationAssetID = s.organisationAssetID\n" +
+            ") as r2 on (r2.assetTypeID = a.assetTypeID AND \n" +
+            "    (r1.createdTime < r2.createdTime OR (r1.createdTime = r2.createdTime AND r1.tradeReconId < r2.tradeReconId)))\n" +
+            "where r2.tradeReconId is null and r1.tradeReconId is not null;";
+
+    private static String MOST_RECENT_RECONSILE = "select u.name, o.price, r.quantity, r.createdTime, r.buyOrderID, r.sellOrderID from TradeRecon r\n" +
+            "    left join (select tradeOrderId, price, t.organisationAssetId from TradeOrders t) as o on (tradeOrderID = r.sellOrderID)\n" +
+            "        left join (select p.assetTypeID, p.organisationAssetID from OrganisationAsset p) as q on q.organisationAssetID = o.organisationAssetID\n" +
+            "            left join (SELECT name, a.assetTypeID from AssetType a) as u on u.assetTypeID = q.assetTypeID\n" +
+            "    order by r.createdTime DESC LIMIT 20;";
+    private static String COUNT_RECENT_RECONSILE = "select count(r.createdTime) as num from TradeRecon r\n" +
+            "    left join (select tradeOrderId, price, t.organisationAssetId from TradeOrders t) as o on (tradeOrderID = r.sellOrderID)\n" +
+            "        left join (select p.assetTypeID, p.organisationAssetID from OrganisationAsset p) as q on q.organisationAssetID = o.organisationAssetID\n" +
+            "            left join (SELECT name, a.assetTypeID from AssetType a) as u on u.assetTypeID = q.assetTypeID\n" +
+            "    order by r.createdTime DESC LIMIT 20;";
+
 
     private static PreparedStatement insertRecon;
 //    private static PreparedStatement getBuyOrSellOrders;
@@ -92,6 +133,9 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
     private static PreparedStatement getMatchingBuyOrder;
     private static PreparedStatement getReconcilableAssetTypeIds;
     private static PreparedStatement getMostRecentAssetReconcileInfo;
+    private static PreparedStatement countRecentAssetReconcile;
+    private static PreparedStatement mostRecentRec;
+    private static PreparedStatement countRecentRec;
 
     private Connection connection;
 
@@ -106,6 +150,11 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             getMatchingBuyOrder = connection.prepareStatement(GET_MATCHING_BUY_ORDER);
             getReconcilableAssetTypeIds = connection.prepareStatement(GET_RECONCILABLE_ASSET_TYPE_IDS);
             getMostRecentAssetReconcileInfo = connection.prepareStatement(GET_MOST_RECENT_ASSET_RECONCILE_INFO);
+            countRecentAssetReconcile = connection.prepareStatement(COUNT_RECENT_ASSET_RECONCILE);
+
+            mostRecentRec = connection.prepareStatement(MOST_RECENT_RECONSILE);
+            countRecentRec = connection.prepareStatement(COUNT_RECENT_RECONSILE);
+
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -163,23 +212,36 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
     }
 
     @Override
-    public Map<AssetType, String[]> getMostRecentAssetTypeTradeDetails() {
-        HashMap<AssetType, String[]> assetPrices = new HashMap<>();
+    public String[][] getMostRecentAssetTypeTradeDetails() {
+
+//        HashMap<AssetType, String[]> assetPrices = new HashMap<>();
         try {
-            ResultSet rs = getMostRecentAssetReconcileInfo.executeQuery();
+            ResultSet rs = mostRecentRec.executeQuery();
+            ResultSet count = countRecentRec.executeQuery();
+            int num = 0;
+            if(count.next()){
+                num = count.getInt("num");
+            }
+
+            String[][] assetPrices = new String[num][];
+            int i = 0;
             while (rs.next()) {
-                AssetType type = new AssetType(rs.getString("name"));
+//                AssetType type = new AssetType(rs.getString("name"));
+                String name = rs.getString("name");
                 String price = rs.getString("price");
                 String quantity = rs.getString("quantity");
                 String createdTime = rs.getString("createdTime");
-                String[] details = new String[]{ price, quantity, createdTime };
-                assetPrices.put(type, details);
+                String[] details = new String[]{ name, price, quantity, createdTime };
+                assetPrices[i] = details;
+                i++;
             }
             rs.close();
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+Arrays.deepToString(assetPrices));
+            return assetPrices;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return assetPrices;
+        return null;
     }
 
 

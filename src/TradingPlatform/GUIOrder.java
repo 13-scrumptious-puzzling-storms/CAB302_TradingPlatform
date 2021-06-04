@@ -1,9 +1,11 @@
 package TradingPlatform;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import static TradingPlatform.GUIMain.*;
 import static java.awt.GridBagConstraints.CENTER;
@@ -31,7 +33,8 @@ public class GUIOrder extends JFrame{
     private static JFrame sell;
 
 
-    public static void buyPopup(){
+    public static void buyPopup() throws IOException, ClassNotFoundException {
+        UIManager.put("Popup.border", cust1);
         buy = new JFrame("Buy");
         buy.setSize(new Dimension(width/2, height/2));
         popUp = new PopupFactory();
@@ -45,13 +48,18 @@ public class GUIOrder extends JFrame{
         quantity = new JLabel("Quantity: ");
         price = new JLabel("Price: ");
 
-        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
-        itemNameInput = new JComboBox(petStrings);
+        String[] data = AssetType.getAllAssetNames();
+        itemNameInput = new JComboBox(data);
         itemNameInput.setPreferredSize(new Dimension(width/4, 20));
-        quantityInput = new JTextField();
+        quantityInput = new JTextField(20);
         quantityInput.setPreferredSize(new Dimension(width/4, 20));
-        priceInput = new JTextField();
+        quantityInput.setEditable(true);
+        quantityInput.setEnabled(true);
+        quantityInput.setText("");
+        priceInput = new JTextField(20);
         priceInput.setPreferredSize(new Dimension(width/4, 20));
+        priceInput.setEditable(true);
+        priceInput.setEnabled(true);
 
         confirm = new JButton("Confirm Order");
         confirm.addActionListener(GUIOrder::finalButton);
@@ -89,6 +97,7 @@ public class GUIOrder extends JFrame{
 
         buyPop.show();
     }
+
     public static void closePop(){
         buyPop.hide();
         buyPop = popUp.getPopup(buy, panel, 100, 100);
@@ -141,7 +150,41 @@ public class GUIOrder extends JFrame{
             buyPop.hide();
         }else{
             //do add new trade order
+            updateBuyOrder();
             buyPop.hide();
+        }
+    }
+
+    private static void updateBuyOrder() {
+
+        if (quantityInput.getText() != null && !quantityInput.getText().equals("")) {
+            int quantity;
+            try {
+                quantity = Integer.parseInt(quantityInput.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(panel, quantityInput.getText() + " is not a valid amount. " +
+                                "Please type in a whole number.",
+                        "Edit Quantity", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int price;
+            try {
+                price = Integer.parseInt(priceInput.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(panel, priceInput.getText() + " is not a valid credit amount. " +
+                                "Please type in a whole number.",
+                        "Edit Credits", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            var asset = itemNameInput.getSelectedItem();
+
+//            admin.EditOrganisationalAsset(orgUnit, asset, quantity);
+
+            JOptionPane.showMessageDialog(panel, "New buy order for" + quantity + " " + asset + " at " + price + "credit(s)!",
+                    "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(panel, "Please enter all details of your order",
+                    "Edit Credits", JOptionPane.WARNING_MESSAGE);
         }
     }
 }

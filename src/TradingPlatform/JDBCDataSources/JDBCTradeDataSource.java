@@ -3,6 +3,7 @@ package TradingPlatform.JDBCDataSources;
 import TradingPlatform.Interfaces.TradeDataSource;
 
 import java.sql.*;
+import java.util.Arrays;
 
 public class JDBCTradeDataSource implements TradeDataSource {
 
@@ -260,13 +261,14 @@ public class JDBCTradeDataSource implements TradeDataSource {
             }
 //            HashSet<Integer> assets = new HashSet<Integer>();
 
-            String[][] assets = new String[count][];
-            String[] ass = new String[3];
+            String[][] assets = new String[count+1][];
+            String[] ass = new String[4];
             int i = 0;
             while (rs.next()) {
-                ass[0] = rs.getString("name");
-                ass[1] = String.valueOf(rs.getInt("quantity"));
-                ass[2] = String.valueOf(rs.getInt("price"));
+                ass[0] = String.valueOf(rs.getInt("tradeOrderID"));
+                ass[1] = rs.getString("name");
+                ass[2] = String.valueOf(rs.getInt("quantity"));
+                ass[3] = String.valueOf(rs.getInt("price"));
                 assets[i] = ass;
                 i++;
             }
@@ -295,16 +297,19 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 count = 0;
             }
 
-            String[][] assets = new String[count][];
-            String[] ass = new String[3];
+            String[][] assets = new String[count+1][];
+            String[] ass = new String[4];
+
             int i = 0;
             while (rs.next()) {
-                ass[0] = rs.getString("name");
-                ass[1] = String.valueOf(rs.getInt("quantity"));
-                ass[2] = String.valueOf(rs.getInt("price"));
+                ass[0] = String.valueOf(rs.getInt("tradeOrderID"));
+                ass[1] = rs.getString("name");
+                ass[2] = String.valueOf(rs.getInt("quantity"));
+                ass[3] = String.valueOf(rs.getInt("price"));
                 assets[i] = ass;
                 i++;
             }
+            System.out.println("getSellOrders"+Arrays.deepToString(assets));
             return assets;
         }
         catch (SQLException throwables){
@@ -312,22 +317,4 @@ public class JDBCTradeDataSource implements TradeDataSource {
         }
         return null;
     }
-
-//    @Override
-//    public String getOrganisation(int tradeId) {
-//        try {
-//            getOrg.clearParameters();
-//            getOrg.setInt(1, tradeId);
-//            ResultSet rs = getOrg.executeQuery();
-//
-//            if (rs.next()) {
-//                int orgId = rs.getInt("");
-//                return orgId;
-//            }
-//        }
-//        catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//        return null;
-//    }
 }

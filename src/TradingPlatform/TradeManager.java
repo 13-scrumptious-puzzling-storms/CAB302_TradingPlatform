@@ -3,6 +3,8 @@ package TradingPlatform;
 import java.io.IOException;
 import java.util.Map;
 
+import TradingPlatform.JDBCDataSources.JDBCTradeReconcileSource;
+
 /**
  * TradeManager executes and manages the listed trades
  */
@@ -52,6 +54,13 @@ public class TradeManager {
     public void updateDatabase(int sellOrg, int buyOrg){
 
     }
+
+    public static String[][] getMostRecentAssetTypeTradeDetails() throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getMostRecentAssetTypeTradeDetails", new String[]{});
+        return response.getDoubleString();
+//        return null;
+    }
+
 
     /**
      * Bella implemented this. not sure where it is meant to go. You may change later

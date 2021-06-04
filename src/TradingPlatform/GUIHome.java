@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.Arrays;
 
 import static TradingPlatform.GUIMain.*;
 import static java.awt.GridBagConstraints.*;
@@ -40,13 +42,13 @@ public class GUIHome extends JFrame{
             {"Radha","BCA","Computer"},
             {"Radha","BCA","Computer"},
             {"Radha","BCA","Computer"}};
-    String BuyHeading[] = {"Recent Trades","Price","Quantity"};
+    String TableHeading[] = {"Recent Trades","Price","Quantity"};
 
-    public GUIHome(JPanel HomeTab){
+    public GUIHome(JPanel HomeTab) throws IOException, ClassNotFoundException {
         homePanel(HomeTab);
     }
 
-    public void homePanel(JPanel panel){
+    public void homePanel(JPanel panel) throws IOException, ClassNotFoundException {
 
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
@@ -55,15 +57,26 @@ public class GUIHome extends JFrame{
         buyButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         buyButton.setPreferredSize(new Dimension(200, 100));
         buyButton.setMinimumSize(new Dimension(50, 50));
-        buyButton.addActionListener(this::buyActionListener);
+        buyButton.setBackground(cust1);
+        buyButton.addActionListener(e -> {
+            try {
+                buyActionListener(e);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+        });
 
         JButton sellButton = new JButton("Sell Assets");
         sellButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         sellButton.setPreferredSize(new Dimension(200, 100));
         sellButton.setMinimumSize(new Dimension(50, 50));
+        sellButton.setBackground(cust1);
         buyButton.addActionListener(this::sellActionListener);
 
-        JScrollPane TradesPaneSell = GUIMain.constructTable(data, BuyHeading);
+        System.out.println(" this is iiadfnkjsdflak  !!!!!!!! "+ Arrays.deepToString(TradeManager.getMostRecentAssetTypeTradeDetails()));
+        JScrollPane TradesPaneSell = GUIMain.tablePane(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableHeading));
         TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
         TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
@@ -89,7 +102,7 @@ public class GUIHome extends JFrame{
         panel.setBackground(cust1);
     }
 
-    public void buyActionListener(ActionEvent e){
+    public void buyActionListener(ActionEvent e) throws IOException, ClassNotFoundException {
         String event = e.getActionCommand();
         if(event == "Buy Assets") {
             GUIOrder.buyPopup();

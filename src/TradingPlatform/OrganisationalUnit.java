@@ -17,7 +17,6 @@ public class OrganisationalUnit implements Serializable {
     String organisationName;
     int organisationCredit;
     int organisationID;
-    ArrayList<OrganisationAsset> assetCollection;
 
     /**
      * Creates new instance of an organisational unit
@@ -30,10 +29,13 @@ public class OrganisationalUnit implements Serializable {
     }
 
     /**
-     * Creates new instance of an organisational unit
+     * Creates new instance of an organisational unit that already exists in the database
      * @param organisationID organisation's unique ID
      */
-    public OrganisationalUnit(int organisationID){
+    public OrganisationalUnit(int organisationID) {
+        this.organisationID = organisationID;
+        this.organisationName = getName(organisationID);
+        this.organisationCredit = getCredits(organisationID);
     }
 
     /**
@@ -44,18 +46,15 @@ public class OrganisationalUnit implements Serializable {
         this.organisationCredit = 0;
     }
 
+
+    public void setId(int newID){
+        this.organisationID = newID;
+    }
+
     public int getID(){
         return organisationID;
     }
 
-    /**
-     * Sets the OrganisationalUnit's ID to id ****DELETE??***
-     *
-     * @param id the id of the Organisational Unit
-     */
-    public void setId(int id) {
-        organisationID = id;
-    }
 
     /**
      * Sets the OrganisationalUnit's name to name
@@ -71,14 +70,17 @@ public class OrganisationalUnit implements Serializable {
      *
      * @return  name of the given Organisational Unit
      */
-    public static String getName(int orgID) throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("OrganisationalUnitServer", "getName", new String[] {String.valueOf(orgID)});
-        return response.getArguments()[0];
+    public static String getName(int orgID){
+        try {
+            Request response = networkManager.GetResponse("OrganisationalUnitServer", "getName", new String[]{String.valueOf(orgID)});
+            return response.getArguments()[0];
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    /**
-     * @return the name of this Organisational unit
-     */
     public String getName(){
         return organisationName;
     }
@@ -95,7 +97,20 @@ public class OrganisationalUnit implements Serializable {
     /**
      * Gets the OrganisationalUnit's organisationCredit
      */
-    public int getCredits() { return organisationCredit; }
+    public int getCredits(int orgID) {
+        try {
+            Request response = networkManager.GetResponse("OrganisationalUnitServer", "getCredits", new String[]{String.valueOf(orgID)});
+            return Integer.valueOf(response.getArguments()[0]);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getCredits(){
+        return organisationCredit;
+    }
 
     /**
      * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
@@ -124,11 +139,33 @@ public class OrganisationalUnit implements Serializable {
 
     /**
      * Returns entire set of assets owned by the organisational unit
-     * @param organisationID Organisational Unit's unique ID
      * @return allAssets
      */
-    public ArrayList<OrganisationAsset> getAssets(int organisationID){
-        return assetCollection;
+    public ArrayList<OrganisationAsset> getAssets() throws IOException, ClassNotFoundException {
+        try {
+            Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[]{String.valueOf(organisationID)});
+            String[][] result = response.getDoubleString();
+            ArrayList<OrganisationAsset> assetCollection = new ArrayList<OrganisationAsset>();
+            for (String[] i : result) {
+                //**Bella can't get any results - coming back to this later
+                //System.out.println("method i[0] is: " + i[0]);
+                //System.out.println("method i[1] is: " + i[1]);
+                //System.out.println("method i[2] is: " + i[2]);
+                String asset = "pens";
+                int quantity = 0;
+                assetCollection.add(new OrganisationAsset(organisationID, asset, quantity));
+            }
+            //OrganisationAsset(int organisationAssetID, int organisationUnitID, AssetType assetType, int quantity)
+            //turn response into ArrayList<>
+            //response.getArguments()[0];
+            //return response.getArguments()[0];
+            return assetCollection;
+        }
+        catch(Exception e){
+            ArrayList<OrganisationAsset> assetCollection = new ArrayList<OrganisationAsset>();
+            return assetCollection;
+
+        }
     }
 
     /**

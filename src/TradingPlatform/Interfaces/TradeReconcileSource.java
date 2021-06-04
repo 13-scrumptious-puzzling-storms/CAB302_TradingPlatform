@@ -45,6 +45,6 @@ public interface TradeReconcileSource {
     /**
      * Gets a list of the asset types that have been traded, and the price, quantity, and date of its last trade.
      */
-    Map<AssetType, String[]> getMostRecentAssetTypeTradeDetails();
+    String[][] getMostRecentAssetTypeTradeDetails();
 
 }
