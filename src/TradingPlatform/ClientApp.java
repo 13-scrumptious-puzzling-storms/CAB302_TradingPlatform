@@ -9,7 +9,6 @@ public class ClientApp {
     public static NetworkManager networkManager;
     private static GUILogin guiLogin;
     private static GUIMain guiMain;
-
     private static Boolean loggedIn;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
@@ -20,10 +19,12 @@ public class ClientApp {
         Thread networkThread = new Thread(networkManager);
         networkThread.start();
 
-        // Get user login. Also this will change from thread to invokeLater {} soon
-        guiLogin = new GUILogin();
-        Thread guiLoginThread = new Thread(guiLogin);
-        guiLoginThread.start();
+        // Initialise the login GUI and get user.
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                guiLogin = new GUILogin();
+            }
+        });
     }
 
     public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
