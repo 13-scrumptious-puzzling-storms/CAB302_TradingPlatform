@@ -106,7 +106,7 @@ public class JDBCOrganisationalAsset {
         return -1;
     }
 
-    public String[][] getOrganisationAssetsQuantity(int orgUnitId){
+    public String[][] getOrganisationAssetsAndQuantity(int orgUnitId){
         try {
             getOrganisationAssetsTable.clearParameters();
             getOrganisationAssetsTable.setInt(1, orgUnitId);

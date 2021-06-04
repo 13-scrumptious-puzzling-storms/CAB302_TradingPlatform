@@ -39,8 +39,18 @@ public class OrganisationAsset {
 
     // Get Methods below ...
     public static String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[] {String.valueOf(orgID)});
+        Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsAndQuantity", new String[] {String.valueOf(orgID)});
         return response.getDoubleString();
+    }
+
+    public static void updateOrganisationalUnitAssetQuantity(int orgAssetID, int assetQuantity){
+        try{
+            NetworkManager.SendRequest("JDBCOrganisationalAsset", "updateOrganisationAssetsQuantity",
+                    new String[] {String.valueOf(orgAssetID), String.valueOf(assetQuantity)});
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -68,6 +78,8 @@ public class OrganisationAsset {
     public int getQuantity() {
         return quantity;
     }
+
+
 
     /**
      * Gets the quantity of the given organisation asset

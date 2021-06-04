@@ -188,7 +188,7 @@ public class OrganisationalUnit implements Serializable {
      */
     public ArrayList<OrganisationAsset> getAssets()  {
         try {
-            Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[]{String.valueOf(organisationID)});
+            Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsAndQuantity", new String[]{String.valueOf(organisationID)});
             String[][] result = response.getDoubleString();
             ArrayList<OrganisationAsset> assetCollection = new ArrayList<OrganisationAsset>();
             for (String[] i : result) {

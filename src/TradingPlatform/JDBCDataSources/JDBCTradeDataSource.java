@@ -27,7 +27,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             "WHERE a.organisationUnitId=? AND isSellOrder='true' AND cancelled='false';";
     private static final String COUNT_ORDER_ROWS = "SELECT count(organisationUnitId) as num FROM TradeOrders as o\n" +
             "left join organisationAsset as a on a.organisationAssetID = o.organisationAssetID\n" +
-            "WHERE organisationUnitId=? and isSellOrder=?;";
+            "WHERE organisationUnitId=? and isSellOrder=? AND cancelled='false';";
 
 
 

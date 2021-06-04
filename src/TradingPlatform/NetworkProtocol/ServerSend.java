@@ -112,9 +112,9 @@ public class ServerSend implements Runnable {
                         DBInterface.addOrganisationAsset(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]));
                         break;
                     }
-                    case "getOrganisationAssetsQuantity": {
+                    case "getOrganisationAssetsAndQuantity": {
                         JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
-                        String[][] response = (DBInterface.getOrganisationAssetsQuantity(Integer.parseInt(arguments[0])));
+                        String[][] response = (DBInterface.getOrganisationAssetsAndQuantity(Integer.parseInt(arguments[0])));
                         Transmit(new Request(className, methodName, response));
                         break;
                     }
@@ -162,6 +162,12 @@ public class ServerSend implements Runnable {
                         var DBInterface2 = new JDBCTradeDataSource(connection);
                         Boolean completed = DBInterface2.setCancel(Integer.parseInt(arguments[0]));
                         Transmit(new Request(className, methodName, new String[]{Boolean.toString(completed)}));
+                        break;
+                    }
+                    case "getOrgAssetId": {
+                        var DBInterface = new JDBCTradeDataSource(connection);
+                        int orgAssetId = DBInterface.getAsset(Integer.parseInt(arguments[0]));
+                        Transmit(new Request(className, methodName, new String[]{Integer.toString(orgAssetId)}));
                         break;
                     }
                     default:

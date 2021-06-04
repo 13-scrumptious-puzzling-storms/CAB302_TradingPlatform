@@ -82,4 +82,18 @@ public class TradeManager {
         Request response = networkManager.GetResponse("JDBCTradeDataSource", "setCancel", new String[] {String.valueOf(tradeID)});
         return response.getResponse();
     }
+
+    /**
+     * Gets the organisation asset id for a given trade, returns -1 on error
+     */
+    public static int getOrganisationAssetId(int tradeId) {
+        try {
+            var response = NetworkManager.GetResponse("JDBCTradeDataSource", "getOrgAssetId", new String[] {String.valueOf(tradeId)});
+            var args = response.getArguments();
+            return Integer.parseInt(args[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 }

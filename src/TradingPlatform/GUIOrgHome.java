@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static TradingPlatform.GUIMain.*;
 
@@ -27,12 +28,29 @@ public class GUIOrgHome{
     int credits;
     String orgName;
     JTabbedPane tradesAssets;
+    JSplitPane tablesPane;
+
     DefaultTableModel buyTableModel;
     JScrollPane TradesPaneBuy;
     JTable buyTable;
-    JSplitPane tablesPane;
+    String[] tradeIDBuy;
+    String[][] buyData;
 
+
+    DefaultTableModel sellTableModel;
     JScrollPane TradesPaneSell;
+    JTable sellTable;
+    String[] tradeIDSell;
+    String[][] sellData;
+
+    JLabel LabelCredits;
+
+    DefaultTableModel assetTableModel;
+    JTable assetTable;
+    JScrollPane Assets;
+
+    String[] OrgAssetID;
+    String[][] AssetItemQuantity;
 
     /**
      * GUIOrg home constructor, adding the organisational home tab to pane
@@ -63,55 +81,14 @@ public class GUIOrgHome{
         panel2.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
-        //Retrieve trades buy table for organisational unit
-        String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
-        int buySize = tradesBuy.length;
-        String[] tradeIDBuy = new String[buySize]; //array that stores organisationAssetID's for buy orders
-        String[][] buyData = new String[buySize][]; //array that stores data to be displayed in buyTrades table
-        try {
-            for (int i = 0; i < buySize; i++) {
-                if(tradesBuy[i]!= null) {
-                    tradeIDBuy[i] = tradesBuy[i][0];
-                    String[] buy = new String[4]; //temporary array
-                    buy[0] = tradesBuy[i][1];
-                    buy[1] = tradesBuy[i][2];
-                    buy[2] = tradesBuy[i][3];
-                    buy[3] = tradesBuy[i][4];
-                    buyData[i] = buy;
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        buyTableModel = GUIMain.constructTable(buyData,BuyHeading);
+        //Setup buy order table
+        buyTableModel = constructBuyTableModel();
         buyTable = tableCreator(buyTableModel);
         TradesPaneBuy = GUIMain.tablePane(buyTable);
 
-        //Retrieve trades sell table for organisational unit
-        String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
-        int sellSize = tradesSell.length;
-        String[] tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
-        String[][] sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
-        try {
-            for (int i = 0; i < sellSize; i++) {
-                if (tradesSell[i]!= null) {
-                    tradeIDSell[i] = tradesSell[i][0];
-                    String[] sell = new String[4]; //temporary array
-                    sell[0] = tradesSell[i][1];
-                    sell[1] = tradesSell[i][2];
-                    sell[2] = tradesSell[i][3];
-                    sell[3] = tradesSell[i][4];
-
-                    sellData[i] = sell;
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        DefaultTableModel sellTableModel = GUIMain.constructTable(sellData, SellHeading);
-        JTable sellTable = tableCreator(sellTableModel);
+        //Setup sell order table
+        sellTableModel = constructSellTableModel();
+        sellTable = tableCreator(sellTableModel);
         TradesPaneSell = tablePane(sellTable);
 
         //Set up Trades tables in Trades tab
@@ -119,24 +96,14 @@ public class GUIOrgHome{
         tablesPane.setDividerLocation(tabWidth/2);
         tablesPane.setResizeWeight(0.5);
 
-        //JPanel AssetsPanel = new JPanel();
-        String[][] OrgAssets = OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID);
-        int size = OrgAssets.length;
-        String[] OrgAssetID = new String[size]; //array that stores OrganisationAssetID's for given array
-        String[][] AssetItemQuantity = new String[size][]; //array that stores AssetItem and AssetQuantity
-        for(int i = 0; i<size; i++){
-            OrgAssetID[i] = OrgAssets[i][0];
-            String[] assets = new String[2]; //temporary array
-            assets[0] = OrgAssets[i][1];
-            assets[1] = OrgAssets[i][2];
-            AssetItemQuantity[i] = assets;
-        }
-        DefaultTableModel assetTableModel = GUIMain.constructTable(AssetItemQuantity, AssetHeading);
-        JScrollPane Assets = GUIMain.tablePane(tableCreator(assetTableModel));
+        //Setup asset table
+        assetTableModel = constructAssetTableModel();
+        assetTable = tableCreator(assetTableModel);
+        Assets = GUIMain.tablePane(assetTable);
 
         //create buttons
-        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position, buyTable, tradeIDBuy, buyData);
-        JButton removeSellOrderButton = removeSellOrderButton(panel2, position, sellTable, tradeIDSell, sellData);
+        JButton removeBuyOrderButton = removeBuyOrderButton(panel2, position, buyTable);
+        JButton removeSellOrderButton = removeSellOrderButton(panel2, position, sellTable);
         JButton buyButton = buyAssetButton(panel2, position);
         JButton sellButton = sellAssetButton(panel2, position);
         creditsLabel(panel2, position);
@@ -184,7 +151,7 @@ public class GUIOrgHome{
         pageScroll.add(panel2);
     }
 
-    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table, String[] tradeIDBuy, String[][] tradeData){
+    private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
         position.gridx = 3;
@@ -204,7 +171,7 @@ public class GUIOrgHome{
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow) + "with tradeID" + String.valueOf(tradeIDBuy[selectedRow]));
-                    int result = JOptionPane.showConfirmDialog(null,"Cancel trade buy order of "+tradeData[selectedRow][1]+" "+tradeData[selectedRow][0]+"?", "Cancel trade",
+                    int result = JOptionPane.showConfirmDialog(null,"Cancel trade buy order of "+buyData[selectedRow][1]+" "+buyData[selectedRow][0]+"?", "Cancel trade",
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
@@ -212,34 +179,18 @@ public class GUIOrgHome{
                         try {
                             TradeManager.setCancel(Integer.valueOf(tradeIDBuy[selectedRow])); //cancel order
 
-                            String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
-                            int sellSize = tradesBuy.length;
-                            String[] tradeIDBuy = new String[sellSize]; //array that stores organisationAssetID's for buy orders
-                            String[][] buyData = new String[sellSize][]; //array that stores data to be displayed in buyTrades table
-                            for (int i = 0; i < sellSize; i++) {
-                                if (tradesBuy[i]!= null) {
-                                    tradeIDBuy[i] = tradesBuy[0][i];
-                                    String[] buy = new String[3]; //temporary array
-                                    buy[0] = tradesBuy[i][1];
-                                    buy[1] = tradesBuy[i][2];
-                                    buy[2] = tradesBuy[i][3];
-                                    buyData[i] = buy;
-                                }
-                            }
-                            //buyTableModel = GUIMain.constructTable(buyData, BuyHeading);
-                            //buyTable = tableCreator(buyTableModel);
-                            //TradesPaneBuy = GUIMain.tablePane(buyTable);
-                            //tablesPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, TradesPaneSell, TradesPaneBuy);
-
-                            //DefaultTableModel tableModel = (DefaultTableModel) table. getModel();
-                            //tableModel.setRowCount(sellSize-1);
-                            //tableModel.setRowCount(sellSize);
-
                             //restore credits (add remaining quantity*price)
-                            //int newCredits = credits + Integer.valueOf(tradeData[selectedRow][2])*Integer.valueOf(tradeData[selectedRow][3]);
-                            //OrganisationalUnit.UpdateOrganisationalUnitCredits(organisationalUnitID, newCredits);
+                            System.out.println("buyData" + Arrays.deepToString(buyData));
+                            int newCredits = credits + Integer.valueOf(buyData[selectedRow][2])*Integer.valueOf(buyData[selectedRow][3]);
+                            OrganisationalUnit.UpdateOrganisationalUnitCredits(organisationalUnitID, newCredits);
+
+                            //update buy order table
+                            buyTableModel = constructBuyTableModel();
+                            buyTable.setModel(buyTableModel);
+
                             //update credits label
-                            //creditsLabel(panel2, position);
+                            LabelCredits.setText("Credits: " + Integer.valueOf(newCredits));
+
                         } catch (Exception m) {
                             m.printStackTrace();
                         }
@@ -252,7 +203,7 @@ public class GUIOrgHome{
         return removeButton;
     }
 
-    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table, String[] tradeIDSell, String[][] tradeData){
+    private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 80, 20, 0);
         position.gridx = 2;
@@ -271,33 +222,36 @@ public class GUIOrgHome{
                     JOptionPane.showMessageDialog(null, "Please select one row from the 'Sell Orders' table to cancel order.");
                 }
                 else{
-                    int result = JOptionPane.showConfirmDialog(null,"Cancel trade sell order of "+tradeData[selectedRow][1]+" "+tradeData[selectedRow][0]+"?", "Cancel trade",
+                    int result = JOptionPane.showConfirmDialog(null,"Cancel trade sell order of "+sellData[selectedRow][1]+" "+sellData[selectedRow][0]+"?", "Cancel trade",
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
                         System.out.print("Trade cancelled");
                         try {
-                            TradeManager.setCancel(Integer.valueOf(tradeIDSell[selectedRow])); //cancel order
+                            int tradeId = Integer.valueOf(tradeIDSell[selectedRow]);
+                            TradeManager.setCancel(tradeId); //cancel order
 
-                            String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
-                            int sellSize = tradesSell.length;
-                            String[] tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
-                            String[][] sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
-                            for (int i = 0; i < sellSize; i++) {
-                                if (tradesSell[i]!= null) {
-                                    tradeIDSell[i] = tradesSell[0][i];
-                                    String[] sell = new String[3]; //temporary array
-                                    sell[0] = tradesSell[i][1];
-                                    sell[1] = tradesSell[i][2];
-                                    sell[2] = tradesSell[i][3];
-                                    sellData[i] = sell;
-                                }
-                            }
-                            //Update Sell Order Table
-                            //DefaultTableModel tableModel = (DefaultTableModel) table. getModel();
-                            //tableModel.setRowCount(0);
+                            // Get the org asset id from the trade id
+                            int orgAssetId = TradeManager.getOrganisationAssetId(tradeId);
+
+                            //Calculate new Asset Quantity
+                            //get current asset quantity for organisationAssetID
+                            int oldQuantity = OrganisationAsset.getQuantity(orgAssetId);
+                            System.out.println("This is old quantity: " + Integer.valueOf(oldQuantity));
+                            int newQuantity = oldQuantity + Integer.valueOf(sellData[selectedRow][2]); //add remaining quantity
+                            System.out.println("This is new quantity: " + Integer.valueOf(Integer.valueOf(sellData[selectedRow][2])));
+
                             //restore the remaining quantity of the asset
+                            OrganisationAsset.updateOrganisationalUnitAssetQuantity(orgAssetId, newQuantity);
+
+                            //Update Sell Order Table
+                            sellTableModel = constructSellTableModel();
+                            sellTable.setModel(sellTableModel);
+
                             //update assets table
+                            assetTableModel = constructAssetTableModel();
+                            assetTable.setModel(assetTableModel);
+
                         } catch (Exception m) {
                             m.printStackTrace();
                         }
@@ -360,13 +314,82 @@ public class GUIOrgHome{
         //Credits Label
         //credits = organisationalUnit.getCredits(organisationalUnitID);
         String creditsLabel = "Credits: " + String.valueOf(credits);
-        JLabel credits = new JLabel(creditsLabel);
-        credits.setForeground(Color.white);
-        credits.setFont(new Font(FONT, Font.PLAIN, 18));
+        LabelCredits = new JLabel(creditsLabel);
+        LabelCredits.setForeground(Color.white);
+        LabelCredits.setFont(new Font(FONT, Font.PLAIN, 18));
         position.gridx = 3;
         position.gridy = 2;
         position.anchor = GridBagConstraints.LINE_END;
-        panel2.add(credits, position);
+        panel2.add(LabelCredits, position);
+    }
+
+    private DefaultTableModel constructBuyTableModel() throws IOException, ClassNotFoundException {
+        //Retrieve trades buy table for organisational unit
+        String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
+        int buySize = tradesBuy.length;
+        this.tradeIDBuy = new String[buySize]; //array that stores organisationAssetID's for buy orders
+        this.buyData = new String[buySize][]; //array that stores data to be displayed in buyTrades table
+        try {
+            for (int i = 0; i < buySize; i++) {
+                if(tradesBuy[i]!= null) {
+                    tradeIDBuy[i] = tradesBuy[i][0];
+                    String[] buy = new String[4]; //temporary array
+                    buy[0] = tradesBuy[i][1];
+                    buy[1] = tradesBuy[i][2];
+                    buy[2] = tradesBuy[i][3];
+                    buy[3] = tradesBuy[i][4];
+                    buyData[i] = buy;
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return GUIMain.constructTable(buyData,BuyHeading);
+    }
+
+
+
+    private DefaultTableModel constructSellTableModel() throws IOException, ClassNotFoundException {
+        //Retrieve trades sell table for organisational unit
+        String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
+        int sellSize = tradesSell.length;
+        this.tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
+        this.sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
+        try {
+            for (int i = 0; i < sellSize; i++) {
+                if (tradesSell[i]!= null) {
+                    tradeIDSell[i] = tradesSell[i][0];
+                    String[] sell = new String[4]; //temporary array
+                    sell[0] = tradesSell[i][1];
+                    sell[1] = tradesSell[i][2];
+                    sell[2] = tradesSell[i][3];
+                    sell[3] = tradesSell[i][4];
+
+                    sellData[i] = sell;
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return GUIMain.constructTable(sellData, SellHeading);
+    }
+
+    private DefaultTableModel constructAssetTableModel() throws IOException, ClassNotFoundException {
+        //JPanel AssetsPanel = new JPanel();
+        String[][] OrgAssets = OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID);
+        int size = OrgAssets.length;
+        this.OrgAssetID = new String[size]; //array that stores OrganisationAssetID's for given array
+        this.AssetItemQuantity = new String[size][]; //array that stores AssetItem and AssetQuantity
+        for(int i = 0; i<size; i++){
+            OrgAssetID[i] = OrgAssets[i][0];
+            String[] assets = new String[2]; //temporary array
+            assets[0] = OrgAssets[i][1];
+            assets[1] = OrgAssets[i][2];
+            AssetItemQuantity[i] = assets;
+        }
+        return GUIMain.constructTable(AssetItemQuantity, AssetHeading);
     }
 
 }
