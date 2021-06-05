@@ -1,7 +1,6 @@
 package TradingPlatform.NetworkProtocol;
 
 import TradingPlatform.AccountType;
-import TradingPlatform.AssetType;
 import TradingPlatform.JDBCDataSources.*;
 import TradingPlatform.OrganisationalUnit;
 import TradingPlatform.Request;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Connection;
-import java.util.Map;
 
 /**
  * A part of the Server side network protocol.
@@ -44,7 +42,7 @@ public class ServerSend implements Runnable {
      * @param clientSocket the Client's socket.
      * @throws IOException if Client's socket is invalid.
      */
-    public static void handleRequest(String className, String methodName, String[] arguments, Socket clientSocket) throws IOException, ClassNotFoundException {
+    public static void handleRequest(String className, String methodName, String[] arguments, Socket clientSocket) throws IOException {
         isWorking = true;
         Connection connection = DBConnection.getInstance();
         System.out.println("Connection to database successful!");
