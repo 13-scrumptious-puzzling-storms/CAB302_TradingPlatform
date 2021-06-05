@@ -5,6 +5,7 @@ import TradingPlatform.JDBCDataSources.*;
 import TradingPlatform.OrganisationalUnit;
 import TradingPlatform.Request;
 
+import javax.xml.transform.Result;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -120,7 +121,8 @@ public class ServerSend extends NotifyingThread {
                 switch (methodName) {
                     case "addOrganisationAsset": {
                         JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
-                        DBInterface.addOrganisationAsset(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]));
+                        int response = DBInterface.addOrganisationAsset(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]));
+                        Transmit(new Request(className, methodName, new String[]{Integer.toString(response)}));
                         break;
                     }
                     case "getOrganisationAssetsAndQuantity": {

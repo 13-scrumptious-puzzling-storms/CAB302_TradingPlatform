@@ -238,7 +238,10 @@ public class GUIOrder extends JFrame{
             }else{
                 int currentCredits = organisationalUnit.organisationCredit;
                 if(currentCredits >= price*quantity){
-                    organisationalUnit.setCredits(currentCredits - price*quantity);
+                    organisationalUnit.UpdateOrganisationalUnitCredits(orgID, currentCredits - price*quantity);
+                    if(orgAssetId < 0){
+                        orgAssetId = OrganisationAsset.addOrganisationAsset(orgID, buyAsset.getAssetId(), 0);
+                    }
                     order.addTradeOrder(orgAssetId, quantity, isSell, price);
                     buyTableModel = GUIOrgHome.constructBuyTableModel();
                     buyTable.setModel(buyTableModel);

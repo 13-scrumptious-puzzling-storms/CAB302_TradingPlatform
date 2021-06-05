@@ -117,7 +117,7 @@ public class OrganisationAsset {
         return -1;
     }
 
-    public int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity){
+    public static int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity){
         try {
             Request response = NetworkManager.GetResponse("JDBCOrganisationalAsset", "addOrganisationAsset",
                     new String[]{ Integer.toString(orgUnitID), Integer.toString(assetTypeID), Integer.toString(quantity) });
