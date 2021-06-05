@@ -12,40 +12,13 @@ import static java.awt.GridBagConstraints.*;
 
 public class GUIHome extends JFrame{
 
-    String data[][] = {{"Vinod","MCA","Computer"},
-            {"Deepak","PGDCA","History"},
-            {"Ranjan","M.SC.","Biology"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"}};
+    public User user;
+
     String TableHeading[] = {"Recent Trades","Price","Quantity"};
 
-    public GUIHome(JPanel HomeTab) throws IOException, ClassNotFoundException {
+    public GUIHome(JPanel HomeTab, User user) throws IOException, ClassNotFoundException {
         homePanel(HomeTab);
+        this.user = user;
     }
 
     public void homePanel(JPanel panel) throws IOException, ClassNotFoundException {
@@ -104,7 +77,8 @@ public class GUIHome extends JFrame{
     public void buyActionListener(ActionEvent e) throws IOException, ClassNotFoundException {
         String event = e.getActionCommand();
         if(event == "Buy Assets") {
-            GUIOrder.buyPopup();
+            GUIOrder order = new GUIOrder(user);
+            order.buyPopup();
         }
     }
     public void sellActionListener(ActionEvent e){

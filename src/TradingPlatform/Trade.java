@@ -2,6 +2,10 @@ package TradingPlatform;
 
 import TradingPlatform.JDBCDataSources.JDBCAssetType;
 
+import java.io.IOException;
+
+import static TradingPlatform.ClientApp.networkManager;
+
 /**
  * Creates a new instance of either a BUY or SELL order for a trade
  */
@@ -10,6 +14,7 @@ public class Trade{
     private boolean type;
     private AssetType asset;
     private int quantity;
+    private int price;
     private int organisation;
 
     /**
@@ -17,13 +22,19 @@ public class Trade{
      * @param type The trade type (true for buy, false for sell).
      * @param asset The trade asset.
      * @param quantity The quantity of the asset for the trade.
+     * @param price The price of the asset for the trade.
      * @param organisationId The organisation initiating the trade order.
      */
-    public Trade(boolean type, AssetType asset, int quantity, int organisationId){
+    public Trade(boolean type, AssetType asset, int quantity, int price, int organisationId){
         this.type = type;
         this.asset = asset;
         this.quantity = quantity;
+        this.price = price;
         this.organisation = organisationId;
+    }
+
+    public void addTradeOrder(int orgAssetId, int quantity, boolean type, int price) throws IOException {
+        networkManager.SendRequest("JDBCTradeDataSource", "addTradeOrder", new String[] {String.valueOf(orgAssetId), String.valueOf(quantity), String.valueOf(type), String.valueOf(price)});
     }
 
     /**

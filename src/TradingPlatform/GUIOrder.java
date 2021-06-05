@@ -1,4 +1,8 @@
 package TradingPlatform;
+import TradingPlatform.JDBCDataSources.JDBCAssetType;
+import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
+import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -17,30 +21,41 @@ public class GUIOrder extends JFrame{
     Popup p;
     private static Popup buyPop;
     private static Popup sellPop;
+    private User user;
 
-    private static JComboBox itemNameInput;
-    private static JTextField quantityInput;
-    private static JTextField priceInput;
-    private static JLabel itemName;
-    private static JLabel quantity;
-    private static JLabel price;
+    private JComboBox itemNameInput;
+    private JTextField quantityInput;
+    private JTextField priceInput;
+    private JLabel itemName;
+    private JLabel quantity;
+    private JLabel price;
 
-    private static JButton confirm;
-    private static JButton cancel;
-    private static PopupFactory popUp;
-    private static JFrame buy;
-    private static JPanel panel;
-    private static JFrame sell;
+    private JLabel order;
+
+    private JButton confirm;
+    private JButton cancel;
+    private JOptionPane popUp;
+    private JPanel buy;
+    private JPanel panel;
+    private JFrame sell;
+
+    public GUIOrder(User user) {
+        this.user = user;
+    }
+
+    public GUIOrder(){
+
+    }
 
 
-    public static void buyPopup() throws IOException, ClassNotFoundException {
+    public void buyPopup() throws IOException, ClassNotFoundException {
         UIManager.put("Popup.border", cust1);
-        buy = new JFrame("Buy");
+        buy = new JPanel();
         buy.setSize(new Dimension(width/2, height/2));
-        popUp = new PopupFactory();
+        popUp = new JOptionPane();
 
         panel = new JPanel();
-        panel.setPreferredSize(new Dimension(width/2, height/2));
+        panel.setPreferredSize(new Dimension(width/2, 300));
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
@@ -51,21 +66,32 @@ public class GUIOrder extends JFrame{
         String[] data = AssetType.getAllAssetNames();
         itemNameInput = new JComboBox(data);
         itemNameInput.setPreferredSize(new Dimension(width/4, 20));
-        quantityInput = new JTextField(20);
+        quantityInput = new JTextField();
         quantityInput.setPreferredSize(new Dimension(width/4, 20));
         quantityInput.setEditable(true);
         quantityInput.setEnabled(true);
-        quantityInput.setText("");
-        priceInput = new JTextField(20);
+        priceInput = new JTextField();
         priceInput.setPreferredSize(new Dimension(width/4, 20));
         priceInput.setEditable(true);
         priceInput.setEnabled(true);
 
         confirm = new JButton("Confirm Order");
-        confirm.addActionListener(GUIOrder::finalButton);
+        confirm.addActionListener(e -> {
+            try {
+                finalButton(e);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
 
         cancel = new JButton("Cancel");
-        cancel.addActionListener(GUIOrder::finalButton);
+        cancel.addActionListener(e -> {
+            try {
+                finalButton(e);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
 
         position.weighty = 0;
         position.insets = new Insets(20, 0, 20, 10);
@@ -93,19 +119,13 @@ public class GUIOrder extends JFrame{
         panel.add(cancel, position);
 
         buy.setPreferredSize(new Dimension(200, 200));
-        buyPop = popUp.getPopup(buy, panel, width/4, height/4);
 
-        buyPop.show();
+        int result = JOptionPane.showConfirmDialog(null, panel, "Create buy order", JOptionPane.PLAIN_MESSAGE);
     }
 
-    public static void closePop(){
-        buyPop.hide();
-        buyPop = popUp.getPopup(buy, panel, 100, 100);
-    }
+    public void sellPopup(){
 
-    public static void sellPopup(){
-
-        popUp = new PopupFactory();
+        popUp = new JOptionPane();
         sell = new JFrame();
 //        JPanel mainPanel = new JPanel();
         panel = new JPanel();
@@ -139,23 +159,21 @@ public class GUIOrder extends JFrame{
         position.gridy = 2;
         panel.add(priceInput, position);
         panel.add(new JLabel("THIS IS SELL"));
-        sellPop = popUp.getPopup(sell, panel, width/4, height/4);
+        //sellPop = popUp.getPopup(sell, panel, width/4, height/4);
         sellPop.show();
         sell.setPreferredSize(new Dimension(200, 200));
     }
 
-    public static void finalButton(ActionEvent e){
+    public void finalButton(ActionEvent e) throws IOException {
         var box = e.getActionCommand();
         if(box == "Cancel"){
-            buyPop.hide();
         }else{
             //do add new trade order
             updateBuyOrder();
-            buyPop.hide();
         }
     }
 
-    private static void updateBuyOrder() {
+    private void updateBuyOrder() throws IOException {
 
         if (quantityInput.getText() != null && !quantityInput.getText().equals("")) {
             int quantity;
@@ -178,9 +196,13 @@ public class GUIOrder extends JFrame{
             }
             var asset = itemNameInput.getSelectedItem();
 
-//            admin.EditOrganisationalAsset(orgUnit, asset, quantity);
+            AssetType buyAsset = new AssetType(asset.toString());
+            OrganisationalUnit organisationalUnit = user.getOrganisationalUnit();
+            int orgID = organisationalUnit.getID();
 
-            JOptionPane.showMessageDialog(panel, "New buy order for" + quantity + " " + asset + " at " + price + "credit(s)!",
+            Trade order = new Trade(false, buyAsset, quantity, price, orgID);
+            order.addTradeOrder(orgID, quantity, false, price);
+            JOptionPane.showMessageDialog(panel, "New buy order for " + quantity + " " + asset + " at " + price + " credit(s)!",
                     "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(panel, "Please enter all details of your order",

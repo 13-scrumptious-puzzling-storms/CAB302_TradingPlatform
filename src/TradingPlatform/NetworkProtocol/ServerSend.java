@@ -170,6 +170,10 @@ public class ServerSend implements Runnable {
                         Transmit(new Request(className, methodName, new String[]{Integer.toString(orgAssetId)}));
                         break;
                     }
+                    case "addTradeOrder": {
+                        var DBInterface = new JDBCTradeDataSource(connection);
+                        DBInterface.addTradeOrder(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Boolean.parseBoolean(arguments[2]), Integer.parseInt(arguments[3]));
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;
