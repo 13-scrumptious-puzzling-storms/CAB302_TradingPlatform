@@ -17,9 +17,14 @@ public class OrganisationalUnitTests {
 
     static Connection connection;
 
+//    @BeforeAll
+//    public static void init(){
+//        connection = DBConnection.getInstance();
+//    }
     @BeforeAll
     public static void init(){
-        connection = DBConnection.getInstance();
+        TestDatabaseFunctions.InitDb();
+        connection = TestDatabaseFunctions.getConnection();
     }
 
     OrganisationalUnit org1;
@@ -37,24 +42,48 @@ public class OrganisationalUnitTests {
     }
 
     @Test
-    public void twoBaseCaseOrg(){
-        org2 = new OrganisationalUnit("Shanelle", 200);
-        System.out.println(org2.getID());
-
-        org3 = new OrganisationalUnit("Bella", 500);
-        System.out.println(org3.getID());
+    public void baseCaseOrg2(){
+        org2 = new OrganisationalUnit("CAB302", 0);
     }
 
     @Test
-    public void DataBaseConnection(){
-        org2 = new OrganisationalUnit("Shanelle", 200);
-        System.out.println(org2.getID());
+    public void twoBaseCaseOrg(){
+        org2 = new OrganisationalUnit("TestCase 1", 200);
+
+        org3 = new OrganisationalUnit("TestCase 2", 500);
+    }
+
+    @Test
+    public void ServerInstanceTest(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+    }
+
+    @Test
+    public void ServerAddOrganisationalUnitName(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        unit.addOrganisationalUnit("New Organisation", 10);
+    }
+
+    @Test
+    public void ServerAddOrganisationalUnitNameError(){
+        //unit name already exists
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert(unit.addOrganisationalUnit("Storms", 0) == -1);
+    }
+
+    @Test
+    public void ServerAddOrganisationalUnitNameError2(){
+        //catch implementation
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert(unit.addOrganisationalUnit("Storms, 2); INSERT INTO OrganisationUnit(name, credits) values (Hacks,",
+                0) == 9);
+        //assert()
     }
 
     @Test
     public void ServerGetOrganisationalUnitName(){
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
-        assert (unit.getOrganisationalUnitName(1).equals("Test"));
+        assert (unit.getOrganisationalUnitName(1).equals("ITAdmin"));
     }
 
     @Test

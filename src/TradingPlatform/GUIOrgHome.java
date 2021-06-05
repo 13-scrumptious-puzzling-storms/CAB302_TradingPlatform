@@ -82,10 +82,17 @@ public class GUIOrgHome{
         exec.scheduleWithFixedDelay(this::RefreshContents, 5, 5, TimeUnit.SECONDS);
     }
 
+    /**
+     * Refreshes tables within GUIOrgHome approximately every 5 second
+     */
     private void RefreshContents(){
         try {
             assetTableModel = constructAssetTableModel();
             assetTable.setModel(assetTableModel);
+            sellTableModel = constructAssetTableModel();
+            sellTable.setModel(sellTableModel);
+            buyTableModel = constructAssetTableModel();
+            buyTable.setModel(buyTableModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
