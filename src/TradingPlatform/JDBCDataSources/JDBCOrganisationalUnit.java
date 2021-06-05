@@ -18,6 +18,8 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private static final String ORGID_HEADING = "OrganisationUnitID";
     private static final String GET_ALL_ORGANISATIONALUNIT_NAMES = "SELECT OrganisationUnitID, name, credits FROM OrganisationUnit";
     private static final String GET_NUM_ORGANISATIONALUNITS_WITH_NAME = "SELECT COUNT(*) FROM OrganisationUnit where name=?";
+    private static final String GET_NUM_ORGANISATIONALUNITS_WITH_ID = "SELECT COUNT(*) FROM OrganisationUnit where OrganisationUnitID=?";
+
 
     //table column headings
     private static final String NAME_HEADING = "name";
@@ -33,6 +35,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private PreparedStatement getNewOrganisationalUnitID;
     private PreparedStatement getAllOrganisationUnitNames;
     private PreparedStatement getNumOrganisationalUnitsWithName;
+    private PreparedStatement getNumOrganisationalUnitsWithID;
 
     //instance of the connection to the database
     private Connection connection;
@@ -54,6 +57,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
             getNewOrganisationalUnitID = connection.prepareStatement(GET_NEW_ORGANISATIONALUNIT_ID);
             getAllOrganisationUnitNames = connection.prepareStatement(GET_ALL_ORGANISATIONALUNIT_NAMES);
             getNumOrganisationalUnitsWithName = connection.prepareStatement(GET_NUM_ORGANISATIONALUNITS_WITH_NAME);
+            getNumOrganisationalUnitsWithID = connection.prepareStatement(GET_NUM_ORGANISATIONALUNITS_WITH_ID);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -78,17 +82,10 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
             addOrganisationalUnit.clearParameters();
             addOrganisationalUnit.setString(1, orgName);
             addOrganisationalUnit.setInt(2, orgCredits);
-            int affectedRows = addOrganisationalUnit.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new SQLException("JDBCOrganisationalUnit unable to retrieve ID: no affected rows");
-            }
+            addOrganisationalUnit.executeUpdate();
             ResultSet generatedKeys = addOrganisationalUnit.getGeneratedKeys();
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
-            }
-            else {
-                throw new SQLException("JDBCOrganisationalUnit unable to retrieve ID");
             }
 
         } catch (SQLException throwables) {
@@ -175,11 +172,14 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     public Boolean UpdateOrganisationalUnitCredits(int OrgUnitID, int updatedCredits){
         synchronized (JDBCThreadLock.UpdateDbLock) {
             try {
+                if (updatedCredits < 0){
+                    return false;
+                }
                 updateOrganisationalUnitCredits.clearParameters();
                 updateOrganisationalUnitCredits.setInt(1, updatedCredits);
                 updateOrganisationalUnitCredits.setInt(2, OrgUnitID);
-                updateOrganisationalUnitCredits.executeUpdate();
-                return true;
+                int numRows = updateOrganisationalUnitCredits.executeUpdate();
+                return numRows > 0;
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
                 return false;

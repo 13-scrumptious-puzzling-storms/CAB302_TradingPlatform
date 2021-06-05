@@ -21,7 +21,6 @@ import static TradingPlatform.GUIMain.*;
  */
 public class GUIOrgHome{
 
-
     public static String BuyHeading[] = {"Buy Orders","Quantity","Remaining Quantity", "Price",};
     public static String[] SellHeading = {"Sell Orders","Quantity","Remaining Quantity", "Price"};
     public static String[] AssetHeading = {"Asset Item","Quantity"};

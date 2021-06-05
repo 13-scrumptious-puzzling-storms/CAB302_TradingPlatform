@@ -47,35 +47,25 @@ public class OrganisationalUnitTests {
     @Test
     public void twoBaseCaseOrg(){
         org2 = new OrganisationalUnit("TestCase 1", 200);
-
         org3 = new OrganisationalUnit("TestCase 2", 500);
     }
-
+//------------ JDBCOrganisationalUnit tests
     @Test
     public void ServerInstanceTest(){
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
     }
 
     @Test
-    public void ServerAddOrganisationalUnitName(){
+    public void ServerAddOrganisationalUnit(){
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
-        unit.addOrganisationalUnit("New Organisation", 10);
+        assert(unit.addOrganisationalUnit("New Organisation", 10) == 6);
     }
 
     @Test
-    public void ServerAddOrganisationalUnitNameError(){
+    public void ServerAddOrganisationalUnitError(){
         //unit name already exists
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert(unit.addOrganisationalUnit("Storms", 0) == -1);
-    }
-
-    @Test
-    public void ServerAddOrganisationalUnitNameError2(){
-        //catch implementation
-        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
-        assert(unit.addOrganisationalUnit("Storms, 2); INSERT INTO OrganisationUnit(name, credits) values (Hacks,",
-                0) == 9);
-        //assert()
     }
 
     @Test
@@ -85,10 +75,54 @@ public class OrganisationalUnitTests {
     }
 
     @Test
-    public void ServerGetOrganisationalUnit(){
+    public void ServerGetOrganisationalUnitNameError(){
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
-        assert (unit.getOrganisationalUnit(1) != null);
+        assert (unit.getOrganisationalUnitName(-1) == null);
     }
+
+    @Test
+    public void getOrganisationalUnitCredits(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert(unit.getOrganisationalUnitCredits(1) == 1000);
+    }
+
+
+    @Test
+    public void ServerUpdateOrganisationalUnitCredits(){
+        JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
+        Boolean successful = unitSource.UpdateOrganisationalUnitCredits(2, 255);
+        assert(successful == true);
+        OrganisationalUnit unit = unitSource.getOrganisationalUnit(2);
+        assert(unit.getCredits() == 255);
+    }
+
+    @Test
+    public void ServerUpdateOrganisationalUnitCreditsError(){
+        //organisational unit ID invalid
+        JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
+        Boolean successful = unitSource.UpdateOrganisationalUnitCredits(-1, 250);
+        System.out.println(successful);
+        assert(successful == false);
+    }
+
+    @Test
+    public void ServerUpdateOrganisationalUnitCreditsError2(){
+        //organisational unit ID invalid
+        JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
+        Boolean successful = unitSource.UpdateOrganisationalUnitCredits(1, -250);
+        assert(successful == false);
+    }
+
+
+    @Test
+    public void ServerGetOrganisationalUnit(){
+        JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
+        OrganisationalUnit unit = unitSource.getOrganisationalUnit(1);
+        assert (unit != null);
+        assert (unit.getName().equals("ITAdmin"));
+        assert (unit.getCredits() == 1000);
+    }
+
 
 
     @Test
@@ -106,11 +140,7 @@ public class OrganisationalUnitTests {
         assert(unit.getOrganisationalUnitCredits(1) == credits);
     }
 
-    @Test
-    public void getOrganisationalUnitCredits(){
-        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
-        assert(unit.getOrganisationalUnitCredits(1) >= 0);
-    }
+
 
     @Test
     public void addOrganisationalUnit(){

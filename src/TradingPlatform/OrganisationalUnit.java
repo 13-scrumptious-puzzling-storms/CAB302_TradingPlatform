@@ -135,7 +135,7 @@ public class OrganisationalUnit implements Serializable {
      * @param orgID organisational unit ID
      * @return number of credits owned by the organisational unit
      */
-    public int getCredits(int orgID) {
+    public static int getCredits(int orgID) {
         try {
             Request response = networkManager.GetResponse("OrganisationalUnitServer", "getCredits", new String[]{String.valueOf(orgID)});
             return Integer.valueOf(response.getArguments()[0]);
@@ -143,7 +143,7 @@ public class OrganisationalUnit implements Serializable {
         catch(Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return -1;
     }
 
     /**
