@@ -21,12 +21,11 @@ public class ClientApp {
         networkThread.start();
 
         // Initialise the login GUI and get user.
-        //SwingUtilities.invokeLater(new Runnable() {
-          //  public void run() {
-            //    guiLogin = new GUILogin();
-            //}
-        //});
-        launchProgram(2);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                guiLogin = new GUILogin();
+            }
+        });
     }
 
     public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
