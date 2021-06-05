@@ -5,6 +5,7 @@ import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import static TradingPlatform.GUIMain.*;
+import static TradingPlatform.GUIOrgHome.*;
 import static java.awt.GridBagConstraints.CENTER;
 import static java.awt.GridBagConstraints.LINE_END;
 
@@ -43,11 +45,6 @@ public class GUIOrder extends JFrame{
         this.user = user;
     }
 
-    public GUIOrder(){
-
-    }
-
-
     public void popup(Boolean isSell) throws IOException, ClassNotFoundException {
         buy = new JPanel();
         buy.setSize(new Dimension(width/2, height/2));
@@ -67,7 +64,7 @@ public class GUIOrder extends JFrame{
 
         itemName = new JLabel("Item Name: ");
         quantity = new JLabel("Quantity: ");
-        price = new JLabel("Price: ");
+        price = new JLabel("Price (per unit): ");
 
         order.setFont(new Font("Verdana", Font.BOLD, 30));
 
@@ -87,7 +84,7 @@ public class GUIOrder extends JFrame{
         confirm.addActionListener(e -> {
             try {
                 finalButton(e, isSell);
-            } catch (IOException ioException) {
+            } catch (IOException | ClassNotFoundException ioException) {
                 ioException.printStackTrace();
             }
         });
@@ -96,7 +93,7 @@ public class GUIOrder extends JFrame{
         cancel.addActionListener(e -> {
             try {
                 finalButton(e, isSell);
-            } catch (IOException ioException) {
+            } catch (IOException | ClassNotFoundException ioException) {
                 ioException.printStackTrace();
             }
         });
@@ -176,7 +173,7 @@ public class GUIOrder extends JFrame{
 //        sell.setPreferredSize(new Dimension(200, 200));
 //    }
 
-    public void finalButton(ActionEvent e, Boolean isSell) throws IOException {
+    private void finalButton(ActionEvent e, Boolean isSell) throws IOException, ClassNotFoundException {
         var box = e.getActionCommand();
         if(box == "Cancel"){
             updateOrder(isSell);
@@ -186,7 +183,7 @@ public class GUIOrder extends JFrame{
         }
     }
 
-    private void updateOrder(Boolean isSell) throws IOException {
+    private void updateOrder(Boolean isSell) throws IOException, ClassNotFoundException {
 
         if (quantityInput.getText() != null && !quantityInput.getText().equals("")) {
             int quantity;
@@ -215,19 +212,49 @@ public class GUIOrder extends JFrame{
             int orgID = organisationalUnit.getID();
             int orgAssetId = OrganisationAsset.getOrganisationAssetID(organisationalUnit, buyAsset);
 
-            if(isSell){
-                Trade order = new Trade(false, buyAsset, quantity, price, orgID);
-                order.addTradeOrder(orgAssetId, quantity, isSell, price);
-            }else{
-                Trade order = new Trade(false, buyAsset, quantity, price, orgID);
-                order.addTradeOrder(orgAssetId, quantity, isSell, price);
-            }
 
-            JOptionPane.showMessageDialog(panel, "New buy order for " + quantity + " " + asset + " at " + price + " credit(s)!",
-                    "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
+            Trade order = new Trade(isSell, buyAsset, quantity, price, orgID);
+
+            if(isSell){
+                int currentQuantity = OrganisationAsset.getQuantity(orgAssetId);
+                if( currentQuantity >= quantity){
+                    OrganisationAsset.updateOrganisationalUnitAssetQuantity(orgAssetId, currentQuantity - quantity);
+                    order.addTradeOrder(orgAssetId, quantity, isSell, price);
+//                    new GUIOrgHome(panel, user).constructSellTableModel();
+//                    new GUIOrgHome(panel, user).constructAssetTableModel();
+                    sellTableModel = GUIOrgHome.constructSellTableModel();
+                    sellTable.setModel(sellTableModel);
+                    assetTableModel = GUIOrgHome.constructAssetTableModel();
+                    assetTable.setModel(assetTableModel);
+                    JOptionPane.showMessageDialog(panel, "New SELL order for " + quantity + " " + asset + " at " + price + " credit(s)!",
+                            "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    if(currentQuantity == -1){
+                        currentQuantity = 0;
+                    }
+                    JOptionPane.showMessageDialog(panel, "Insufficient quantity!\nOrganisational Unit : " + organisationalUnit.getName() + " has " + currentQuantity + " " + asset + "s.\nYou attempted to sell " + quantity + " unit(s)!",
+                            "Edit Credits", JOptionPane.WARNING_MESSAGE);
+                }
+            }else{
+                int currentCredits = organisationalUnit.organisationCredit;
+                if(currentCredits >= price*quantity){
+                    organisationalUnit.setCredits(currentCredits - price*quantity);
+                    order.addTradeOrder(orgAssetId, quantity, isSell, price);
+                    buyTableModel = GUIOrgHome.constructBuyTableModel();
+                    buyTable.setModel(buyTableModel);
+//                    //new GUIOrgHome(panel, user).creditsLabel();
+                    GUIOrgHome.LabelCredits.setText("Credits: " + String.valueOf(currentCredits - price*quantity));
+                    JOptionPane.showMessageDialog(panel, "New BUY order for " + quantity + " " + asset + " at " + price + " credit(s)!",
+                            "Order Complete", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else{
+                    JOptionPane.showMessageDialog(panel, "Insufficient funds!\nOrganisational Unit : " + organisationalUnit.getName() + " has " + currentCredits + " credits.\nYou attempted to use " + price*quantity + " credit(s)!",
+                            "Edit Credits", JOptionPane.WARNING_MESSAGE);
+                }
+            }
         } else {
             JOptionPane.showMessageDialog(panel, "Please enter all details of your order",
-                    "Edit Credits", JOptionPane.WARNING_MESSAGE);
+                    "Edit Details", JOptionPane.WARNING_MESSAGE);
         }
     }
 }
