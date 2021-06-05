@@ -15,7 +15,7 @@ public class JDBCAssetType {
     private static final String COUNT_ASSETS = "SELECT count(name) as num FROM AssetType";
     private static final String GET_ASSET_ID = "SELECT assetTypeID FROM AssetType WHERE name=?";
 
-
+    //prepared statements
     private PreparedStatement addAssetType;
     private PreparedStatement getAssetName;
     private PreparedStatement getAllAssetNames;
@@ -23,9 +23,8 @@ public class JDBCAssetType {
     private PreparedStatement countAssets;
     private PreparedStatement getAssetId;
 
-
+    //instance of the connection to the database
     private Connection connection;
-
 
     public JDBCAssetType(Connection connection) {
         this.connection = connection;
@@ -44,6 +43,11 @@ public class JDBCAssetType {
         }
     }
 
+    /**
+     *
+     * @param assetName
+     * @return
+     */
     public int addAssetType(String assetName){
         try {
             addAssetType.clearParameters();
