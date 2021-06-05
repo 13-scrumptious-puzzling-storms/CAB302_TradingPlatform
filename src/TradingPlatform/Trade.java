@@ -1,7 +1,5 @@
 package TradingPlatform;
 
-import TradingPlatform.JDBCDataSources.JDBCAssetType;
-
 import java.io.IOException;
 
 import static TradingPlatform.ClientApp.networkManager;
@@ -33,12 +31,20 @@ public class Trade{
         this.organisation = organisationId;
     }
 
+    /**
+     * Adds a new Trade Order to the database for the values given
+     * @param orgAssetId An int showing the organisation asset ID for the trade.
+     * @param quantity An int showing the quantity of the asset for the trade.
+     * @param type A boolean showing the trade type (true for buy, false for sell).
+     * @param price An int showing the price of the asset for the trade.
+     * @throws IOException
+     */
     public void addTradeOrder(int orgAssetId, int quantity, boolean type, int price) throws IOException {
         networkManager.SendRequest("JDBCTradeDataSource", "addTradeOrder", new String[] {String.valueOf(orgAssetId), String.valueOf(quantity), String.valueOf(type), String.valueOf(price)});
     }
 
     /**
-     * returns the amount of credits needed for a trade
+     * Returns the amount of credits needed for a trade
      * @param asset The trade asset
      * @param quantity The number of assets
      * @return price

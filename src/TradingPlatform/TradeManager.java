@@ -3,16 +3,15 @@ package TradingPlatform;
 import java.io.IOException;
 import java.util.Map;
 
-import TradingPlatform.JDBCDataSources.JDBCTradeReconcileSource;
-
 /**
- * TradeManager executes and manages the listed trades
+ * TradeManager manages the listed trades
  */
 public class TradeManager {
+
     private static NetworkManager networkManager = ClientApp.networkManager;
 
     /**
-     * gets the current BUY orders for an asset.
+     *
      * @param asset The asset to get the buy orders for.
      * @return buyOrders
      */
@@ -55,11 +54,23 @@ public class TradeManager {
 
     }
 
+    /**
+     * Gets an array of the most recent reconciled trades for each asset
+     * @return A String[][] response from the server
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static String[][] getMostRecentAssetTypeTradeDetails() throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getMostRecentAssetTypeTradeDetails", new String[]{});
         return response.getDoubleString();
     }
 
+    /**
+     * Gets an array of the most recent reconciled trades
+     * @return A String[][] response from the server
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static String[][] getRecentTradeDetails() throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getRecentTradeDetails", new String[]{});
         return response.getDoubleString();
@@ -67,7 +78,11 @@ public class TradeManager {
 
 
     /**
-     * Bella implemented this. not sure where it is meant to go. You may change later
+     * gets the current SELL orders for an organisation.
+     * @param orgID An int showing the organisation ID
+     * @return A String[][] response from the server
+     * @throws IOException
+     * @throws ClassNotFoundException
      */
     public static String[][] getSellOrders(int orgID) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCTradeDataSource", "getSellOrders", new String[] {String.valueOf(orgID)});
@@ -75,20 +90,33 @@ public class TradeManager {
     }
 
     /**
-     * Bella implemented this. not sure where it is meant to go. You may change later
+     * gets the current BUY orders for an organisation.
+     * @param orgID An int showing the organisation ID
+     * @return A String[][] response from the server
+     * @throws IOException
+     * @throws ClassNotFoundException
      */
     public static String[][] getBuyOrders(int orgID) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCTradeDataSource", "getBuyOrders", new String[] {String.valueOf(orgID)});
         return response.getDoubleString();
     }
 
+    /**
+     * sets the trade to cancelled
+     * @param tradeID An int representing the current trade ID
+     * @return A Boolean response from the server
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static Boolean setCancel(int tradeID) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCTradeDataSource", "setCancel", new String[] {String.valueOf(tradeID)});
         return response.getResponse();
     }
 
     /**
-     * Gets the organisation asset id for a given trade, returns -1 on error
+     * Gets the organisation asset ID for a given trade, returns -1 on error
+     * @param tradeId An int representing the current trade ID
+     * @return An int representing the organisation asset ID
      */
     public static int getOrganisationAssetId(int tradeId) {
         try {
@@ -101,11 +129,25 @@ public class TradeManager {
         return -1;
     }
 
+    /**
+     * Gets an array of all current Sell orders for an asset
+     * @param assetTypeId An int representing the asset type ID
+     * @return A String[][] response from the server
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static String[][] getCurrentSellOrdersPriceAndQuantityForAsset(int assetTypeId) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getCurrentSellOrdersPriceAndQuantityForAsset", new String[] {String.valueOf(assetTypeId)});
         return response.getDoubleString();
     }
 
+    /**
+     * Gets an array of all current Buy orders for an asset
+     * @param assetTypeId An int representing the asset type ID
+     * @return A String[][] response from the server
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static String[][] getCurrentBuyOrdersPriceAndQuantityForAsset(int assetTypeId) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getCurrentBuyOrdersPriceAndQuantityForAsset", new String[] {String.valueOf(assetTypeId)});
         return response.getDoubleString();

@@ -105,12 +105,12 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             "    (r1.createdTime < r2.createdTime OR (r1.createdTime = r2.createdTime AND r1.tradeReconId < r2.tradeReconId)))\n" +
             "where r2.tradeReconId is null and r1.tradeReconId is not null;";
 
-    private static String MOST_RECENT_RECONCILE = "select u.name, o.price, r.quantity, r.createdTime, r.buyOrderID, r.sellOrderID from TradeRecon r\n" +
+    private static final String MOST_RECENT_RECONCILE = "select u.name, o.price, r.quantity, r.createdTime, r.buyOrderID, r.sellOrderID from TradeRecon r\n" +
             "    left join (select tradeOrderId, price, t.organisationAssetId from TradeOrders t) as o on (tradeOrderID = r.sellOrderID)\n" +
             "        left join (select p.assetTypeID, p.organisationAssetID from OrganisationAsset p) as q on q.organisationAssetID = o.organisationAssetID\n" +
             "            left join (SELECT name, a.assetTypeID from AssetType a) as u on u.assetTypeID = q.assetTypeID\n" +
             "    order by r.createdTime DESC LIMIT 20;";
-    private static String COUNT_RECENT_RECONCILE = "select count(r.createdTime) as num from TradeRecon r\n" +
+    private static final String COUNT_RECENT_RECONCILE = "select count(r.createdTime) as num from TradeRecon r\n" +
             "    left join (select tradeOrderId, price, t.organisationAssetId from TradeOrders t) as o on (tradeOrderID = r.sellOrderID)\n" +
             "        left join (select p.assetTypeID, p.organisationAssetID from OrganisationAsset p) as q on q.organisationAssetID = o.organisationAssetID\n" +
             "            left join (SELECT name, a.assetTypeID from AssetType a) as u on u.assetTypeID = q.assetTypeID\n" +
@@ -197,6 +197,11 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
         }
         return buyOrder;
     }
+
+    /**
+     * Gets the most recent trade details of each asset type from the database
+     * @return A String[][] of the details of the most resent trades
+     */
     @Override
     public String[][] getMostRecentAssetTypeTradeDetails() {
 
@@ -227,6 +232,10 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
         return null;
     }
 
+    /**
+     * Gets the most recent trade details from the database
+     * @return A String[][] of the details of the resent trades
+     */
     @Override
     public String[][] getRecentTradeDetails() {
 

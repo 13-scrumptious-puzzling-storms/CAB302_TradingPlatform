@@ -1,24 +1,18 @@
 package TradingPlatform;
-import TradingPlatform.JDBCDataSources.JDBCAssetType;
-import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
-import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static TradingPlatform.GUIMain.*;
 import static TradingPlatform.GUIOrgHome.*;
 import static java.awt.GridBagConstraints.CENTER;
 import static java.awt.GridBagConstraints.LINE_END;
 
+/**
+ * Constructs the Buy/Sell Trade Order popup as a JOptionPane.
+ * From this, the user is able to create a new trade order for their organisational unit.
+ */
 public class GUIOrder extends JFrame{
 
     private User user;
@@ -43,25 +37,21 @@ public class GUIOrder extends JFrame{
     String AssetBuyHeading[] = {"Buy Price", "Quantity"};
     String AssetSellHeading[] = {"Sell Price", "Quantity"};
 
+    /**
+     * GUIOrder constructor, setting the user and organisational unit
+     * @param user The current user
+     */
     public GUIOrder(User user) {
         this.user = user;
         organisationalUnit = user.getOrganisationalUnit();
     }
 
-    private void RefreshContent(){
-        try {
-            var assetName = itemNameInput.getSelectedItem();
-            AssetType asset = new AssetType(assetName.toString());
-            int assetId = asset.getAssetId();
-            var dataModel1 = GUIMain.constructTable(TradeManager.getCurrentBuyOrdersPriceAndQuantityForAsset(assetId), AssetBuyHeading);
-            BuyOrderTable.setModel(dataModel1);
-            var dataModel2 = GUIMain.constructTable(TradeManager.getCurrentSellOrdersPriceAndQuantityForAsset(assetId), AssetSellHeading);
-            SellOrderTable.setModel(dataModel2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * The main method for calling the buy/sell popup. Other classes will call this when they need a buy/sell popup.
+     * @param isSell A Boolean determining if the order is a Sell (true) or Buy (false)
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void popup(Boolean isSell) throws IOException, ClassNotFoundException {
         buy = new JPanel();
         buy.setSize(new Dimension(width/2, height/2));
@@ -155,6 +145,30 @@ public class GUIOrder extends JFrame{
 
     }
 
+    /**
+     * Refreshes the data in the buy and sell tables on the popup.
+     */
+    private void RefreshContent(){
+        try {
+            var assetName = itemNameInput.getSelectedItem();
+            AssetType asset = new AssetType(assetName.toString());
+            int assetId = asset.getAssetId();
+            var dataModel1 = GUIMain.constructTable(TradeManager.getCurrentBuyOrdersPriceAndQuantityForAsset(assetId), AssetBuyHeading);
+            BuyOrderTable.setModel(dataModel1);
+            var dataModel2 = GUIMain.constructTable(TradeManager.getCurrentSellOrdersPriceAndQuantityForAsset(assetId), AssetSellHeading);
+            SellOrderTable.setModel(dataModel2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * UpdateOrder handles the trade order. It makes sure all values are valid and calls warning messages if it is not.
+     * It then calls the functions to add the new buy or sell trade to the database.
+     * @param isSell A Boolean determining if the order is a Sell (true) or Buy (false)
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     private void updateOrder(Boolean isSell) throws IOException, ClassNotFoundException {
 
         if (quantityInput.getText() != null && !quantityInput.getText().equals("")) {
@@ -191,8 +205,6 @@ public class GUIOrder extends JFrame{
                 if( currentQuantity >= quantity){
                     OrganisationAsset.updateOrganisationalUnitAssetQuantity(orgAssetId, currentQuantity - quantity);
                     order.addTradeOrder(orgAssetId, quantity, isSell, price);
-//                    new GUIOrgHome(panel, user).constructSellTableModel();
-//                    new GUIOrgHome(panel, user).constructAssetTableModel();
                     sellTableModel = GUIOrgHome.constructSellTableModel();
                     sellTable.setModel(sellTableModel);
                     assetTableModel = GUIOrgHome.constructAssetTableModel();
@@ -216,7 +228,6 @@ public class GUIOrder extends JFrame{
                     order.addTradeOrder(orgAssetId, quantity, isSell, price);
                     buyTableModel = GUIOrgHome.constructBuyTableModel();
                     buyTable.setModel(buyTableModel);
-//                    //new GUIOrgHome(panel, user).creditsLabel();
                     GUIOrgHome.LabelCredits.setText("Credits: " + String.valueOf(currentCredits - price*quantity));
                     JOptionPane.showMessageDialog(panel, "New BUY order for " + quantity + " " + asset + " at " + price + " credit(s)!",
                             "Order Complete", JOptionPane.INFORMATION_MESSAGE);
