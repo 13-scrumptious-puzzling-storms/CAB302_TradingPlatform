@@ -309,7 +309,6 @@ public class GUIOrgHome{
             public void actionPerformed(ActionEvent e)
             {
                 // display buy popup
-                System.out.println("Just pressed the buy button");
                 try {
                     GUIOrder order = new GUIOrder(user);
                     order.popup(false);
@@ -337,10 +336,17 @@ public class GUIOrgHome{
         JButton sellButton = new JButton("Sell Assets");
         sellButton.setBackground(cust1);
         panel2.add(sellButton, position);
-        sellButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        sellButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
                 // display sell popup
-                System.out.println("Just pressed the sell button");
+                try {
+                    GUIOrder order = new GUIOrder(user);
+                    order.popup(true);
+                } catch (Exception m) {
+                    m.printStackTrace();
+                }
             }
         });
         sellButton.setVisible(false);
