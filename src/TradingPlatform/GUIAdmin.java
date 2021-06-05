@@ -262,7 +262,7 @@ public class GUIAdmin {
         cboxUserAccountType.setEnabled(editable);
         cboxUserOrgUnitName.setEnabled(editable && addUserIsMember); // Auto set the org unit if the user is an new Admin
         btnSaveNewUser.setEnabled(editable);
-        btnAddUser.setEnabled(editable == false); // btnAddUser enables the fields, so it needs to be the opposite
+        btnAddUser.setEnabled(!editable); // btnAddUser enables the fields, so it needs to be the opposite
 
         // If editable, set the background to a lighter colour, else dark colour
         if (editable){
@@ -506,7 +506,7 @@ public class GUIAdmin {
 
         txtAssetName.setEnabled(editable);
         btnSaveNewAsset.setEnabled(editable);
-        btnAddAsset.setEnabled(editable == false);
+        btnAddAsset.setEnabled(!editable);
 
         // If editable, set the background to a lighter colour, else dark colour
         if (editable)
@@ -634,7 +634,7 @@ public class GUIAdmin {
 
         txtCreateOrgUnitName.setEnabled(editable);
         btnSaveNewOrgUnit.setEnabled(editable);
-        btnCreateOrgUnit.setEnabled(editable == false);
+        btnCreateOrgUnit.setEnabled(!editable);
 
         // If editable, set the background to a lighter colour, else dark colour
         if (editable)
