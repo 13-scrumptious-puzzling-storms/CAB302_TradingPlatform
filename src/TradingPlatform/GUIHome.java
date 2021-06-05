@@ -65,7 +65,7 @@ public class GUIHome extends JFrame{
         mostRecentTrades.setPreferredSize(new Dimension(tabWidth-tabWidth/100, 100));
         mostRecentTrades.setMinimumSize(new Dimension(tabWidth/2, 50));
 
-        JScrollPane allRecentTrades = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableTwoHeading)));
+        JScrollPane allRecentTrades = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getRecentTradeDetails(), TableTwoHeading)));
         allRecentTrades.setPreferredSize(new Dimension(tabWidth-tabWidth/100, tabHeight-100));
         allRecentTrades.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
@@ -98,8 +98,5 @@ public class GUIHome extends JFrame{
     public void ActionListener(Boolean isSell) throws IOException, ClassNotFoundException {
        GUIOrder order = new GUIOrder(user);
        order.popup(isSell);
-    }
-    public void sellActionListener(ActionEvent e){
-//        GUIOrder.sellPopup();
     }
 }

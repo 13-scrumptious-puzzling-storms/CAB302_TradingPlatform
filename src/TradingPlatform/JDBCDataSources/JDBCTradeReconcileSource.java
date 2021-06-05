@@ -197,9 +197,38 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
         }
         return buyOrder;
     }
-
     @Override
     public String[][] getMostRecentAssetTypeTradeDetails() {
+
+        try {
+            ResultSet rs = getMostRecentAssetReconcileInfo.executeQuery();
+            ResultSet count = countRecentAssetReconcile.executeQuery();
+            int num = 0;
+            if(count.next()){
+                num = count.getInt("num");
+            }
+
+            String[][] assetPrices = new String[num][];
+            int i = 0;
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String price = rs.getString("price");
+                String quantity = rs.getString("quantity");
+                String createdTime = rs.getString("createdTime");
+                String[] details = new String[]{ name, price, quantity, createdTime };
+                assetPrices[i] = details;
+                i++;
+            }
+            rs.close();
+            return assetPrices;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String[][] getRecentTradeDetails() {
 
         try {
             ResultSet rs = mostRecentRec.executeQuery();

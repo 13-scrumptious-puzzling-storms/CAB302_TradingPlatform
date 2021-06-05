@@ -47,4 +47,9 @@ public interface TradeReconcileSource {
      */
     String[][] getMostRecentAssetTypeTradeDetails();
 
+    /**
+     * Gets a list of the recent trades, and the price, quantity, and date of the trade.
+     */
+    String[][] getRecentTradeDetails();
+
 }
