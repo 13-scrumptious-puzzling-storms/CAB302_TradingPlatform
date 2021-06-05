@@ -14,15 +14,12 @@ public class ReconcileTests {
 
     static Connection connection;
     static JDBCTradeReconcileSource reconcileSource;
-    static final Object tradeLock = new Object();
-    static TradeReconcile tradeReconcile;
 
     @BeforeEach
     public void resetDb(){
         TestDatabaseFunctions.InitDb();
         connection = TestDatabaseFunctions.getConnection();
         reconcileSource = new JDBCTradeReconcileSource(connection);
-        tradeReconcile = new TradeReconcile(tradeLock, connection);
     }
 
     @AfterAll
@@ -55,7 +52,7 @@ public class ReconcileTests {
 
     @Test
     public void TestReconcile(){
-        tradeReconcile.ReconcileCurrentTrades();
+        TradeReconcile.ReconcileCurrentTrades(connection);
         // Check that there are no reconcilable trades left
         var assetTypeIds = reconcileSource.getCurrentReconcilableAssetTypeIds();
         assert (assetTypeIds.size() == 0);
