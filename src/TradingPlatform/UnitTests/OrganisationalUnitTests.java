@@ -26,7 +26,6 @@ public class OrganisationalUnitTests {
     OrganisationalUnit org2;
     OrganisationalUnit org3;
 
-
     @Test
     public void emptyCaseOrg(){
         org1 = new OrganisationalUnit();
@@ -34,8 +33,7 @@ public class OrganisationalUnitTests {
 
     @Test
     public void baseCaseOrg(){
-        org2 = new OrganisationalUnit("Shanelle", 200);
-        System.out.println(org2.getID());
+        org2 = new OrganisationalUnit("CAB302", 200);
     }
 
     @Test
@@ -96,7 +94,7 @@ public class OrganisationalUnitTests {
     }
 
     @Test
-    public void getAssets() throws IOException, ClassNotFoundException {
+    public void getAssets() {
         OrganisationalUnit unit = new OrganisationalUnit(2);
         ArrayList<OrganisationAsset> response = unit.getAssets();
         System.out.println("test response is: " + response);

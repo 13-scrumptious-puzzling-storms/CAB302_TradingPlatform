@@ -1,11 +1,20 @@
 package TradingPlatform.NetworkProtocol;
 
+import TradingPlatform.TradeReconciliation.TradeReconcile;
+
 import javax.swing.*;
 import java.io.IOException;
+import java.sql.Connection;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ServerApp {
 
     private static Thread threadHandle;
+    public static ScheduledExecutorService serverReconcileExecutor;
+
+    private static final int RECONCILE_TIMER = 5; // how many seconds between reconciling trades
 
     public static void main(String[] args) {
         System.out.println("Starting Server ...");
@@ -14,6 +23,19 @@ public class ServerApp {
         var serverHandleRunnable = new ServerHandle();
         threadHandle = new Thread(serverHandleRunnable);
         threadHandle.start();
+
+        // Start the reconcile thread, and make it run every 5 seconds
+        try {
+            serverReconcileExecutor = Executors.newSingleThreadScheduledExecutor();
+            serverReconcileExecutor.scheduleAtFixedRate(() -> {
+                Connection conn = DBConnection.getInstance();
+                // run the trade reconcile thread
+                if (conn != null)
+                    TradeReconcile.ReconcileCurrentTrades(conn);
+            }, 0, RECONCILE_TIMER, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Start the Server GUI.
         SwingUtilities.invokeLater(new Runnable() {
@@ -43,6 +65,17 @@ public class ServerApp {
         System.out.println("\nShutting down Server ...");
         ServerHandle.end(); // Stop accepting requests
         while (ServerHandle.threadsOpen());
+
+        // Shutdown the reconcile thread
+        serverReconcileExecutor.shutdown();
+        try {
+            if (!serverReconcileExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
+                serverReconcileExecutor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            serverReconcileExecutor.shutdownNow();
+        }
+
         System.exit(0);
     }
 }

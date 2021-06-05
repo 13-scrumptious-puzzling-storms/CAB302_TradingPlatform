@@ -117,4 +117,22 @@ public class OrganisationAsset {
         return -1;
     }
 
+    /**
+     * creates new organisationAsset using organisationID, assetTypeID, and quantity
+     * @param orgUnitID organisationalUnit ID
+     * @param assetTypeID AssetType ID
+     * @param quantity number of assets to be added
+     * @return organisationAssetID
+     */
+    public int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity){
+        try {
+            Request response = NetworkManager.GetResponse("JDBCOrganisationalAsset", "addOrganisationAsset",
+                    new String[]{ Integer.toString(orgUnitID), Integer.toString(assetTypeID), Integer.toString(quantity) });
+            return Integer.parseInt(response.getArguments()[0]);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 }
