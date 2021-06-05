@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
-//Testing push 2
 
 /**
  * Creates a new instance of an organisational unit.
@@ -62,7 +61,6 @@ public class OrganisationalUnit implements Serializable {
     public int getID(){
         return organisationID;
     }
-
 
     /**
      * Sets the OrganisationalUnit's name to name for given instance

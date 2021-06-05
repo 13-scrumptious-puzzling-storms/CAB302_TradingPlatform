@@ -273,6 +273,12 @@ public class ServerSend extends NotifyingThread {
                         Transmit(new Request(className, methodName, response));
                         break;
                     }
+                    case "getRecentTradeDetails":{
+                        JDBCTradeReconcileSource DBInterface = new JDBCTradeReconcileSource(connection);
+                        String[][] response = (DBInterface.getRecentTradeDetails());
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    }
                     default:
                         System.out.println("Invalid Method");
                         break;

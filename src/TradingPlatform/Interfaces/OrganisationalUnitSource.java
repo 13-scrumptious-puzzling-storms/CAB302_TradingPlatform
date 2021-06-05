@@ -1,65 +1,55 @@
 package TradingPlatform.Interfaces;
 
+import TradingPlatform.OrganisationalUnit;
+
+import java.sql.Connection;
 import java.util.HashMap;
 
 public interface OrganisationalUnitSource {
 
-    int assignID();
+    /**
+     * Creates new organisationalUnit using organisation name and number of credits
+     * returns organisationalUnit ID
+     * @param orgName organisation's name
+     * @param orgCredits number of credits belonging to the organisational unit
+     * @return organisationalUnit ID
+     */
+    int addOrganisationalUnit(String orgName, int orgCredits);
 
     /**
-     *
-     * @return organisational units's ID
+     * retrieves name of organisational unit with the given ID
+     * @param orgUnitId organisationalUnit ID
+     * @return name of the organisation
      */
-    int getID();
+    String getOrganisationalUnitName(int orgUnitId);
 
     /**
-     * Sets the OrganisationalUnit's ID to id ****DELETE??***
-     *
-     * @param id the id of the Organisational Unit
+     * retrieves number of credits belonging to the organisational unit
+     * @param OrgUnitId organisationalUnit ID
+     * @return number of credits belonging to the organisational unit
      */
-    void setId(int id);
+    int getOrganisationalUnitCredits(int OrgUnitId);
 
     /**
-     * Sets the OrganisationalUnit's name to name
-     *
-     * @param name the name of the Organisational Unit
+     * retrieves constructed organisational unit with all details given
+     * the organisationalUnit ID
+     * @param orgUnitId organisationalUnit ID
+     * @return OrganisationalUnit of the given organisationalUnitID
      */
-    void setName(String name);
+    OrganisationalUnit getOrganisationalUnit(int orgUnitId);
 
     /**
-     * Sets the OrganisationalUnit's credits to credits
-     *
-     * @param credits the credits belonging to the Organisational Unit
+     * updates the number of credits of a given organisational unit
+     * @param OrgUnitID organisationalUnit ID
+     * @param updatedCredits new number of credits owned by given organisationalUnit
+     * @return returns true if successful, false otherwise
      */
-    void setCredits(int credits);
+    Boolean UpdateOrganisationalUnitCredits(int OrgUnitID, int updatedCredits);
 
     /**
-     * Adds assets to organisational unit. If asset already exists under organisation name then update quantity.
-     * @param organisationID Organisational unit's unique ID
-     * @param asset Asset object type to  added to organisational unit
-     * @param quantity Quantity of asset to be added under organisational unit
+     * Returns the names and ID of the organisationalUnit. For IT admin when editing
+     * users and organisationalUnits
+     * @return double array of organisationalUnit names and IDs
      */
-    void addAsset(int organisationID, Object asset, int quantity);
-
-    /**
-     * Returns entire set of assets owned by the organisational unit
-     * @param organisationID Organisational Unit's unique ID
-     * @return allAssets
-     */
-    HashMap getAssets(int organisationID);
-
-    /**
-     * Returns current asset orders placed for organisation
-     * @param organisationID Organisational Unit's unique ID
-     * @return buyAssets
-     */
-    HashMap getCurrentBuyOrders(int organisationID);
-
-    /**
-     * Returns current asset sell orders placed for organisation
-     * @param organisationID Organisational Unit's unique ID
-     * @return sellAssets
-     */
-    HashMap getCurrentSellOrders(int organisationID);
-
+    String[][] getAllOrganisationalUnits();
 }
