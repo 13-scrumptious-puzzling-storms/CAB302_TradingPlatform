@@ -19,14 +19,14 @@ import static TradingPlatform.GUIMain.*;
 public class GUIOrgHome{
 
 
-    public String BuyHeading[] = {"Buy Orders","Quantity","Remaining Quantity", "Price",};
-    public String SellHeading[] = {"Sell Orders","Quantity","Remaining Quantity", "Price"};
-    public String AssetHeading[] = {"Asset Item","Quantity"};
+    public static String BuyHeading[] = {"Buy Orders","Quantity","Remaining Quantity", "Price",};
+    public static String[] SellHeading = {"Sell Orders","Quantity","Remaining Quantity", "Price"};
+    public static String[] AssetHeading = {"Asset Item","Quantity"};
 
     //User information
-    private User user;
+    private static User user;
     OrganisationalUnit organisationalUnit;
-    int organisationalUnitID;
+    static int organisationalUnitID;
     int credits;
     String orgName;
 
@@ -35,28 +35,28 @@ public class GUIOrgHome{
     JSplitPane tablesPane;
 
     //buy table variables
-    public DefaultTableModel buyTableModel;
+    public static DefaultTableModel buyTableModel;
     JScrollPane TradesPaneBuy;
-    public JTable buyTable;
-    String[] tradeIDBuy;
-    String[][] buyData;
+    public static JTable buyTable;
+    static String[] tradeIDBuy;
+    static String[][] buyData;
 
     //sell table variables
-    public DefaultTableModel sellTableModel;
+    public static DefaultTableModel sellTableModel;
     JScrollPane TradesPaneSell;
-    public JTable sellTable;
-    String[] tradeIDSell;
-    String[][] sellData;
+    public static JTable sellTable;
+    static String[] tradeIDSell;
+    static String[][] sellData;
 
     //Credits label
-    public JLabel LabelCredits;
+    public static JLabel LabelCredits;
 
     //asset table variables
-    public DefaultTableModel assetTableModel;
-    public JTable assetTable;
+    public static DefaultTableModel assetTableModel;
+    public static JTable assetTable;
     JScrollPane Assets;
-    String[] OrgAssetID;
-    String[][] AssetItemQuantity;
+    static String[] OrgAssetID;
+    static String[][] AssetItemQuantity;
 
 
     /**
@@ -312,6 +312,7 @@ public class GUIOrgHome{
                 try {
                     GUIOrder order = new GUIOrder(user);
                     order.popup(false);
+
                 } catch (Exception m) {
                     m.printStackTrace();
                 }
@@ -359,7 +360,7 @@ public class GUIOrgHome{
      * @param panel2 panel to add orgHome components to
      * @param position position variable to set
      */
-    private void creditsLabel(JPanel panel2, GridBagConstraints position){
+    public void creditsLabel(JPanel panel2, GridBagConstraints position){
         //Credits Label
         String creditsLabel = "Credits: " + String.valueOf(credits);
         LabelCredits = new JLabel(creditsLabel);
@@ -378,12 +379,12 @@ public class GUIOrgHome{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public DefaultTableModel constructBuyTableModel() throws IOException, ClassNotFoundException {
+    public static DefaultTableModel constructBuyTableModel() throws IOException, ClassNotFoundException {
         //Retrieve trades buy table for organisational unit
         String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
         int buySize = tradesBuy.length;
-        this.tradeIDBuy = new String[buySize]; //array that stores organisationAssetID's for buy orders
-        this.buyData = new String[buySize][]; //array that stores data to be displayed in buyTrades table
+        tradeIDBuy = new String[buySize]; //array that stores organisationAssetID's for buy orders
+        buyData = new String[buySize][]; //array that stores data to be displayed in buyTrades table
         try {
             for (int i = 0; i < buySize; i++) {
                 if(tradesBuy[i]!= null) {
@@ -410,12 +411,12 @@ public class GUIOrgHome{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public DefaultTableModel constructSellTableModel() throws IOException, ClassNotFoundException {
+    public static DefaultTableModel constructSellTableModel() throws IOException, ClassNotFoundException {
         //Retrieve trades sell table for organisational unit
         String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
         int sellSize = tradesSell.length;
-        this.tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
-        this.sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
+        tradeIDSell = new String[sellSize]; //array that stores organisationAssetID's for sell orders
+        sellData = new String[sellSize][]; //array that stores data to be displayed in sellTrades table
         try {
             for (int i = 0; i < sellSize; i++) {
                 if (tradesSell[i]!= null) {
@@ -443,12 +444,12 @@ public class GUIOrgHome{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public DefaultTableModel constructAssetTableModel() throws IOException, ClassNotFoundException {
+    public static DefaultTableModel constructAssetTableModel() throws IOException, ClassNotFoundException {
         //JPanel AssetsPanel = new JPanel();
         String[][] OrgAssets = OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID);
         int size = OrgAssets.length;
-        this.OrgAssetID = new String[size]; //array that stores OrganisationAssetID's for given array
-        this.AssetItemQuantity = new String[size][]; //array that stores AssetItem and AssetQuantity
+        OrgAssetID = new String[size]; //array that stores OrganisationAssetID's for given array
+        AssetItemQuantity = new String[size][]; //array that stores AssetItem and AssetQuantity
         for(int i = 0; i<size; i++){
             OrgAssetID[i] = OrgAssets[i][0];
             String[] assets = new String[2]; //temporary array
