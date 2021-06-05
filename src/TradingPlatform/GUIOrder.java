@@ -48,8 +48,7 @@ public class GUIOrder extends JFrame{
     }
 
 
-    public void buyPopup() throws IOException, ClassNotFoundException {
-        UIManager.put("Popup.border", cust1);
+    public void popup(Boolean isSell) throws IOException, ClassNotFoundException {
         buy = new JPanel();
         buy.setSize(new Dimension(width/2, height/2));
         popUp = new JOptionPane();
@@ -59,9 +58,18 @@ public class GUIOrder extends JFrame{
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
+        if(isSell){
+            order = new JLabel("CREATE NEW SELL ORDER");
+        }
+        else{
+            order = new JLabel("CREATE NEW BUY ORDER");
+        }
+
         itemName = new JLabel("Item Name: ");
         quantity = new JLabel("Quantity: ");
         price = new JLabel("Price: ");
+
+        order.setFont(new Font("Verdana", Font.BOLD, 30));
 
         String[] data = AssetType.getAllAssetNames();
         itemNameInput = new JComboBox(data);
@@ -78,7 +86,7 @@ public class GUIOrder extends JFrame{
         confirm = new JButton("Confirm Order");
         confirm.addActionListener(e -> {
             try {
-                finalButton(e);
+                finalButton(e, isSell);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -87,93 +95,98 @@ public class GUIOrder extends JFrame{
         cancel = new JButton("Cancel");
         cancel.addActionListener(e -> {
             try {
-                finalButton(e);
+                finalButton(e, isSell);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         });
 
         position.weighty = 0;
+        position.gridx = 1;
+        position.gridy = 0;
+        panel.add(order, position);
+        position.weighty = 0;
         position.insets = new Insets(20, 0, 20, 10);
         position.anchor = LINE_END;
         position.gridx = 0;
-        position.gridy = 0;
-        panel.add(itemName, position);
         position.gridy = 1;
-        panel.add(quantity, position);
+        panel.add(itemName, position);
         position.gridy = 2;
+        panel.add(quantity, position);
+        position.gridy = 3;
         panel.add(price, position);
         position.insets = new Insets(20, 0, 20, 0);
         position.anchor = CENTER;
         position.gridx = 1;
-        position.gridy = 0;
-        panel.add(itemNameInput, position);
         position.gridy = 1;
-        panel.add(quantityInput, position);
+        panel.add(itemNameInput, position);
         position.gridy = 2;
+        panel.add(quantityInput, position);
+        position.gridy = 3;
         panel.add(priceInput, position);
 
-        position.gridy = 3;
+        position.gridy = 4;
         panel.add(confirm, position);
         position.gridx = 2;
         panel.add(cancel, position);
 
         buy.setPreferredSize(new Dimension(200, 200));
 
-        int result = JOptionPane.showConfirmDialog(null, panel, "Create buy order", JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "" ,JOptionPane.PLAIN_MESSAGE);
     }
 
-    public void sellPopup(){
+//    public void sellPopup(){
+//
+//        popUp = new JOptionPane();
+//        sell = new JFrame();
+////        JPanel mainPanel = new JPanel();
+//        panel = new JPanel();
+//        panel.setPreferredSize(new Dimension(width/2, height/2));
+//        panel.setLayout(new GridBagLayout());
+//        GridBagConstraints position = new GridBagConstraints();
+//
+//        itemName = new JLabel("Item Name: ");
+//        quantity = new JLabel("Quantity: ");
+//        price = new JLabel("Price: ");
+//
+//        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+//        itemNameInput = new JComboBox(petStrings);
+//
+//        quantityInput = new JTextField();
+//        priceInput = new JTextField();
+//
+//        position.weighty = 0;
+//        position.gridx = 0;
+//        position.gridy = 0;
+//        panel.add(itemName, position);
+//        position.gridy = 1;
+//        panel.add(quantity, position);
+//        position.gridy = 2;
+//        panel.add(price, position);
+//        position.gridx = 1;
+//        position.gridy = 0;
+//        panel.add(itemNameInput, position);
+//        position.gridy = 1;
+//        panel.add(quantityInput, position);
+//        position.gridy = 2;
+//        panel.add(priceInput, position);
+//        panel.add(new JLabel("THIS IS SELL"));
+//        //sellPop = popUp.getPopup(sell, panel, width/4, height/4);
+//        sellPop.show();
+//        sell.setPreferredSize(new Dimension(200, 200));
+//    }
 
-        popUp = new JOptionPane();
-        sell = new JFrame();
-//        JPanel mainPanel = new JPanel();
-        panel = new JPanel();
-        panel.setPreferredSize(new Dimension(width/2, height/2));
-        panel.setLayout(new GridBagLayout());
-        GridBagConstraints position = new GridBagConstraints();
-
-        itemName = new JLabel("Item Name: ");
-        quantity = new JLabel("Quantity: ");
-        price = new JLabel("Price: ");
-
-        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
-        itemNameInput = new JComboBox(petStrings);
-
-        quantityInput = new JTextField();
-        priceInput = new JTextField();
-
-        position.weighty = 0;
-        position.gridx = 0;
-        position.gridy = 0;
-        panel.add(itemName, position);
-        position.gridy = 1;
-        panel.add(quantity, position);
-        position.gridy = 2;
-        panel.add(price, position);
-        position.gridx = 1;
-        position.gridy = 0;
-        panel.add(itemNameInput, position);
-        position.gridy = 1;
-        panel.add(quantityInput, position);
-        position.gridy = 2;
-        panel.add(priceInput, position);
-        panel.add(new JLabel("THIS IS SELL"));
-        //sellPop = popUp.getPopup(sell, panel, width/4, height/4);
-        sellPop.show();
-        sell.setPreferredSize(new Dimension(200, 200));
-    }
-
-    public void finalButton(ActionEvent e) throws IOException {
+    public void finalButton(ActionEvent e, Boolean isSell) throws IOException {
         var box = e.getActionCommand();
         if(box == "Cancel"){
+            updateOrder(isSell);
         }else{
             //do add new trade order
-            updateBuyOrder();
+            updateOrder(isSell);
         }
     }
 
-    private void updateBuyOrder() throws IOException {
+    private void updateOrder(Boolean isSell) throws IOException {
 
         if (quantityInput.getText() != null && !quantityInput.getText().equals("")) {
             int quantity;
@@ -196,12 +209,20 @@ public class GUIOrder extends JFrame{
             }
             var asset = itemNameInput.getSelectedItem();
 
+
             AssetType buyAsset = new AssetType(asset.toString());
             OrganisationalUnit organisationalUnit = user.getOrganisationalUnit();
             int orgID = organisationalUnit.getID();
+            int orgAssetId = OrganisationAsset.getOrganisationAssetID(organisationalUnit, buyAsset);
 
-            Trade order = new Trade(false, buyAsset, quantity, price, orgID);
-            order.addTradeOrder(orgID, quantity, false, price);
+            if(isSell){
+                Trade order = new Trade(false, buyAsset, quantity, price, orgID);
+                order.addTradeOrder(orgAssetId, quantity, isSell, price);
+            }else{
+                Trade order = new Trade(false, buyAsset, quantity, price, orgID);
+                order.addTradeOrder(orgAssetId, quantity, isSell, price);
+            }
+
             JOptionPane.showMessageDialog(panel, "New buy order for " + quantity + " " + asset + " at " + price + " credit(s)!",
                     "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
         } else {

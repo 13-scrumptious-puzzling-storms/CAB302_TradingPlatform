@@ -33,7 +33,7 @@ public class GUIHome extends JFrame{
         buyButton.setBackground(cust1);
         buyButton.addActionListener(e -> {
             try {
-                buyActionListener(e);
+                ActionListener(false);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             } catch (ClassNotFoundException classNotFoundException) {
@@ -46,7 +46,15 @@ public class GUIHome extends JFrame{
         sellButton.setPreferredSize(new Dimension(200, 100));
         sellButton.setMinimumSize(new Dimension(50, 50));
         sellButton.setBackground(cust1);
-        buyButton.addActionListener(this::sellActionListener);
+        buyButton.addActionListener(e -> {
+            try {
+                ActionListener(true);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+        });
 
         JScrollPane TradesPaneSell = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableHeading)));
         TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
@@ -74,12 +82,9 @@ public class GUIHome extends JFrame{
         panel.setBackground(cust1);
     }
 
-    public void buyActionListener(ActionEvent e) throws IOException, ClassNotFoundException {
-        String event = e.getActionCommand();
-        if(event == "Buy Assets") {
-            GUIOrder order = new GUIOrder(user);
-            order.buyPopup();
-        }
+    public void ActionListener(Boolean isSell) throws IOException, ClassNotFoundException {
+       GUIOrder order = new GUIOrder(user);
+       order.popup(isSell);
     }
     public void sellActionListener(ActionEvent e){
 //        GUIOrder.sellPopup();

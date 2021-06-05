@@ -283,7 +283,7 @@ public class GUIOrgHome{
                 System.out.println("Just pressed the buy button");
                 try {
                     GUIOrder order = new GUIOrder(user);
-                    order.buyPopup();
+                    order.popup(false);
                 } catch (Exception m) {
                     m.printStackTrace();
                 }
