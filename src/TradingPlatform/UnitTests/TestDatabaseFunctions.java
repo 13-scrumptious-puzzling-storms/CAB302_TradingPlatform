@@ -193,7 +193,7 @@ public class TestDatabaseFunctions {
                     "    userRole           INTEGER\n" +
                     ")",
 
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (1, 'radmin', '" + SHA256.hashPassword("password") + "', 1, 1)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (1, 'radmin', '" + SHA256.hashPassword("password1") + "', 1, 1)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (2, 'nolangrayson', '" + SHA256.hashPassword("Omni-man") + "', 2, 0)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (3, 'katecha', '" + SHA256.hashPassword("DupliKate") + "', 3, 0)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (4, 'sammyeve', '" + SHA256.hashPassword("AtomEve") + "', 4, 0)",
