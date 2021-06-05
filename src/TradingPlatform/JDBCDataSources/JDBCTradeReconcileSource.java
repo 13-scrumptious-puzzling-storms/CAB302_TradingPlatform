@@ -1,6 +1,5 @@
 package TradingPlatform.JDBCDataSources;
 
-import TradingPlatform.AssetType;
 import TradingPlatform.Interfaces.TradeReconcileSource;
 import TradingPlatform.TradeReconciliation.TradeOrder;
 import TradingPlatform.TradeReconciliation.TradeRecon;
@@ -8,18 +7,10 @@ import TradingPlatform.TradeReconciliation.TradeRecon;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JDBCTradeReconcileSource implements TradeReconcileSource {
 
     private static final String INSERT_RECON = "INSERT INTO TradeRecon (sellOrderId, buyOrderId, quantity, createdTime) VALUES (?, ?, ?, strftime('%Y-%m-%d %H:%M:%f','now'))";
-
-    // Need to set isSellOrder
-//    private static final String GET_CURRENT_BUY_OR_SELL_ORDERS = "SELECT a.assetTypeID, o.* FROM TradeOrders as o " +
-//            "left join OrganisationAsset as a on a.organisationAssetID = o.organisationAssetID " +
-//            "WHERE remainingQuantity > 0 and cancelled = 'false' and isSellOrder = ? " +
-//            "ORDER BY price ASC, createdTime ASC";
 
     // Need to set assetTypeId
     private static final String GET_CURRENT_SELL_ORDERS_TYPE = "SELECT o.* FROM TradeOrders as o " +
@@ -114,12 +105,12 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             "    (r1.createdTime < r2.createdTime OR (r1.createdTime = r2.createdTime AND r1.tradeReconId < r2.tradeReconId)))\n" +
             "where r2.tradeReconId is null and r1.tradeReconId is not null;";
 
-    private static String MOST_RECENT_RECONSILE = "select u.name, o.price, r.quantity, r.createdTime, r.buyOrderID, r.sellOrderID from TradeRecon r\n" +
+    private static String MOST_RECENT_RECONCILE = "select u.name, o.price, r.quantity, r.createdTime, r.buyOrderID, r.sellOrderID from TradeRecon r\n" +
             "    left join (select tradeOrderId, price, t.organisationAssetId from TradeOrders t) as o on (tradeOrderID = r.sellOrderID)\n" +
             "        left join (select p.assetTypeID, p.organisationAssetID from OrganisationAsset p) as q on q.organisationAssetID = o.organisationAssetID\n" +
             "            left join (SELECT name, a.assetTypeID from AssetType a) as u on u.assetTypeID = q.assetTypeID\n" +
             "    order by r.createdTime DESC LIMIT 20;";
-    private static String COUNT_RECENT_RECONSILE = "select count(r.createdTime) as num from TradeRecon r\n" +
+    private static String COUNT_RECENT_RECONCILE = "select count(r.createdTime) as num from TradeRecon r\n" +
             "    left join (select tradeOrderId, price, t.organisationAssetId from TradeOrders t) as o on (tradeOrderID = r.sellOrderID)\n" +
             "        left join (select p.assetTypeID, p.organisationAssetID from OrganisationAsset p) as q on q.organisationAssetID = o.organisationAssetID\n" +
             "            left join (SELECT name, a.assetTypeID from AssetType a) as u on u.assetTypeID = q.assetTypeID\n" +
@@ -127,7 +118,6 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
 
 
     private static PreparedStatement insertRecon;
-//    private static PreparedStatement getBuyOrSellOrders;
     private static PreparedStatement getSellOrdersAssetType;
     private static PreparedStatement getBuyOrdersAssetType;
     private static PreparedStatement getMatchingBuyOrder;
@@ -137,14 +127,11 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
     private static PreparedStatement mostRecentRec;
     private static PreparedStatement countRecentRec;
 
-    private Connection connection;
 
     public JDBCTradeReconcileSource(Connection connection){
-        this.connection = connection;
 
         try {
             insertRecon = connection.prepareStatement(INSERT_RECON);
-//            getBuyOrSellOrders = connection.prepareStatement(GET_CURRENT_BUY_OR_SELL_ORDERS);
             getSellOrdersAssetType = connection.prepareStatement(GET_CURRENT_SELL_ORDERS_TYPE);
             getBuyOrdersAssetType = connection.prepareStatement(GET_CURRENT_BUY_ORDERS_TYPE);
             getMatchingBuyOrder = connection.prepareStatement(GET_MATCHING_BUY_ORDER);
@@ -152,8 +139,8 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             getMostRecentAssetReconcileInfo = connection.prepareStatement(GET_MOST_RECENT_ASSET_RECONCILE_INFO);
             countRecentAssetReconcile = connection.prepareStatement(COUNT_RECENT_ASSET_RECONCILE);
 
-            mostRecentRec = connection.prepareStatement(MOST_RECENT_RECONSILE);
-            countRecentRec = connection.prepareStatement(COUNT_RECENT_RECONSILE);
+            mostRecentRec = connection.prepareStatement(MOST_RECENT_RECONCILE);
+            countRecentRec = connection.prepareStatement(COUNT_RECENT_RECONCILE);
 
 
         } catch (SQLException ex) {
@@ -214,7 +201,6 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
     @Override
     public String[][] getMostRecentAssetTypeTradeDetails() {
 
-//        HashMap<AssetType, String[]> assetPrices = new HashMap<>();
         try {
             ResultSet rs = mostRecentRec.executeQuery();
             ResultSet count = countRecentRec.executeQuery();
@@ -226,7 +212,6 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
             String[][] assetPrices = new String[num][];
             int i = 0;
             while (rs.next()) {
-//                AssetType type = new AssetType(rs.getString("name"));
                 String name = rs.getString("name");
                 String price = rs.getString("price");
                 String quantity = rs.getString("quantity");
@@ -236,7 +221,6 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
                 i++;
             }
             rs.close();
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+Arrays.deepToString(assetPrices));
             return assetPrices;
         } catch (SQLException ex) {
             ex.printStackTrace();
