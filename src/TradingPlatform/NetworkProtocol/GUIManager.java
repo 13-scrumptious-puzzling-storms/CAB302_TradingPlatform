@@ -198,6 +198,15 @@ public class GUIManager extends JFrame implements ActionListener {
         panel.add(buttonPanel); //panel.add(buttonPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * A convenience method to create a new JLabel.
+     * Sets label text, font and colour
+     *
+     * @param text the text of the label.
+     * @param font the font of the text.
+     * @param textColour the colour of the text.
+     * @return returns the newly create JLabel.
+     */
     private static JLabel newLabel(String text, Font font, Color textColour) {
         JLabel label = new JLabel(text);
         label.setFont(font);
@@ -205,6 +214,11 @@ public class GUIManager extends JFrame implements ActionListener {
         return label;
     }
 
+    /**
+     * This method uses serverConfig.java to update the values
+     * for the text of the labels that display information
+     * regarding the .props file.
+     */
     private static void setDynamicButtons() {
         String[] fileSplit = serverConfig.getPropsFile().toString().split(Pattern.quote("\\"));
         String props = fileSplit[fileSplit.length-1];
@@ -230,6 +244,13 @@ public class GUIManager extends JFrame implements ActionListener {
         passParam.setText(pass);
     }
 
+    /**
+     * This method uses DBConnection.java and
+     * serverConfig.java to text if the Server is able
+     * to connect to the specified database.
+     * The status of the connection to the database
+     * will set the value of the statusLabel text.
+     */
     private static void testConnection() {
         DBConnection.setPropsFile(serverConfig.getPropsFile().toString());
         DBConnection.getInstance();
@@ -243,6 +264,16 @@ public class GUIManager extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * A convenience method to create a new JButton.
+     * Sets the text, font, text colour and button colour.
+     *
+     * @param text the text of the button.
+     * @param font the font of the text.
+     * @param textColour the colour of the text.
+     * @param btnColour the colour of the button.
+     * @return returns the newly created button.
+     */
     private JButton newButton(String text, Font font, Color textColour, Color btnColour) {
         JButton button = new JButton(text);
         button.setFont(font);
@@ -252,18 +283,47 @@ public class GUIManager extends JFrame implements ActionListener {
         return button;
     }
 
+    /**
+     * A convenience method to create a new JPanel.
+     * Sets the background colour of the panel.
+     *
+     * @param bg the colour of the panel.
+     * @return returns the newly created JPanel.
+     */
     private static JPanel newPanel(Color bg) {
         JPanel panel = new JPanel();
         panel.setBackground(bg);
         return panel;
     }
-    
+
+    /**
+     * A convenience method that adds an array of JComponents
+     * to a specified panel.
+     *
+     * @param panel the panel to add components to.
+     * @param components an array of the JComponents to add.
+     */
     private static void addToPanel(JPanel panel, JComponent[] components) {
         for (int i = 0; i < components.length; i++) {
             panel.add(components[i]);
         }
     }
 
+    /**
+     * Changes the .props file for serverConfig to use and
+     * saves the directory to this newly specified file.
+     * If the user cancels this operation, the .props file
+     * is left unchanged.
+     * If no .props file is specified on startup AND the user
+     * cancels the .props selection, the Server application
+     * will close.
+     *
+     * @return returns a bool indicating whether a new .props
+     * file was selected.
+     * @throws IOException if serverConfig fails to update to the
+     * newly specified .props file OR if serverConfig fails to read
+     * the newly specified .props file.
+     */
     private Boolean changeProps() throws IOException {
         JFileChooser fileChooser = new JFileChooser("./");
         int returnVal = fileChooser.showOpenDialog(this);
@@ -279,6 +339,13 @@ public class GUIManager extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Attempts to update the .props file via serverConfig
+     * when its value are updated by the user through the GUI.
+     * It will then test to see if it can connect to the
+     * database with the newly updated parameters and it will
+     * update the dynamic labels to reflect these changes.
+     */
     private void update() {
         try { serverConfig.writePropsFile(); }
         catch (IOException ioException) { ioException.printStackTrace(); }
@@ -287,6 +354,15 @@ public class GUIManager extends JFrame implements ActionListener {
         jframe.repaint();
     }
 
+    /**
+     * Detects action events for GUI buttons.
+     * Each button has its own unique code that
+     * it will execute upon a button press.
+     * If a button modifies paramerters (i.e., user didn't
+     * cancel their action), then the update() method is called.
+     *
+     * @param e the ActionEvent e caused by user action.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource(); // Get the event source

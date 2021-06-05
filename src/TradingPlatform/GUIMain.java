@@ -103,7 +103,7 @@ public class GUIMain extends JFrame {
         JTabbedPane pagePane = new JTabbedPane();
 
         JPanel homeTab = new JPanel();
-        new GUIHome(homeTab);
+        new GUIHome(homeTab, user);
 
         JPanel orgHomeTab = new JPanel();
         new GUIOrgHome(orgHomeTab, user);
