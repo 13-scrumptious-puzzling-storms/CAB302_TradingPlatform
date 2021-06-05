@@ -1,7 +1,5 @@
 package TradingPlatform;
 
-import TradingPlatform.NetworkProtocol.ServerSend;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -11,10 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
-
 import static TradingPlatform.GUIMain.*;
 
-
+/**
+ * Constructs components to creates organisationalHome tab of the GUI.
+ * Allows users to buy and sell assets, view orders made by their organisation
+ * and cancel orders made by their organisational unit.
+ */
 public class GUIOrgHome{
 
 
@@ -22,35 +23,41 @@ public class GUIOrgHome{
     public String SellHeading[] = {"Sell Orders","Quantity","Remaining Quantity", "Price"};
     public String AssetHeading[] = {"Asset Item","Quantity"};
 
+    //User information
     private User user;
     OrganisationalUnit organisationalUnit;
     int organisationalUnitID;
     int credits;
     String orgName;
+
+    //Pane information
     JTabbedPane tradesAssets;
     JSplitPane tablesPane;
 
+    //buy table variables
     DefaultTableModel buyTableModel;
     JScrollPane TradesPaneBuy;
     JTable buyTable;
     String[] tradeIDBuy;
     String[][] buyData;
 
-
+    //sell table variables
     DefaultTableModel sellTableModel;
     JScrollPane TradesPaneSell;
     JTable sellTable;
     String[] tradeIDSell;
     String[][] sellData;
 
+    //Credits label
     JLabel LabelCredits;
 
+    //asset table variables
     DefaultTableModel assetTableModel;
     JTable assetTable;
     JScrollPane Assets;
-
     String[] OrgAssetID;
     String[][] AssetItemQuantity;
+
 
     /**
      * GUIOrg home constructor, adding the organisational home tab to pane
@@ -70,7 +77,7 @@ public class GUIOrgHome{
 
     /**
      * Main method for adding components to Tab (buttons, tables, labels)
-     * @param panel2 panel to add all components to
+     * @param panel2 panel to add all orgHome components to
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -151,6 +158,14 @@ public class GUIOrgHome{
         pageScroll.add(panel2);
     }
 
+    /**
+     * Button which removes selected buy order from table. Subsequently updates
+     * organisational unit credits
+     * @param panel2 panel to add all orgHome components to
+     * @param position position variable to set
+     * @param table buy order table
+     * @return
+     */
     private JButton removeBuyOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 0, 20, 0);
@@ -203,6 +218,14 @@ public class GUIOrgHome{
         return removeButton;
     }
 
+    /**
+     * Button which removes selected row from sell order table. Subsequently
+     * updates the asset table and asset quantity
+     * @param panel2 panel to add orgHome components to
+     * @param position position variable to set
+     * @param table sell order table
+     * @return button which allows user to cancel sell order of organisational unit
+     */
     private JButton removeSellOrderButton(JPanel panel2, GridBagConstraints position, JTable table){
         //Create Remove Buy/Sell Button
         position.insets = new Insets(0, 80, 20, 0);
@@ -265,7 +288,13 @@ public class GUIOrgHome{
         return removeButton;
     }
 
-
+    /**
+     * Buy asset button calls popup box that allows user to place a
+     * buy order on behalf of their organisational unit
+     * @param panel2 panel to add orgHome components to
+     * @param position position variable to set
+     * @return buy button which allows user to buy assets
+     */
     private JButton buyAssetButton(JPanel panel2, GridBagConstraints position){
         //Create Buy Asset Button
         position.gridwidth = 1;
@@ -292,6 +321,13 @@ public class GUIOrgHome{
         return buyButton;
     }
 
+    /**
+     * Sell asset button calls popup box that allows user to place sell order
+     * on behalf of their organisational unit
+     * @param panel2 panel to add orgHome components to
+     * @param position position variable to set
+     * @return sell button which allows user to sell assets
+     */
     private JButton sellAssetButton(JPanel panel2, GridBagConstraints position){
         //Create Sell Asset Button
         position.gridx = 3;
@@ -310,9 +346,14 @@ public class GUIOrgHome{
         return sellButton;
     }
 
+    /**
+     * Displays number of credits owned by the organisational unit the user
+     * belong to
+     * @param panel2 panel to add orgHome components to
+     * @param position position variable to set
+     */
     private void creditsLabel(JPanel panel2, GridBagConstraints position){
         //Credits Label
-        //credits = organisationalUnit.getCredits(organisationalUnitID);
         String creditsLabel = "Credits: " + String.valueOf(credits);
         LabelCredits = new JLabel(creditsLabel);
         LabelCredits.setForeground(Color.white);
@@ -323,6 +364,13 @@ public class GUIOrgHome{
         panel2.add(LabelCredits, position);
     }
 
+    /**
+     * constructs buy order table model using information retrieved from
+     * the database
+     * @return buy order table model
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     private DefaultTableModel constructBuyTableModel() throws IOException, ClassNotFoundException {
         //Retrieve trades buy table for organisational unit
         String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
@@ -348,8 +396,13 @@ public class GUIOrgHome{
         return GUIMain.constructTable(buyData,BuyHeading);
     }
 
-
-
+    /**
+     * constructs sell order table model using information retrieved from
+     * the database
+     * @return sell order table model
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     private DefaultTableModel constructSellTableModel() throws IOException, ClassNotFoundException {
         //Retrieve trades sell table for organisational unit
         String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
@@ -376,6 +429,13 @@ public class GUIOrgHome{
         return GUIMain.constructTable(sellData, SellHeading);
     }
 
+    /**
+     * constructs asset table model using information retrieved from
+     * the database
+     * @return asset table model of assets belonging to the organisational unit
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     private DefaultTableModel constructAssetTableModel() throws IOException, ClassNotFoundException {
         //JPanel AssetsPanel = new JPanel();
         String[][] OrgAssets = OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID);

@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import static TradingPlatform.ClientApp.networkManager;
 
 /**
- * Creates a new instance of an asset
+ * Creates a new instance of an asset. Creates calls to the database
+ * regarding information created by the database.
  */
 public class AssetType {
 
@@ -32,11 +33,25 @@ public class AssetType {
         return assetName;
     }
 
-    public static String[] getAllAssetNames() throws IOException, ClassNotFoundException {
-        Request response = NetworkManager.GetResponse("JDBCAssetType", "getAllAssetNames", new String[]{});
-        return response.getArguments();
+    /**
+     * Retrieves all Asset Names from the database
+     * @return all asset names that are listed in the database
+     */
+    public static String[] getAllAssetNames() {
+        try {
+            Request response = NetworkManager.GetResponse("JDBCAssetType", "getAllAssetNames", new String[]{});
+            return response.getArguments();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
+    /**
+     * Returns all Asset types from the database in an Arraylist
+     * @return All asset types from the database
+     */
     public static ArrayList<AssetType> getAllAssetTypes() {
         ArrayList<AssetType> assets = new ArrayList<>();
         try {
