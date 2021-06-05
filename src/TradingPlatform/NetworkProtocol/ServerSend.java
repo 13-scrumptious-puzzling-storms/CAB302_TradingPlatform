@@ -6,7 +6,6 @@ import TradingPlatform.OrganisationalUnit;
 import TradingPlatform.Request;
 import TradingPlatform.TradeReconciliation.TradeOrder;
 
-import javax.xml.transform.Result;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
