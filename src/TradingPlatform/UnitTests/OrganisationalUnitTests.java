@@ -75,6 +75,12 @@ public class OrganisationalUnitTests {
     }
 
     @Test
+    public void ServerGetOrganisationalUnitName2(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert (unit.getOrganisationalUnitName(5).equals("Storms"));
+    }
+
+    @Test
     public void ServerGetOrganisationalUnitNameError(){
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert (unit.getOrganisationalUnitName(-1) == null);
@@ -86,6 +92,36 @@ public class OrganisationalUnitTests {
         assert(unit.getOrganisationalUnitCredits(1) == 1000);
     }
 
+    @Test
+    public void getOrganisationalUnitCredits2(){
+        JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
+        assert(unit.getOrganisationalUnitCredits(4) == 500);
+    }
+
+    @Test
+    public void ServerGetOrganisationalUnit(){
+        JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
+        OrganisationalUnit unit = unitSource.getOrganisationalUnit(1);
+        assert (unit != null);
+        assert (unit.getName().equals("ITAdmin"));
+        assert (unit.getCredits() == 1000);
+    }
+
+    @Test
+    public void ServerGetOrganisationalUnit2(){
+        JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
+        OrganisationalUnit unit = unitSource.getOrganisationalUnit(5);
+        assert (unit != null);
+        assert (unit.getName().equals("Puzzling"));
+        assert (unit.getCredits() == 500);
+    }
+
+    @Test
+    public void ServerGetOrganisationalUnitError(){
+        JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
+        OrganisationalUnit unit = unitSource.getOrganisationalUnit(-1);
+        assert (unit == null);
+    }
 
     @Test
     public void ServerUpdateOrganisationalUnitCredits(){
@@ -113,16 +149,7 @@ public class OrganisationalUnitTests {
         assert(successful == false);
     }
 
-
-    @Test
-    public void ServerGetOrganisationalUnit(){
-        JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
-        OrganisationalUnit unit = unitSource.getOrganisationalUnit(1);
-        assert (unit != null);
-        assert (unit.getName().equals("ITAdmin"));
-        assert (unit.getCredits() == 1000);
-    }
-
+    //------
 
 
     @Test
@@ -156,5 +183,6 @@ public class OrganisationalUnitTests {
         ArrayList<OrganisationAsset> response = unit.getAssets();
         System.out.println("test response is: " + response);
     }
+
 
 }
