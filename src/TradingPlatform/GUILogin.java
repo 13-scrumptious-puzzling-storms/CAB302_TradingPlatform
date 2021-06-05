@@ -38,12 +38,23 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
     private static int windowWidth;
     private static int windowHeight;
 
+    // Dynamic Strings
+    private static String ipAddressText;
+    private static String portText;
+
     // Text Fields
     private static JTextField usernameField;
     private static JTextField passwordField;
+    private static JTextField ipAddressParam;
+    private static JTextField portParam;
+
+    // Dynamic Variables
+    private static String ipAddress;
+    private static int port;
 
     // Buttons
     private static JButton loginButton;
+    private static JButton applyButton;
 
     public static JFrame jframe;
     private static NetworkManager networkManager = ClientApp.networkManager;
@@ -81,18 +92,34 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
         loginPanel(loginTab);
         loginTab.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
 
-        // Create and pane and add the console tab
+        // Create settings tab
+        JPanel configTab = new JPanel();
+        configTab.setBackground(DARK_JUNGLE_GREEN);
+        configPanel(configTab);
+        configTab.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
+
+        // Create the pane and add the console and settings tab
         UIManager.put("TabbedPane.selected", DARK_JUNGLE_GREEN);
+        UIManager.put("TabbedPane.unselected", DARK_JUNGLE_GREEN);
         JTabbedPane pagePane = new JTabbedPane();
         pagePane.add("Login", loginTab);
+        pagePane.add("Config", configTab);
+        pagePane.addFocusListener(this);
         jframe.getContentPane().add(pagePane);
-        pagePane.setForeground(WHITE); // Tab text colour //pagePane.setBackground(cust1);
+        pagePane.setForeground(WHITE);
+        pagePane.setBackground(OCEAN_GREEN);
+
+        // Prevent auto-focus on first component.
+
 
         // Set dimensions and location of window. Display the window
         jframe.setPreferredSize(new Dimension(windowWidth, windowHeight));
         jframe.setLocation(new Point(Math.round(screenWidth / 2) - windowWidth/2,  Math.round(screenHeight / 2) - windowHeight / 2)); // window position on screen
         jframe.pack();
+        jframe.getContentPane().requestFocusInWindow();
         jframe.setVisible(true);
+
+
     }
 
     /**
@@ -129,6 +156,37 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
 
         // Panel to main panel
         panel.add(buttonPanel); //panel.add(buttonPanel, BorderLayout.NORTH);
+    }
+
+    private void configPanel(JPanel panel) {
+        // Labels
+        JLabel headerLabel = newLabel("SPS Trading", FONT_HEADER, OCEAN_GREEN);
+        JLabel configLabel = newLabel("Server Address", FONT_HEAVY, WHITE);
+
+        // Dynamic Labels
+        ipAddressParam = newTextField(null, FONT_FIELD, CELADON_GREEN, DARK_JUNGLE_GREEN);
+        portParam = newTextField(null, FONT_FIELD, CELADON_GREEN, DARK_JUNGLE_GREEN);
+        setDynamicFields();
+
+        // Buttons
+        applyButton = newButton("SAVE", FONT_BUTTON, WHITE, OCEAN_GREEN);
+
+        // Panels
+        JPanel buttonPanel = newPanel(CHARCOAL);
+
+        // Panel Settings
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(35, 40, 35, 40));
+        buttonPanel.setLayout(new GridLayout(0,1, 75, 10));
+
+        // Add content to panel
+        buttonPanel.add(headerLabel);
+        buttonPanel.add(configLabel);
+        buttonPanel.add(ipAddressParam);
+        buttonPanel.add(portParam);
+        buttonPanel.add(applyButton);
+
+        // Panel to main panel
+        panel.add(buttonPanel);
     }
 
     /**
@@ -198,6 +256,15 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
         return panel;
     }
 
+    private static void setDynamicFields() {
+        ClientConfig.ReadServerAddress();
+        ipAddress = ClientConfig.GetIPAddress();
+        port = ClientConfig.GetPort();
+
+        ipAddressParam.setText(" " + ipAddress);
+        portParam.setText(" " + port);
+    }
+
     /**
      * Attempts to login the user into the main application.
      * Uses username and password from the text fields and
@@ -208,6 +275,8 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
      * @throws ClassNotFoundException if Server's response is not a valid Request object.
      */
     private void attemptLogin() throws IOException, ClassNotFoundException {
+        NetworkManager.ipAddress = ipAddress;
+        NetworkManager.port = port;
         String username = usernameField.getText();
         String hashedPass = SHA256.hashPassword(passwordField.getText());
         Request response = networkManager.GetResponse("JDBCUserDataSource", "getUserId", new String[] { username, hashedPass });
@@ -218,6 +287,15 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
         } else {
             JOptionPane.showConfirmDialog(this, "Invalid username or password.", "Access Denied", JOptionPane.PLAIN_MESSAGE, JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    private void SetServerAddress() {
+        ipAddress = ipAddressParam.getText().replace(" ", "");
+        port = Integer.parseInt(portParam.getText().replace(" ", ""));
+        ClientConfig.SetIPAddress(ipAddress);
+        ClientConfig.SetPort(port);
+        ClientConfig.WriteServerAddress();
+        JOptionPane.showConfirmDialog(this, "Server Address updated!", "Success", JOptionPane.PLAIN_MESSAGE, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -233,6 +311,8 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
             if (btn == loginButton) {
                 try { attemptLogin(); }
                 catch (Exception ex) { ex.printStackTrace(); }
+            } else if (btn == applyButton) {
+                SetServerAddress();
             }
         }
     }
@@ -246,12 +326,19 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
     @Override
     public void focusGained(FocusEvent e) {
         Object src = e.getSource();
+        if (src instanceof JTabbedPane) {
+            jframe.getContentPane().requestFocusInWindow();
+        }
         if (src instanceof JTextField) {
             JTextField txt = ((JTextField) src);
             if (txt == usernameField && usernameField.getText().equals(usernameText)) {
                 usernameField.setText("");
             } else if (txt == passwordField && passwordField.getText().equals(passwordText)) {
                 passwordField.setText("");
+            } else if (txt == portParam && portParam.getText().equals(" " + port)) {
+                portParam.setText("");
+            } else if (txt == ipAddressParam && ipAddressParam.getText().equals(" " + ipAddress)) {
+                ipAddressParam.setText("");
             }
         }
     }
@@ -271,6 +358,10 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
                 usernameField.setText(usernameText);
             } else if (txt == passwordField && passwordField.getText().equals("")) {
                 passwordField.setText(passwordText);
+            } else if (txt == ipAddressParam && ipAddressParam.getText().equals("")) {
+                ipAddressParam.setText(" " + ipAddress);
+            } else if (txt == portParam && portParam.getText().equals("")) {
+                portParam.setText(" " + port);
             }
         }
     }

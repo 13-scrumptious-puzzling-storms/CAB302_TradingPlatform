@@ -31,7 +31,7 @@ public class ClientApp {
     public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
         loggedIn = true;
         User user = new User(userID);
-        //guiLogin.terminate();
+        guiLogin.terminate();
         guiMain = new GUIMain(user);
     }
 

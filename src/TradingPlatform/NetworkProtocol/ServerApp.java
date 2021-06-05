@@ -72,10 +72,11 @@ public class ServerApp {
             if (!serverReconcileExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
                 serverReconcileExecutor.shutdownNow();
             }
+            System.out.println("SHUTDOWN: SR Executor shutdown gracefully.");
         } catch (InterruptedException e) {
             serverReconcileExecutor.shutdownNow();
+            System.out.println("SHUTDOWN: SR Executor shutdown forcefully.");
         }
-
         System.exit(0);
     }
 }

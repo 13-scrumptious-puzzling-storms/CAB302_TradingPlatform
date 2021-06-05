@@ -208,6 +208,7 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
      * @param quantity new quantity of the organisationAsset
      */
     public void UpdateOrganisationAssetQuantity(int orgAssetID, int quantity){
+
         try{
             updateOrganisationAssetQuantity.clearParameters();
             updateOrganisationAssetQuantity.setInt(1, quantity);
@@ -216,6 +217,7 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
     }
 
 
