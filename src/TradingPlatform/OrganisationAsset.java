@@ -117,4 +117,15 @@ public class OrganisationAsset {
         return -1;
     }
 
+    public int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity){
+        try {
+            Request response = NetworkManager.GetResponse("JDBCOrganisationalAsset", "addOrganisationAsset",
+                    new String[]{ Integer.toString(orgUnitID), Integer.toString(assetTypeID), Integer.toString(quantity) });
+            return Integer.parseInt(response.getArguments()[0]);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 }
