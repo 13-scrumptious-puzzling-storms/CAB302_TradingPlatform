@@ -44,9 +44,9 @@ public class JDBCAssetType {
     }
 
     /**
-     *
-     * @param assetName
-     * @return
+     * Creates new assetType and returns unique ID
+     * @param assetName name of asset to be created
+     * @return unique ID given to the assetType
      */
     public int addAssetType(String assetName){
         try {
@@ -71,6 +71,12 @@ public class JDBCAssetType {
         return -1;
     }
 
+    /**
+     * Retrieves the asset name associated with the unique
+     * asset ID
+     * @param assetId unique asset ID
+     * @return name of the asset associated with the unique
+     */
     public String getAssetName(int assetId) {
         try {
             getAssetName.clearParameters();
@@ -87,6 +93,10 @@ public class JDBCAssetType {
         return null;
     }
 
+    /**
+     * Returns all assetNames from the database in the form of a String Array
+     * @return String array of all asset names in the database
+     */
     public String[] getAllAssetNames(){
         try{
             int num = 0;
@@ -111,7 +121,11 @@ public class JDBCAssetType {
         return null;
     }
 
-    // Returns asset types in the form String[numAssets][id, assetName]
+
+    /**
+     * Retrieves all assetTypes from database with asset name and ID
+     * @return Returns asset types in the form String[numAssets][id, assetName]
+     */
     public String[][] getAllAssetTypes(){
         try{
             int num = 0;
@@ -137,7 +151,12 @@ public class JDBCAssetType {
         return new String[0][2];
     }
 
-    // Returns the id of the asset with the given name, or -1 on error
+
+    /**
+     * Retrieves asset ID associated with the asset name
+     * @param assetName name of asset`
+     * @return Returns the id of the asset with the given name, or -1 on error
+     */
     public int getAssetId(String assetName) {
         try {
             getAssetId.clearParameters();
