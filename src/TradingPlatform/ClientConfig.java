@@ -44,8 +44,6 @@ public class ClientConfig {
     }
 
     public static void WriteServerAddress() {
-        System.out.println(ipAddress);
-        System.out.println(port);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(ADDRESS_FILE))){
             bufferedWriter.write(ipAddress + "\n" + port);
         } catch (IOException e) {
