@@ -100,4 +100,14 @@ public class TradeManager {
         }
         return -1;
     }
+
+    public static String[][] getCurrentSellOrdersPriceAndQuantityForAsset(int assetTypeId) throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getCurrentSellOrdersPriceAndQuantityForAsset", new String[] {String.valueOf(assetTypeId)});
+        return response.getDoubleString();
+    }
+
+    public static String[][] getCurrentBuyOrdersPriceAndQuantityForAsset(int assetTypeId) throws IOException, ClassNotFoundException {
+        Request response = networkManager.GetResponse("JDBCTradeReconcileSource", "getCurrentBuyOrdersPriceAndQuantityForAsset", new String[] {String.valueOf(assetTypeId)});
+        return response.getDoubleString();
+    }
 }
