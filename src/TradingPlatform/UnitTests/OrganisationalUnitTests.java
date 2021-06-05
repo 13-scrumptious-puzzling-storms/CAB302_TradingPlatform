@@ -1,5 +1,6 @@
 package TradingPlatform.UnitTests;
 
+import TradingPlatform.ConnectToTestDB;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
 import TradingPlatform.NetworkProtocol.DBConnection;
@@ -17,14 +18,11 @@ public class OrganisationalUnitTests {
 
     static Connection connection;
 
-//    @BeforeAll
-//    public static void init(){
-//        connection = DBConnection.getInstance();
-//    }
+
     @BeforeAll
-    public static void init(){
-        TestDatabaseFunctions.InitDb();
-        connection = TestDatabaseFunctions.getConnection();
+    public static void init() {
+        ConnectToTestDB.NewTestConnection();
+        connection = DBConnection.getInstance();
     }
 
     OrganisationalUnit org1;

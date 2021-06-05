@@ -89,10 +89,11 @@ public class GUIOrgHome{
         try {
             assetTableModel = constructAssetTableModel();
             assetTable.setModel(assetTableModel);
-            sellTableModel = constructAssetTableModel();
+            sellTableModel = constructSellTableModel();
             sellTable.setModel(sellTableModel);
-            buyTableModel = constructAssetTableModel();
+            buyTableModel = constructBuyTableModel();
             buyTable.setModel(buyTableModel);
+            LabelCredits.setText("Credits: " + organisationalUnit.getCredits(organisationalUnitID));
         } catch (Exception e) {
             e.printStackTrace();
         }
