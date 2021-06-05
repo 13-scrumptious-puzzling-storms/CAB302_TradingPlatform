@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static TradingPlatform.GUIMain.*;
 import static TradingPlatform.GUIOrgHome.*;
@@ -19,11 +21,8 @@ import static java.awt.GridBagConstraints.LINE_END;
 
 public class GUIOrder extends JFrame{
 
-    // popups
-    Popup p;
-    private static Popup buyPop;
-    private static Popup sellPop;
     private User user;
+    private OrganisationalUnit organisationalUnit;
 
     private JComboBox itemNameInput;
     private JTextField quantityInput;
@@ -34,15 +33,33 @@ public class GUIOrder extends JFrame{
 
     private JLabel order;
 
-    private JButton confirm;
-    private JButton cancel;
     private JOptionPane popUp;
     private JPanel buy;
     private JPanel panel;
-    private JFrame sell;
+
+    private volatile JTable BuyOrderTable;
+    private volatile JTable SellOrderTable;
+
+    String AssetBuyHeading[] = {"Buy Price", "Quantity"};
+    String AssetSellHeading[] = {"Sell Price", "Quantity"};
 
     public GUIOrder(User user) {
         this.user = user;
+        organisationalUnit = user.getOrganisationalUnit();
+    }
+
+    private void RefreshContent(){
+        try {
+            var assetName = itemNameInput.getSelectedItem();
+            AssetType asset = new AssetType(assetName.toString());
+            int assetId = asset.getAssetId();
+            var dataModel1 = GUIMain.constructTable(TradeManager.getCurrentBuyOrdersPriceAndQuantityForAsset(assetId), AssetBuyHeading);
+            BuyOrderTable.setModel(dataModel1);
+            var dataModel2 = GUIMain.constructTable(TradeManager.getCurrentSellOrdersPriceAndQuantityForAsset(assetId), AssetSellHeading);
+            SellOrderTable.setModel(dataModel2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void popup(Boolean isSell) throws IOException, ClassNotFoundException {
@@ -51,7 +68,7 @@ public class GUIOrder extends JFrame{
         popUp = new JOptionPane();
 
         panel = new JPanel();
-        panel.setPreferredSize(new Dimension(width/2, 300));
+        panel.setPreferredSize(new Dimension(width - width/3, 300));
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
@@ -80,32 +97,16 @@ public class GUIOrder extends JFrame{
         priceInput.setEditable(true);
         priceInput.setEnabled(true);
 
-        confirm = new JButton("Confirm Order");
-        confirm.addActionListener(e -> {
-            try {
-                finalButton(e, isSell);
-            } catch (IOException | ClassNotFoundException ioException) {
-                ioException.printStackTrace();
-            }
-        });
-
-        cancel = new JButton("Cancel");
-        cancel.addActionListener(e -> {
-            try {
-                finalButton(e, isSell);
-            } catch (IOException | ClassNotFoundException ioException) {
-                ioException.printStackTrace();
-            }
-        });
-
-        position.weighty = 0;
+        position.weightx = 1;
+        position.weighty = 1;
         position.gridx = 1;
         position.gridy = 0;
+        position.gridwidth = 3;
         panel.add(order, position);
-        position.weighty = 0;
+        position.gridwidth = 1;
         position.insets = new Insets(20, 0, 20, 10);
         position.anchor = LINE_END;
-        position.gridx = 0;
+        position.gridx = 1;
         position.gridy = 1;
         panel.add(itemName, position);
         position.gridy = 2;
@@ -114,7 +115,7 @@ public class GUIOrder extends JFrame{
         panel.add(price, position);
         position.insets = new Insets(20, 0, 20, 0);
         position.anchor = CENTER;
-        position.gridx = 1;
+        position.gridx = 2;
         position.gridy = 1;
         panel.add(itemNameInput, position);
         position.gridy = 2;
@@ -122,65 +123,36 @@ public class GUIOrder extends JFrame{
         position.gridy = 3;
         panel.add(priceInput, position);
 
-        position.gridy = 4;
-        panel.add(confirm, position);
-        position.gridx = 2;
-        panel.add(cancel, position);
+        var assetName = itemNameInput.getSelectedItem();
+        AssetType asset = new AssetType(assetName.toString());
+        int assetId = asset.getAssetId();
+        itemNameInput.addActionListener(e -> RefreshContent());
+
+        BuyOrderTable = tableCreator(GUIMain.constructTable(TradeManager.getCurrentBuyOrdersPriceAndQuantityForAsset(assetId), AssetBuyHeading));
+        JScrollPane RecentBuy = GUIMain.tablePane(BuyOrderTable);
+        RecentBuy.setPreferredSize(new Dimension(tabWidth/6, 100));
+        RecentBuy.setMinimumSize(new Dimension(tabWidth/10, 50));
+
+        SellOrderTable = tableCreator(GUIMain.constructTable(TradeManager.getCurrentSellOrdersPriceAndQuantityForAsset(assetId), AssetSellHeading));
+        JScrollPane RecentSell = GUIMain.tablePane(SellOrderTable);
+        RecentSell.setPreferredSize(new Dimension(tabWidth/6, 100));
+        RecentSell.setMinimumSize(new Dimension(tabWidth/10, 50));
+
+        position.insets = new Insets(0, 0, 0, 0);
+        position.gridx = 3;
+        position.gridy = 1;
+        position.gridheight = 2;
+        panel.add(RecentBuy, position);
+        position.gridy = 3;
+        panel.add(RecentSell, position);
+
 
         buy.setPreferredSize(new Dimension(200, 200));
 
-        int result = JOptionPane.showConfirmDialog(null, panel, "" ,JOptionPane.PLAIN_MESSAGE);
-    }
-
-//    public void sellPopup(){
-//
-//        popUp = new JOptionPane();
-//        sell = new JFrame();
-////        JPanel mainPanel = new JPanel();
-//        panel = new JPanel();
-//        panel.setPreferredSize(new Dimension(width/2, height/2));
-//        panel.setLayout(new GridBagLayout());
-//        GridBagConstraints position = new GridBagConstraints();
-//
-//        itemName = new JLabel("Item Name: ");
-//        quantity = new JLabel("Quantity: ");
-//        price = new JLabel("Price: ");
-//
-//        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
-//        itemNameInput = new JComboBox(petStrings);
-//
-//        quantityInput = new JTextField();
-//        priceInput = new JTextField();
-//
-//        position.weighty = 0;
-//        position.gridx = 0;
-//        position.gridy = 0;
-//        panel.add(itemName, position);
-//        position.gridy = 1;
-//        panel.add(quantity, position);
-//        position.gridy = 2;
-//        panel.add(price, position);
-//        position.gridx = 1;
-//        position.gridy = 0;
-//        panel.add(itemNameInput, position);
-//        position.gridy = 1;
-//        panel.add(quantityInput, position);
-//        position.gridy = 2;
-//        panel.add(priceInput, position);
-//        panel.add(new JLabel("THIS IS SELL"));
-//        //sellPop = popUp.getPopup(sell, panel, width/4, height/4);
-//        sellPop.show();
-//        sell.setPreferredSize(new Dimension(200, 200));
-//    }
-
-    private void finalButton(ActionEvent e, Boolean isSell) throws IOException, ClassNotFoundException {
-        var box = e.getActionCommand();
-        if(box == "Cancel"){
-            updateOrder(isSell);
-        }else{
-            //do add new trade order
+        if (JOptionPane.showInternalConfirmDialog(null, panel, "" , JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
             updateOrder(isSell);
         }
+
     }
 
     private void updateOrder(Boolean isSell) throws IOException, ClassNotFoundException {
@@ -208,7 +180,6 @@ public class GUIOrder extends JFrame{
 
 
             AssetType buyAsset = new AssetType(asset.toString());
-            OrganisationalUnit organisationalUnit = user.getOrganisationalUnit();
             int orgID = organisationalUnit.getID();
             int orgAssetId = OrganisationAsset.getOrganisationAssetID(organisationalUnit, buyAsset);
 
