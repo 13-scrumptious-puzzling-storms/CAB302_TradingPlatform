@@ -65,7 +65,7 @@
 <!--    </target>-->
 
     <target name="JavaDoc">
-        <javadoc packagenames="TradingPlatform"
+        <javadoc packagenames="TradingPlatform, TradingPlatform.Interfaces, TradingPlatform.JDBCDataSources, TradingPlatform.NetworkProtocol, TradingPlatform.TradeReconciliation"
                  sourcepath="src"
                  destdir="JavaDoc"
                  author="true"
