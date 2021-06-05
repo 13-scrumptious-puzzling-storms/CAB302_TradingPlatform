@@ -1,0 +1,94 @@
+<project name="exercise" basedir=".">
+    <property name="base" value="artifacts" />
+    <property name="testBase" value="testFiles" />
+
+    <property name="junitJar" value="lib/junit-jupiter-api-5.4.2.jar" />
+    <property name="junitPlatformJar" value="lib/junit-platform-commons-1.4.2.jar" />
+    <property name="opentestJar" value="lib/opentest4j-1.1.1.jar" />
+    <property name="apiguardianJar" value="lib/apiguardian-api-1.0.0.jar" />
+
+    <property name="junitpath" value="${junitJar}:${junitPlatformJar}:${opentestJar}:${apiguardianJar}" />
+
+    <target name="prepare" description="Create target directories">
+        <mkdir dir="${base}" />
+        <mkdir dir="${testBase}" />
+        <mkdir dir="JavaDoc" />
+        <mkdir dir="utestclasses" />
+    </target>
+
+    <target name="compile" depends="prepare" description="Compile source">
+        <javac srcdir="src" classpath="${base}:${junitpath}" destdir="${base}"
+               includeantruntime="false">
+            <include name="TradingPlatform/*.java" />
+            <include name="TradingPlatform/Interfaces/*.java" />
+            <include name="TradingPlatform/JDBCDataSources/*.java" />
+            <include name="TradingPlatform/NetworkProtocol/*.java" />
+            <include name="TradingPlatform/TradeReconciliation/*.java" />
+        </javac>
+    </target>
+
+    <target name="compileTests" depends="compile" description="Compile tests">
+        <!-- Compile unit test source -->
+        <javac srcdir="utest" classpath="${base}:${junitJar}:${junitPlatformJar}:${opentestJar}:${apiguardianJar}"
+               destdir="utestclasses"
+               includeantruntime="false">
+            <include name="TradingPlatform/JDBCDataSources/*.java" />
+            <include name="TradingPlatform/TradeReconciliation/*.java" />
+        </javac>
+    </target>
+
+    <target name="utest" depends="compileTests" description="Run JUnit">
+        <junitlauncher printSummary="true" failureProperty="junit.failure">
+            <classpath>
+                <pathelement path="utestclasses:${base}" />
+                <pathelement path="${junitJar}:${junitPlatformJar}:${opentestJar}:${apiguardianJar}" />
+            </classpath>
+            <testclasses outputDir="${testBase}">
+                <fileset dir="utestclasses"/>
+                <listener type="legacy-xml"/>
+            </testclasses>
+        </junitlauncher>
+        <fail if="junit.failure" message="junit tests failed - aborting"/>
+    </target>
+
+<!--    <target name="build" depends="utest">-->
+<!--        <jar destfile="${base}/WarehouseSimulation.jar" basedir="${base}">-->
+<!--            <manifest>-->
+<!--                &lt;!&ndash; Who is building this jar? &ndash;&gt;-->
+<!--                <attribute name="Built-By" value="${user.name}"/>-->
+<!--                &lt;!&ndash; Information about the program itself &ndash;&gt;-->
+<!--                <attribute name="Implementation-Vendor" value="13-scrumptious-puzzling-storms"/>-->
+<!--                <attribute name="Implementation-Title" value="SPS Trading Platform"/>-->
+<!--                <attribute name="Implementation-Version" value="1.0.0"/>-->
+<!--            </manifest>-->
+<!--        </jar>-->
+<!--    </target>-->
+
+    <target name="JavaDoc">
+        <javadoc packagenames="TradingPlatform"
+                 sourcepath="src"
+                 destdir="JavaDoc"
+                 author="true"
+                 version="true"
+                 use="false"
+                 windowtitle="SPS Trading Platform API">
+            <doctitle><![CDATA[<h1>SPS Trading Platform</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Copyright &#169;  13-scrumptious-puzzling-storms. All marks 100%.</i>]]></bottom>
+        </javadoc>
+    </target>
+
+    <target name="clean">
+        <delete dir="${base}"/>
+        <delete dir="JavaDoc"/>
+        <delete dir="${testBase}"/>
+        <delete dir="utestclasses"/>
+    </target>
+
+<!--    <target name="src" depends="JavaDoc">-->
+<!--        <mkdir dir="${base}" />-->
+<!--        <zip destfile="${base}/warehouseSrc.zip"-->
+<!--             basedir="src"-->
+<!--             update="true"-->
+<!--        />-->
+<!--    </target>-->
+</project>

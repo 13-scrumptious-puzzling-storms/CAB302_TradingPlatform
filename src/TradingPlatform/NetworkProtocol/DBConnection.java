@@ -19,7 +19,7 @@ public class DBConnection {
      */
     private static Connection instance;
 
-    private static String propsFile = "./db.props";
+    private static String propsFile = "./db_test.props";
 
     /**
      * Sets the instance to null (since the parameters to connect to DB will have changed).

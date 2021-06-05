@@ -1,4 +1,4 @@
-jdbc.url=jdbc:sqlite:SPS-TradingPlatform.db
-jdbc.schema=SPS_Trading
-jdbc.username=root
+jdbc.url=jdbc:sqlite:testdb.db
+jdbc.schema=
+jdbc.username=
 jdbc.password=

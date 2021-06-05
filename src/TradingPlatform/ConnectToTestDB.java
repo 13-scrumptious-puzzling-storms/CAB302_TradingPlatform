@@ -1,7 +1,7 @@
 package TradingPlatform;
 
 import TradingPlatform.NetworkProtocol.DBConnection;
-import TradingPlatform.UnitTests.TestDatabaseFunctions;
+import TradingPlatform.JDBCDataSources.MockDatabaseFunctions;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,7 +21,7 @@ public class ConnectToTestDB {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        TestDatabaseFunctions.InitDb();
+        MockDatabaseFunctions.InitDb();
         DBConnection.setPropsFile(TEST_PROPS_FILE);
     }
 
@@ -30,7 +30,7 @@ public class ConnectToTestDB {
      * referencing it.
      */
     public static void CloseTestConnection() {
-        TestDatabaseFunctions.CloseDatabase();
+        MockDatabaseFunctions.CloseDatabase();
         (new File(TEST_PROPS_FILE)).delete();
     }
 }

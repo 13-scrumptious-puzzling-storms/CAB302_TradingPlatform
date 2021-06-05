@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"TradingPlatform"},{"l":"TradingPlatform.NetworkProtocol"}];updateSearchResults();
