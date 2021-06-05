@@ -20,14 +20,14 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private static final String GET_BUY_ORDERS = "SELECT o.*, a.organisationUnitId, name FROM TradeOrders AS o \n" +
             "LEFT JOIN organisationAsset AS a ON a.organisationAssetID = o.organisationAssetID \n" +
             "LEFT JOIN assetType AS t ON a.assetTypeId = t.assetTypeId\n" +
-            "WHERE a.organisationUnitId=? AND isSellOrder='false' AND cancelled='false';";
+            "WHERE a.organisationUnitId=? AND isSellOrder='false' AND cancelled='false' AND remainingQuantity != 0;";
     private static final String GET_SELL_ORDERS = "SELECT o.*, a.organisationUnitId, name FROM TradeOrders AS o \n" +
             "LEFT JOIN organisationAsset AS a ON a.organisationAssetID = o.organisationAssetID \n" +
             "LEFT JOIN assetType AS t ON a.assetTypeId = t.assetTypeId\n" +
-            "WHERE a.organisationUnitId=? AND isSellOrder='true' AND cancelled='false';";
+            "WHERE a.organisationUnitId=? AND isSellOrder='true' AND cancelled='false' AND remainingQuantity != 0;";
     private static final String COUNT_ORDER_ROWS = "SELECT count(organisationUnitId) as num FROM TradeOrders as o\n" +
             "left join organisationAsset as a on a.organisationAssetID = o.organisationAssetID\n" +
-            "WHERE organisationUnitId=? and isSellOrder=? AND cancelled='false';";
+            "WHERE organisationUnitId=? and isSellOrder=? AND cancelled='false' AND remainingQuantity != 0;";
 
 
 

@@ -6,7 +6,6 @@ import TradingPlatform.OrganisationalUnit;
 import TradingPlatform.Request;
 import TradingPlatform.TradeReconciliation.TradeOrder;
 
-import javax.xml.transform.Result;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -290,7 +289,7 @@ public class ServerSend extends NotifyingThread {
                         for (int i = 0; i < sellOrders.size(); i++) {
                             response[i] = new String[]{
                                     Integer.toString(sellOrders.get(i).getPrice()),
-                                    Integer.toString(sellOrders.get(i).getQuantity())
+                                    Integer.toString(sellOrders.get(i).getRemainingQuantity())
                             };
                         }
                         Transmit(new Request(className, methodName, response));
@@ -303,7 +302,7 @@ public class ServerSend extends NotifyingThread {
                         for (int i = 0; i < sellOrders.size(); i++) {
                             response[i] = new String[]{
                                     Integer.toString(sellOrders.get(i).getPrice()),
-                                    Integer.toString(sellOrders.get(i).getQuantity())
+                                    Integer.toString(sellOrders.get(i).getRemainingQuantity())
                             };
                         }
                         Transmit(new Request(className, methodName, response));

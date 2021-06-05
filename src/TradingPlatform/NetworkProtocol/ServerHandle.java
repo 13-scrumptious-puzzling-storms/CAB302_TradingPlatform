@@ -90,6 +90,11 @@ public class ServerHandle implements Runnable, ThreadCompleteListener {
         return false;
     }
 
+    /**
+     * This method is executed each time a ServerSend thread runs to completion.
+     * Decrements the count of the number of open ServerSend threads.
+     * @param thread the completed thread.
+     */
     @Override
     public void notifyOfThreadComplete(Thread thread) {
         synchronized (numThreadsLock) {

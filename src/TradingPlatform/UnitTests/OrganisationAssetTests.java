@@ -4,6 +4,7 @@ import TradingPlatform.ConnectToTestDB;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.OrganisationAsset;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,11 @@ public class OrganisationAssetTests {
     public static void init(){
         ConnectToTestDB.NewTestConnection();
         connection = DBConnection.getInstance();
+    }
+
+    @AfterAll
+    public static void close() {
+        ConnectToTestDB.CloseTestConnection();
     }
 
     @Test

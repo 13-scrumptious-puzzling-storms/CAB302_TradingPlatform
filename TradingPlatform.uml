@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>TradingPlatform</OriginalElement>
+  <nodes>
+    <node x="293.0" y="1729.0">TradingPlatform.OrganisationalUnit</node>
+    <node x="0.0" y="2573.0">TradingPlatform.NetworkProtocol</node>
+    <node x="897.0" y="2250.0">TradingPlatform.GUIHome</node>
+    <node x="2188.0" y="2250.0">TradingPlatform.TradeReconciliation</node>
+    <node x="1834.9999999999998" y="322.0">TradingPlatform.ITAdministrator</node>
+    <node x="653.0" y="1729.0">TradingPlatform.GUItester</node>
+    <node x="1155.0" y="2250.0">TradingPlatform.AccountType</node>
+    <node x="1255.0" y="637.0">TradingPlatform.GUITrade</node>
+    <node x="1430.0" y="2250.0">TradingPlatform.AssetType</node>
+    <node x="1157.0" y="0.0">TradingPlatform.GUIMain</node>
+    <node x="251.0" y="2573.0">TradingPlatform.UnitTests</node>
+    <node x="1530.0" y="0.0">TradingPlatform.GUIProfile</node>
+    <node x="0.0" y="0.0">TradingPlatform.GUIAdmin</node>
+    <node x="2190.0" y="161.0">TradingPlatform.JDBCDataSources</node>
+    <node x="353.0" y="0.0">TradingPlatform.GUILogin</node>
+    <node x="1908.9999999999998" y="81.0">TradingPlatform.User</node>
+    <node x="1543.0" y="483.0">TradingPlatform.GUIProfile.ButtonListener</node>
+    <node x="1714.0" y="2250.0">TradingPlatform.stringToDoubleArray</node>
+    <node x="984.0" y="1729.0">TradingPlatform.TradeManager</node>
+    <node x="0.0" y="2250.0">TradingPlatform.Request</node>
+    <node x="27.0" y="1451.0">TradingPlatform.GUIAdmin.adminActionListener</node>
+    <node x="1947.0" y="2250.0">TradingPlatform.SHA256</node>
+    <node x="308.0" y="2250.0">TradingPlatform.Trade</node>
+    <node x="2031.0" y="1729.0">TradingPlatform.NetworkManager</node>
+    <node x="707.0" y="0.0">TradingPlatform.GUIOrgHome</node>
+    <node x="618.0" y="2250.0">TradingPlatform.ClientApp</node>
+    <node x="1397.0" y="1729.0">TradingPlatform.ClientConfig</node>
+    <node x="0.0" y="1729.0">TradingPlatform.GUIOrder</node>
+    <node x="2087.75" y="0.0">TradingPlatform.Interfaces</node>
+    <node x="1628.0" y="1729.0">TradingPlatform.OrganisationAsset</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="TradingPlatform.GUIProfile.ButtonListener" target="TradingPlatform.GUIProfile" relationship="INNER_CLASS">
+      <point x="0.0" y="-61.5" />
+      <point x="0.0" y="216.5" />
+    </edge>
+    <edge source="TradingPlatform.User" target="TradingPlatform.Interfaces" relationship="REALIZATION">
+      <point x="0.0" y="-95.5" />
+      <point x="2039.4999999999998" y="56.0" />
+      <point x="2167.25" y="56.0" />
+      <point x="0.0" y="15.5" />
+    </edge>
+    <edge source="TradingPlatform.ITAdministrator" target="TradingPlatform.User" relationship="GENERALIZATION">
+      <point x="0.0" y="-139.0" />
+      <point x="0.0" y="95.5" />
+    </edge>
+    <edge source="TradingPlatform.GUIAdmin.adminActionListener" target="TradingPlatform.GUIAdmin" relationship="INNER_CLASS">
+      <point x="0.0" y="-116.5" />
+      <point x="0.0" y="700.5" />
+    </edge>
+    <edge source="TradingPlatform.JDBCDataSources" target="TradingPlatform.Interfaces" relationship="REALIZATION">
+      <point x="0.0" y="-15.5" />
+      <point x="2295.0" y="56.0" />
+      <point x="2167.25" y="56.0" />
+      <point x="0.0" y="15.5" />
+    </edge>
+    <edge source="TradingPlatform.GUITrade" target="TradingPlatform.GUIMain" relationship="GENERALIZATION">
+      <point x="0.0" y="-28.0" />
+      <point x="0.0" y="293.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.3231707317073171" showDependencies="false" x="1205.5" y="1302.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
