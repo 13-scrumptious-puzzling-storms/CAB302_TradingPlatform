@@ -71,7 +71,7 @@ public class DBConnection {
             ex.printStackTrace();
         }
         if (!isConnected) {
-            System.out.println("DBConnection: Failed to connect to database!");
+            System.out.println("DBConnection: Failed to connect to database with current .props file!");
         }
     }
 

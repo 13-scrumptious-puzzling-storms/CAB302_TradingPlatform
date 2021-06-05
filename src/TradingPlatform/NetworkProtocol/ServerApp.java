@@ -3,12 +3,15 @@ package TradingPlatform.NetworkProtocol;
 import TradingPlatform.TradeReconciliation.TradeReconcile;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.sql.Connection;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Responsible for starting all of the Server's core processes
+ * and for gracefully shutting down the Server.
+ */
 public class ServerApp {
 
     private static Thread threadHandle;
@@ -16,7 +19,22 @@ public class ServerApp {
 
     private static final int RECONCILE_TIMER = 5; // how many seconds between reconciling trades
 
+    /**
+     * The main method invokes StartServer();
+     * @param args
+     */
     public static void main(String[] args) {
+        StartServer();
+    }
+
+    /**
+     * Starts the Server by:
+     * Starting ServerHandle on a separate thread.
+     * Starting serverReconcileExecutor on a separate thread.
+     * Starting the Server GUI (GUIManager) on the AWT
+     * event-dispatching thread.
+     */
+    private static void StartServer() {
         System.out.println("Starting Server ...");
 
         // Start the Client requests handler for the Server.
@@ -28,10 +46,12 @@ public class ServerApp {
         try {
             serverReconcileExecutor = Executors.newSingleThreadScheduledExecutor();
             serverReconcileExecutor.scheduleAtFixedRate(() -> {
-                Connection conn = DBConnection.getInstance();
-                // run the trade reconcile thread
-                if (conn != null)
-                    TradeReconcile.ReconcileCurrentTrades(conn);
+                if (DBConnection.getIsConnected()) {
+                    Connection conn = DBConnection.getInstance();
+                    // run the trade reconcile thread
+                    if (conn != null)
+                        TradeReconcile.ReconcileCurrentTrades(conn);
+                }
             }, 0, RECONCILE_TIMER, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,22 +65,14 @@ public class ServerApp {
         });
     }
 
-    public static void shutdown1() {
-        System.out.println("\nShutting down Server ...");
-        ServerHandle.end(); // Stop accepting requests
-        try {
-            ServerHandle.socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        try {
-//            threadHandle.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        System.exit(0);
-    }
-
+    /**
+     * Begins the Server Shutdown sequence.
+     * Disables ServerHandle from receiving more requests.
+     * Waits for ServerSend threads to finish handling their
+     * current requests.
+     * Shuts down the serverReconcileExecutor.
+     * And finally shuts down the Server application.
+     */
     public static void shutdown() {
         System.out.println("\nShutting down Server ...");
         ServerHandle.end(); // Stop accepting requests

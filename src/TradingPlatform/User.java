@@ -18,7 +18,7 @@ public class User implements UserDataSource {
      * Instantiates a user from their userid, getting their information from the database
      * @param userID The user's userid
      */
-    public User(int userID) throws IOException, ClassNotFoundException {
+    public User(int userID) {
         this.userID = userID;
 
         // Get the user's data from the server

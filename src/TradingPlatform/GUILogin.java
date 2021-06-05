@@ -158,6 +158,13 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
         panel.add(buttonPanel); //panel.add(buttonPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * Creates the config panel.
+     * Initialises labels, textFields and buttons.
+     * Adds the constructed login panel to provided JPanel panel.
+     * Also invokes the setDynamicFields();
+     * @param panel The parent panel which has the Login panel added to it.
+     */
     private void configPanel(JPanel panel) {
         // Labels
         JLabel headerLabel = newLabel("SPS Trading", FONT_HEADER, OCEAN_GREEN);
@@ -256,6 +263,10 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
         return panel;
     }
 
+    /**
+     * Uses ClientConfig to get the IP Address and port.
+     * Sets the ipAdress and port Strings to these returned values.
+     */
     private static void setDynamicFields() {
         ClientConfig.ReadServerAddress();
         ipAddress = ClientConfig.GetIPAddress();
@@ -289,6 +300,10 @@ public class GUILogin extends JFrame implements ActionListener, FocusListener {
         }
     }
 
+    /**
+     * Sets and saves the user inputted IP Address and
+     * Port using ClientConfig.
+     */
     private void SetServerAddress() {
         ipAddress = ipAddressParam.getText().replace(" ", "");
         port = Integer.parseInt(portParam.getText().replace(" ", ""));

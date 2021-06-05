@@ -173,15 +173,17 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
      * @return returns true if successful, false otherwise
      */
     public Boolean UpdateOrganisationalUnitCredits(int OrgUnitID, int updatedCredits){
-        try{
-            updateOrganisationalUnitCredits.clearParameters();
-            updateOrganisationalUnitCredits.setInt(1, updatedCredits);
-            updateOrganisationalUnitCredits.setInt(2, OrgUnitID);
-            updateOrganisationalUnitCredits.executeUpdate();
-            return true;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
+        synchronized (JDBCThreadLock.UpdateDbLock) {
+            try {
+                updateOrganisationalUnitCredits.clearParameters();
+                updateOrganisationalUnitCredits.setInt(1, updatedCredits);
+                updateOrganisationalUnitCredits.setInt(2, OrgUnitID);
+                updateOrganisationalUnitCredits.executeUpdate();
+                return true;
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                return false;
+            }
         }
     }
 
