@@ -1,61 +1,13 @@
 package TradingPlatform.TradeReconciliation;
 
-import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
-import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
-import TradingPlatform.JDBCDataSources.JDBCTradeDataSource;
-import TradingPlatform.JDBCDataSources.JDBCTradeReconcileSource;
+import TradingPlatform.JDBCDataSources.*;
 import TradingPlatform.NetworkProtocol.DBConnection;
 
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-public class TradeReconcile implements Runnable {
-
-    private static final int SLEEP_TIME = 1000; // Wakes up every 1 second(s)
-    private static Connection connection;
-    private final Object tradeLock;
-    private static JDBCTradeReconcileSource reconcileSource;
-    private static JDBCOrganisationalUnit orgUnitSource;
-    private static JDBCOrganisationalAsset orgAssetSource;
-    private static JDBCTradeDataSource tradeSource;
-
-    public TradeReconcile(Object tradeLock){
-        this.tradeLock = tradeLock;
-        init(DBConnection.getInstance());
-    }
-
-    public TradeReconcile(Object tradeLock, Connection connection){
-        this.tradeLock = tradeLock;
-        init(connection);
-    }
-
-    private void init(Connection connection) {
-        try {
-            TradeReconcile.connection = connection;
-            reconcileSource = new JDBCTradeReconcileSource(connection);
-            orgUnitSource = new JDBCOrganisationalUnit(connection);
-            orgAssetSource = new JDBCOrganisationalAsset(connection);
-            tradeSource = new JDBCTradeDataSource(connection);
-            System.out.println("Connection to database successful!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void run() {
-        while (true){
-            ReconcileCurrentTrades();
-            try {
-                Thread.sleep(SLEEP_TIME);
-            } catch (InterruptedException e) {
-                if (Thread.interrupted()){
-                    return;
-                }
-            }
-        }
-    }
-
+public class TradeReconcile {
     /**
      * This method reconciles all current outstanding trades
      * NOTE: When a buy order is first placed, the max price for the order is deducted from the org's credits.
@@ -64,9 +16,15 @@ public class TradeReconcile implements Runnable {
      *       This means that when a trade is reconciled, it does not need to remove the selling org's assets,
      *       and it does not need to deduct from the buying org's credits.
      */
-    public void ReconcileCurrentTrades(){
+    public static void ReconcileCurrentTrades(Connection connection){
+        // Get the connections to the database
+        var reconcileSource = new JDBCTradeReconcileSource(connection);
+        var orgUnitSource = new JDBCOrganisationalUnit(connection);
+        var orgAssetSource = new JDBCOrganisationalAsset(connection);
+        var tradeSource = new JDBCTradeDataSource(connection);
+
         // Need to have the trade lock to reconcile trades
-        synchronized (tradeLock){
+        synchronized (JDBCThreadLock.UpdateDbLock){
             ArrayList<Integer> tradableAssetTypes = reconcileSource.getCurrentReconcilableAssetTypeIds();
 
             for (int assetTypeId : tradableAssetTypes) {
