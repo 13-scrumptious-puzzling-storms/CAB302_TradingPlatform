@@ -8,8 +8,8 @@ import java.net.Socket;
  * Responsible for sending and receiving messages from the Sever.
  */
 public class NetworkManager implements Runnable {
-    private static final String HOST_ADDRESS = "127.0.0.1";
-    private static final int PORT = 2197;
+    public static String ipAddress = "127.0.0.1";
+    public static int port = 2197;
 
     private static Socket socket;
     private static Boolean receive = false;
@@ -94,7 +94,7 @@ public class NetworkManager implements Runnable {
      */
     private static void transmit(Request request) {
         try {
-            socket = new Socket(HOST_ADDRESS, PORT);
+            socket = new Socket(ipAddress, port);
             System.out.println("Successfully connected to server!");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             objectOutputStream.writeObject(request);
@@ -106,7 +106,7 @@ public class NetworkManager implements Runnable {
             }
         }
         catch (Exception ex) {
-            ClientApp.displayError("Failed to connect to server. \nThe server appears to be offline.\n");
+            ClientApp.displayError("Failed to connect to server. \nThe server may be offline.\n");
         }
     }
 
