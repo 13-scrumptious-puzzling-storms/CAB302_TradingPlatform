@@ -1,11 +1,15 @@
 package TradingPlatform;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static TradingPlatform.GUIMain.*;
 import static java.awt.GridBagConstraints.*;
@@ -14,12 +18,30 @@ public class GUIHome extends JFrame{
 
     public User user;
 
+    private volatile JTable mostRecentTradesTable;
+    private volatile JTable allRecentTradesTable;
+
     String TableOneHeading[] = {"Asset Name","Price","Quantity"};
     String TableTwoHeading[] = {"Recent Trades","Price","Quantity"};
 
     public GUIHome(JPanel HomeTab, User user) throws IOException, ClassNotFoundException {
         homePanel(HomeTab);
         this.user = user;
+
+        // create a thread to update the page content every 5 seconds or so
+        var exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleWithFixedDelay(this::RefreshContent, 5, 5, TimeUnit.SECONDS);
+    }
+
+    private void RefreshContent(){
+        try {
+            var dataModel1 = GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading);
+            mostRecentTradesTable.setModel(dataModel1);
+            var dataModel2 = GUIMain.constructTable(TradeManager.getRecentTradeDetails(), TableTwoHeading);
+            allRecentTradesTable.setModel(dataModel2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void homePanel(JPanel panel) throws IOException, ClassNotFoundException {
@@ -61,11 +83,13 @@ public class GUIHome extends JFrame{
             }
         });
 
-        JScrollPane mostRecentTrades = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading)));
+        mostRecentTradesTable = tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading));
+        var mostRecentTrades = GUIMain.tablePane(mostRecentTradesTable);
         mostRecentTrades.setPreferredSize(new Dimension(tabWidth-tabWidth/100, 100));
         mostRecentTrades.setMinimumSize(new Dimension(tabWidth/2, 50));
 
-        JScrollPane allRecentTrades = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getRecentTradeDetails(), TableTwoHeading)));
+        allRecentTradesTable = tableCreator(GUIMain.constructTable(TradeManager.getRecentTradeDetails(), TableTwoHeading));
+        var allRecentTrades = GUIMain.tablePane(allRecentTradesTable);
         allRecentTrades.setPreferredSize(new Dimension(tabWidth-tabWidth/100, tabHeight-100));
         allRecentTrades.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 

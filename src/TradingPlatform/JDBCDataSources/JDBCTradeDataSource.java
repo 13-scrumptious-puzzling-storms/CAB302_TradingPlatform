@@ -204,7 +204,6 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return -1;
     }
 
-    //~~~~~TO FIX METHODS UNDER THIS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @Override
     public Boolean setCancel(int tradeId){
         try {
