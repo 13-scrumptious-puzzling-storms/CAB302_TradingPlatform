@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * Responsible for the Client application and its core processes.
+ */
 public class ClientApp {
 
     public static NetworkManager networkManager;
@@ -12,7 +15,23 @@ public class ClientApp {
 
     private static Boolean loggedIn;
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    /**
+     *
+     * @param args
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static void main(String[] args) {
+        StartClient();
+    }
+
+    /**
+     * Starts the Client by:
+     * Starting the NetworkManager to send Client's
+     * requests and receive replies from Server.
+     * Starting the Login GUI (GUILogin) for user authentication.
+     */
+    private static void StartClient() {
         loggedIn = false;
 
         // Initialise the client-side network protocol
@@ -28,13 +47,25 @@ public class ClientApp {
         });
     }
 
-    public static void launchProgram(int userID) throws IOException, ClassNotFoundException {
+    /**
+     * Launches the main Client application after successful
+     * user authentication. Main Client application will be
+     * loaded using the privileges of the user.
+     * @param userID the authenticated user.
+     */
+    public static void launchProgram(int userID) {
         loggedIn = true;
         User user = new User(userID);
         guiLogin.terminate();
-        guiMain = new GUIMain(user);
+        try { guiMain = new GUIMain(user); }
+        catch (Exception ex) { ex.printStackTrace(); }
     }
 
+    /**
+     * A public method allowing any GUI class to display a custom
+     * error (errorMessage) to the user using a JOptionPane.
+     * @param errorMessage the errorMessage to display.
+     */
     public static void displayError(String errorMessage) {
         Component parentComponent;
         if (loggedIn) {
@@ -43,13 +74,5 @@ public class ClientApp {
             parentComponent = guiMain;
         }
         JOptionPane.showConfirmDialog(parentComponent, errorMessage, "Warning", JOptionPane.PLAIN_MESSAGE, JOptionPane.WARNING_MESSAGE);
-    }
-
-    private static void networkTest() throws IOException, ClassNotFoundException {
-        OrganisationalUnit organisationalUnit = new OrganisationalUnit();
-        System.out.println("Organisational Unit Name for ID 1: " + organisationalUnit.getName(1));
-
-        OrganisationAsset oAss = new OrganisationAsset();
-        oAss.getOrganisationalUnitAssetTable(1);
     }
 }
