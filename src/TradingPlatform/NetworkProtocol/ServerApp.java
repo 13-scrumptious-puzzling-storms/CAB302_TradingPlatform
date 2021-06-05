@@ -1,24 +1,19 @@
 package TradingPlatform.NetworkProtocol;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class ServerApp {
 
-    private static ServerHandle serverHandleRunnable;
-    public static ServerSend serverSendRunnable;
+    private static Thread threadHandle;
 
     public static void main(String[] args) {
         System.out.println("Starting Server ...");
 
         // Start the Client requests handler for the Server.
-        serverHandleRunnable = new ServerHandle();
-        Thread threadHandle = new Thread(serverHandleRunnable);
+        var serverHandleRunnable = new ServerHandle();
+        threadHandle = new Thread(serverHandleRunnable);
         threadHandle.start();
-
-        // Start the Client reply component of the network protocol.
-        serverSendRunnable = new ServerSend();
-        Thread threadSend = new Thread(serverSendRunnable);
-        threadSend.start();
 
         // Start the Server GUI.
         SwingUtilities.invokeLater(new Runnable() {
@@ -28,10 +23,26 @@ public class ServerApp {
         });
     }
 
+    public static void shutdown1() {
+        System.out.println("\nShutting down Server ...");
+        ServerHandle.end(); // Stop accepting requests
+        try {
+            ServerHandle.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        try {
+//            threadHandle.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        System.exit(0);
+    }
+
     public static void shutdown() {
         System.out.println("\nShutting down Server ...");
-        serverHandleRunnable.end(); // Stop accepting requests
-        while (serverSendRunnable.isWorking) { } // Wait for ServerSend to finish
+        ServerHandle.end(); // Stop accepting requests
+        while (ServerHandle.threadsOpen());
         System.exit(0);
     }
 }
