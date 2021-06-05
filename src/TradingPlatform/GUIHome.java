@@ -12,40 +12,13 @@ import static java.awt.GridBagConstraints.*;
 
 public class GUIHome extends JFrame{
 
-    String data[][] = {{"Vinod","MCA","Computer"},
-            {"Deepak","PGDCA","History"},
-            {"Ranjan","M.SC.","Biology"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"}};
+    public User user;
+
     String TableHeading[] = {"Recent Trades","Price","Quantity"};
 
-    public GUIHome(JPanel HomeTab) throws IOException, ClassNotFoundException {
+    public GUIHome(JPanel HomeTab, User user) throws IOException, ClassNotFoundException {
         homePanel(HomeTab);
+        this.user = user;
     }
 
     public void homePanel(JPanel panel) throws IOException, ClassNotFoundException {
@@ -60,7 +33,7 @@ public class GUIHome extends JFrame{
         buyButton.setBackground(cust1);
         buyButton.addActionListener(e -> {
             try {
-                buyActionListener(e);
+                ActionListener(false);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             } catch (ClassNotFoundException classNotFoundException) {
@@ -73,10 +46,17 @@ public class GUIHome extends JFrame{
         sellButton.setPreferredSize(new Dimension(200, 100));
         sellButton.setMinimumSize(new Dimension(50, 50));
         sellButton.setBackground(cust1);
-        buyButton.addActionListener(this::sellActionListener);
+        buyButton.addActionListener(e -> {
+            try {
+                ActionListener(true);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+        });
 
-        System.out.println(" this is iiadfnkjsdflak  !!!!!!!! "+ Arrays.deepToString(TradeManager.getMostRecentAssetTypeTradeDetails()));
-        JScrollPane TradesPaneSell = GUIMain.tablePane(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableHeading));
+        JScrollPane TradesPaneSell = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableHeading)));
         TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
         TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
@@ -102,11 +82,9 @@ public class GUIHome extends JFrame{
         panel.setBackground(cust1);
     }
 
-    public void buyActionListener(ActionEvent e) throws IOException, ClassNotFoundException {
-        String event = e.getActionCommand();
-        if(event == "Buy Assets") {
-            GUIOrder.buyPopup();
-        }
+    public void ActionListener(Boolean isSell) throws IOException, ClassNotFoundException {
+       GUIOrder order = new GUIOrder(user);
+       order.popup(isSell);
     }
     public void sellActionListener(ActionEvent e){
 //        GUIOrder.sellPopup();

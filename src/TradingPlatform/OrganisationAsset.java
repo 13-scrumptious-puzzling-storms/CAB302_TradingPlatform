@@ -14,32 +14,43 @@ public class OrganisationAsset {
     private static NetworkManager networkManager = ClientApp.networkManager;
 
     // GUI OrganisationAsset Constructor
+
+    /**
+     * Organisation Asset constructor with given organisational unit ID, asset type, and quantity
+     * @param organisationUnitID organisational unit ID belonging to organisation unit which owns the asset
+     * @param assetType asset type that the organisation unit owns
+     * @param quantity quantity of assets that the organisational unit owns
+     */
     public OrganisationAsset(int organisationUnitID, String assetType, int quantity){
         this.organisationUnitID = organisationUnitID;
         this.assetType = assetType;
         this.quantity = quantity;
     }
 
+    /**
+     *
+     */
     public OrganisationAsset() {
-
+            this.organisationUnitID = 0;
+            this.assetType = "";
+            this.quantity = 0;
     }
 
-    // JDBC Constructor
-//    public OrganisationAsset(int OrganisationAssetID, Connection connection){
-//        // Get OrganisationAsset data from database ...
-//
-//        // Get fields from database ... fill this in
-//
-//
-//        // result set rs ...
-//        int assetTypeId = rs.getInt("AssetTypeID");
-//        assetType = new AssetType(assetTypeId);
-//    }
 
     // Get Methods below ...
     public static String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsQuantity", new String[] {String.valueOf(orgID)});
+        Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsAndQuantity", new String[] {String.valueOf(orgID)});
         return response.getDoubleString();
+    }
+
+    public static void updateOrganisationalUnitAssetQuantity(int orgAssetID, int assetQuantity){
+        try{
+            NetworkManager.SendRequest("JDBCOrganisationalAsset", "updateOrganisationAssetsQuantity",
+                    new String[] {String.valueOf(orgAssetID), String.valueOf(assetQuantity)});
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -67,6 +78,8 @@ public class OrganisationAsset {
     public int getQuantity() {
         return quantity;
     }
+
+
 
     /**
      * Gets the quantity of the given organisation asset

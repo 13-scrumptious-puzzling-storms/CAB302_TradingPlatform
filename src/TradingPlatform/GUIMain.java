@@ -103,7 +103,7 @@ public class GUIMain extends JFrame {
         JTabbedPane pagePane = new JTabbedPane();
 
         JPanel homeTab = new JPanel();
-        new GUIHome(homeTab);
+        new GUIHome(homeTab, user);
 
         JPanel orgHomeTab = new JPanel();
         new GUIOrgHome(orgHomeTab, user);
@@ -169,6 +169,7 @@ public class GUIMain extends JFrame {
     }
 
     public static JScrollPane tablePane(JTable table){
+
         JScrollPane tradesScrollTable = new JScrollPane(table);
         tradesScrollTable.setBackground(cust3);
         tradesScrollTable.getVerticalScrollBar().setBackground(cust2);
@@ -181,13 +182,17 @@ public class GUIMain extends JFrame {
         return tradesScrollTable;
     }
 
-    public static JTable constructTable(String[][] data, String[] headingType){
+    public static DefaultTableModel constructTable(String[][] data, String[] headingType){
         DefaultTableModel model = new DefaultTableModel(data, headingType);
+        return model;
+    }
+
+    public static JTable tableCreator (DefaultTableModel model){
         JTable table = new JTable(model);
         JTableHeader anHeader = table.getTableHeader();
         anHeader.setBackground(cust1);
-
         return table;
     }
+
 
 }
