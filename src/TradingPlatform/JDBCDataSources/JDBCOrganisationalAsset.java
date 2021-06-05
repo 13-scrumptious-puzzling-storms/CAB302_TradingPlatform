@@ -1,11 +1,16 @@
 package TradingPlatform.JDBCDataSources;
 
+import TradingPlatform.Interfaces.OrganisationalAssetSource;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class JDBCOrganisationalAsset {
+/**
+ * Retrieves requested information from the OrganisationAsset table of the database
+ */
+public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
     private static final String INSERT_ORGANISATIONASSET = "INSERT INTO OrganisationAsset (organisationUnitID, assetTypeID, Quantity) VALUES (?, ?, ?);";
     private static final String UPDATE_ORGANISATIONASSET_QUANTITY = "UPDATE OrganisationAsset SET Quantity=? WHERE  OrganisationAssetID=?;";
     private static final String GET_ORGANISATIONASSET_ORGUNITID = "SELECT organisationUnitID FROM OrganisationAsset WHERE OrganisationAssetID=?";
@@ -19,14 +24,14 @@ public class JDBCOrganisationalAsset {
             "WHERE o.organisationUnitId = ?";
     private static final String GET_ORGANISATIONASSET_ID = "SELECT OrganisationAssetID FROM OrganisationAsset WHERE organisationUnitID=? and assetTypeID=?";
 
-
+    //table column headings
     private static final String ORGID_HEADING = "organisationUnitID";
     private static final String ASSETTYPEID_HEADING = "assetTypeID";
     private static final String QUANTITY_HEADING = "Quantity";
     private static final String NAME_HEADING = "name";
     private static final String ASSET_ID_HEADING = "assetTypeID";
 
-
+    //Prepared statements
     private PreparedStatement addOrganisationAsset;
     private PreparedStatement updateOrganisationAssetQuantity;
     private PreparedStatement getOrganisationAssetOrgUnitID;
@@ -36,10 +41,13 @@ public class JDBCOrganisationalAsset {
     private PreparedStatement getOrgAssetsTableCount;
     private PreparedStatement getOrgAssetId;
 
-
+    //connections instance
     private Connection connection;
 
-
+    /**
+     * Creates instance of the prepared statements for the connection to the database
+     * @param connection
+     */
     public JDBCOrganisationalAsset(Connection connection){
         this.connection = connection;
 
@@ -58,6 +66,11 @@ public class JDBCOrganisationalAsset {
         }
     }
 
+    /**
+     * Retrieves organisationalUnitID of the organisationAsset
+     * @param orgAssetId organisationAssetID
+     * @return organisationalUnitID
+     */
     public int getOrganisationAssetOrgUnitID(int orgAssetId) {
         try {
             getOrganisationAssetOrgUnitID.clearParameters();
@@ -74,6 +87,11 @@ public class JDBCOrganisationalAsset {
         return -1;
     }
 
+    /**
+     * Retrieves quantity of the organisationAsset
+     * @param orgAssetId organisationAsset ID
+     * @return quantity of the organisationAssetID
+     */
     public int getOrganisationAssetQuantity(int orgAssetId) {
         try {
             getOrganisationAssetQuantity.clearParameters();
@@ -90,6 +108,12 @@ public class JDBCOrganisationalAsset {
         return -1;
     }
 
+    /**
+     * Retrieves the asset ID that belongs to
+     * the given organisationAssetID
+     * @param orgAssetId organisationAsset ID
+     * @return asset ID of the given organisationAssetID
+     */
     public int getOrganisationAssetTypeID(int orgAssetId) {
         try {
             getOrganisationAssetTypeID.clearParameters();
@@ -106,6 +130,11 @@ public class JDBCOrganisationalAsset {
         return -1;
     }
 
+    /**
+     * Retrieves the organisation's asset names and quantity
+     * @param orgUnitId organisationUnit ID
+     * @return organisationUnits assets and quantities in double string array
+     */
     public String[][] getOrganisationAssetsAndQuantity(int orgUnitId){
         try {
             getOrganisationAssetsTable.clearParameters();
@@ -140,6 +169,13 @@ public class JDBCOrganisationalAsset {
         return null;
     }
 
+    /**
+     * Adds new organisationAsset to the database using organisationUnitID, assetTypeId, and quantity
+     * @param orgUnitID organisationUnit ID to add organisationAsset to
+     * @param assetTypeID Asset type ID of asset that is to be added
+     * @param quantity quantity to add organisationAsset to
+     * @return ID of the organisation asset
+     */
     public int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity) {
         try {
             addOrganisationAsset.clearParameters();
@@ -166,6 +202,11 @@ public class JDBCOrganisationalAsset {
         return -1;
     }
 
+    /**
+     * Updates the quantity of an organisation asset with given ID
+     * @param orgAssetID organisationAsset ID to be updated
+     * @param quantity new quantity of the organisationAsset
+     */
     public void UpdateOrganisationAssetQuantity(int orgAssetID, int quantity){
         try{
             updateOrganisationAssetQuantity.clearParameters();
@@ -177,7 +218,13 @@ public class JDBCOrganisationalAsset {
         }
     }
 
-    // Gets the orgAssetId for a given org and asset type, or -1 on error
+
+    /**
+     * Returns the organisationAssetID for a given organisationalUnit and AssetType
+     * @param orgUnitId organisationUnit ID
+     * @param assetTypeId assetTypeID
+     * @return organisationAssetID (-1 on error)
+     */
     public int getOrganisationAssetId(int orgUnitId, int assetTypeId){
         int assetId = -1;
         try {

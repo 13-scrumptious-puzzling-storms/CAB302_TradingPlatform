@@ -35,25 +35,25 @@ public class GUIOrgHome{
     JSplitPane tablesPane;
 
     //buy table variables
-    DefaultTableModel buyTableModel;
+    public DefaultTableModel buyTableModel;
     JScrollPane TradesPaneBuy;
-    JTable buyTable;
+    public JTable buyTable;
     String[] tradeIDBuy;
     String[][] buyData;
 
     //sell table variables
-    DefaultTableModel sellTableModel;
+    public DefaultTableModel sellTableModel;
     JScrollPane TradesPaneSell;
-    JTable sellTable;
+    public JTable sellTable;
     String[] tradeIDSell;
     String[][] sellData;
 
     //Credits label
-    JLabel LabelCredits;
+    public JLabel LabelCredits;
 
     //asset table variables
-    DefaultTableModel assetTableModel;
-    JTable assetTable;
+    public DefaultTableModel assetTableModel;
+    public JTable assetTable;
     JScrollPane Assets;
     String[] OrgAssetID;
     String[][] AssetItemQuantity;
@@ -372,7 +372,7 @@ public class GUIOrgHome{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private DefaultTableModel constructBuyTableModel() throws IOException, ClassNotFoundException {
+    public DefaultTableModel constructBuyTableModel() throws IOException, ClassNotFoundException {
         //Retrieve trades buy table for organisational unit
         String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
         int buySize = tradesBuy.length;
@@ -404,7 +404,7 @@ public class GUIOrgHome{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private DefaultTableModel constructSellTableModel() throws IOException, ClassNotFoundException {
+    public DefaultTableModel constructSellTableModel() throws IOException, ClassNotFoundException {
         //Retrieve trades sell table for organisational unit
         String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
         int sellSize = tradesSell.length;
@@ -437,7 +437,7 @@ public class GUIOrgHome{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private DefaultTableModel constructAssetTableModel() throws IOException, ClassNotFoundException {
+    public DefaultTableModel constructAssetTableModel() throws IOException, ClassNotFoundException {
         //JPanel AssetsPanel = new JPanel();
         String[][] OrgAssets = OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID);
         int size = OrgAssets.length;

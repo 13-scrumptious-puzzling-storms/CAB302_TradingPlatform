@@ -16,15 +16,15 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private static final String GET_ORGANISATIONALUNIT = "SELECT * FROM OrganisationUnit WHERE OrganisationUnitID=?";
     private static final String GET_NEW_ORGANISATIONALUNIT_ID = "SELECT * FROM OrganisationUnit WHERE name=?";
     private static final String ORGID_HEADING = "OrganisationUnitID";
-
     private static final String GET_ALL_ORGANISATIONALUNIT_NAMES = "SELECT OrganisationUnitID, name, credits FROM OrganisationUnit";
     private static final String GET_NUM_ORGANISATIONALUNITS_WITH_NAME = "SELECT COUNT(*) FROM OrganisationUnit where name=?";
 
+    //table column headings
     private static final String NAME_HEADING = "name";
     private static final String CREDITS_HEADING = "credits";
     private static final String ID_HEADING = "OrganisationUnitID";
 
-
+    //prepared statements
     private PreparedStatement addOrganisationalUnit;
     private PreparedStatement updateOrganisationalUnitCredits;
     private PreparedStatement getOrganisationalUnitName;
@@ -34,11 +34,13 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     private PreparedStatement getAllOrganisationUnitNames;
     private PreparedStatement getNumOrganisationalUnitsWithName;
 
-
-
+    //instance of the connection to the database
     private Connection connection;
 
-
+    /**
+     * Creates instance of the prepared statements for the connection to the database
+     * @param connection
+     */
     public JDBCOrganisationalUnit(Connection connection){
         this.connection = connection;
 
@@ -57,6 +59,13 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         }
     }
 
+    /**
+     * Creates new organisationalUnit using organisation name and number of credits
+     * returns organisationalUnit ID
+     * @param orgName organisation's name
+     * @param orgCredits number of credits belonging to the organisational unit
+     * @return organisationalUnit ID
+     */
     public int addOrganisationalUnit(String orgName, int orgCredits) {
         try {
             // Check that there are no orgUnits with the given name
@@ -88,6 +97,11 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return -1;
     }
 
+    /**
+     * retrieves name of organisational unit with the given ID
+     * @param orgUnitId organisationalUnit ID
+     * @return name of the organisation
+     */
     public String getOrganisationalUnitName(int orgUnitId) {
         try {
             getOrganisationalUnitName.clearParameters();
@@ -104,6 +118,11 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return null;
     }
 
+    /**
+     * retrieves number of credits belonging to the organisational unit
+     * @param OrgUnitId organisationalUnit ID
+     * @return number of credits belonging to the organisational unit
+     */
     public int getOrganisationalUnitCredits(int OrgUnitId) {
         try {
             getOrganisationalUnitCredits.clearParameters();
@@ -120,6 +139,12 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return -1;
     }
 
+    /**
+     * retrieves constructed organisational unit with all details given
+     * the organisationalUnit ID
+     * @param orgUnitId organisationalUnit ID
+     * @return OrganisationalUnit of the given organisationalUnitID
+     */
     public OrganisationalUnit getOrganisationalUnit(int orgUnitId) {
         try {
             getOrganisationalUnit.clearParameters();
@@ -141,6 +166,12 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return null;
     }
 
+    /**
+     * updates the number of credits of a given organisational unit
+     * @param OrgUnitID organisationalUnit ID
+     * @param updatedCredits new number of credits owned by given organisationalUnit
+     * @return returns true if successful, false otherwise
+     */
     public Boolean UpdateOrganisationalUnitCredits(int OrgUnitID, int updatedCredits){
         try{
             updateOrganisationalUnitCredits.clearParameters();
@@ -154,8 +185,12 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         }
     }
 
-    // Returns the names of the organisation units, as well as their id's
-    // This is for the IT Admin when editing org Units / adding users
+
+    /**
+     * Returns the names and ID of the organisationalUnit. For IT admin when editing
+     * users and organisationalUnits
+     * @return double array of organisationalUnit names and IDs
+     */
     public String[][] getAllOrganisationalUnits(){
         ArrayList<String[]> orgNames = new ArrayList<>();
         try {
@@ -174,49 +209,5 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
         return orgNames.toArray(new String[orgNames.size()][]);
     }
 
-
-    //WHAT TO DO WITH THESE!?
-    @Override
-    public int assignID() {
-        return 0;
-    }
-
-    @Override
-    public int getID() {
-        return 0;
-    }
-
-    @Override
-    public void setId(int id) {
-    }
-
-    @Override
-    public void setName(String name) {
-    }
-
-    @Override
-    public void setCredits(int credits) {
-
-    }
-
-    @Override
-    public void addAsset(int organisationID, Object asset, int quantity) {
-
-    }
-
-    @Override
-    public HashMap getAssets(int organisationID) {
-        return null;
-    }
-
-    @Override
-    public HashMap getCurrentBuyOrders(int organisationID) {
-        return null;
-    }
-
-    @Override
-    public HashMap getCurrentSellOrders(int organisationID) {
-        return null;
-    }
 }
 

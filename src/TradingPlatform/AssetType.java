@@ -78,6 +78,7 @@ public class AssetType {
     }
 
     /**
+     * retrieves the assetID from the database if does not already exist in the instance
      * @return The ID of the asset
      */
     public int getAssetId() {
@@ -95,7 +96,7 @@ public class AssetType {
     }
 
     /**
-     * @return the name of the asset
+     * @return the name of the asset from the instance
      */
     public String getAssetName() {
         return assetName;
