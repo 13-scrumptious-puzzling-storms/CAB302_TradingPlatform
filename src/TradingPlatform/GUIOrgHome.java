@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import static TradingPlatform.GUIMain.*;
 
 /**
@@ -73,6 +76,19 @@ public class GUIOrgHome{
         this.orgName = organisationalUnit.getName(organisationalUnitID);
         this.credits = organisationalUnit.getCredits(organisationalUnitID);
         orgHomePanel(OrgHomeTab);
+
+        // Create a thread to update the table's data every 5 seconds or so
+        var exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleWithFixedDelay(this::RefreshContents, 5, 5, TimeUnit.SECONDS);
+    }
+
+    private void RefreshContents(){
+        try {
+            assetTableModel = constructAssetTableModel();
+            assetTable.setModel(assetTableModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
