@@ -77,13 +77,16 @@ public class ServerHandle implements Runnable, ThreadCompleteListener {
     /**
      * Sets the stopFlag to true, ending the while loop in getRequests()
      */
-    public static void end() { stopFlag = true; }
+    public static void end() {
+        stopFlag = true;
+        System.out.println("SHUTDOWN: ServerHandle wrapping up.");
+    }
 
     public static Boolean threadsOpen() {
         if (numThreadsOpen != 0) {
             return true;
         }
-
+        System.out.println("SHUTDOWN: All threads have closed.");
         return false;
     }
 
