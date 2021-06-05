@@ -17,13 +17,26 @@ import java.sql.Connection;
  * back a reply to the Client if the request requires so.
  * Runs on a separate thread.
  */
-public class ServerSend implements Runnable {
-    private static Socket socket;
-    public static volatile Boolean isWorking = false;
+public class ServerSend extends NotifyingThread {
+    public volatile Boolean isWorking;
+
+    private Socket socket;
+    private String className;
+    private String methodName;
+    private String[] arguments;
 
     @Override
-    public void run() {
+    public void doRun() {
+        try { handleRequest(socket, className, methodName, arguments); }
+        catch (IOException e) { e.printStackTrace(); }
+    }
 
+    public ServerSend(Socket _socket, String _className, String _methodName, String[] _arguments) {
+        isWorking = false;
+        socket = _socket;
+        className = _className;
+        methodName = _methodName;
+        arguments = _arguments;
     }
 
     /**
@@ -42,7 +55,7 @@ public class ServerSend implements Runnable {
      * @param clientSocket the Client's socket.
      * @throws IOException if Client's socket is invalid.
      */
-    public static void handleRequest(String className, String methodName, String[] arguments, Socket clientSocket) throws IOException {
+    public void handleRequest(Socket clientSocket, String className, String methodName, String[] arguments) throws IOException {
         isWorking = true;
         Connection connection = DBConnection.getInstance();
         System.out.println("Connection to database successful!");
@@ -284,14 +297,14 @@ public class ServerSend implements Runnable {
      * @param request the prepared reply to send to the client.
      * @throws IOException if Client's socket is invalid.
      */
-    public static void Transmit(Request request) throws IOException {
+    public void Transmit(Request request) throws IOException {
         System.out.println("Request required response. Sending response ...");
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()))) {
             objectOutputStream.writeObject(request);
             objectOutputStream.flush();
         }
         System.out.println("Connection closed.");
-        isWorking = true;
+        isWorking = false;
     }
 
 }

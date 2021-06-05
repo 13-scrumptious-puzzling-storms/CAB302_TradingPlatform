@@ -4,6 +4,8 @@ import TradingPlatform.Request;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A part of the Server side network protocol.
@@ -11,14 +13,15 @@ import java.net.Socket;
  * these requests to a separate thread managed by ServerSend.
  * Runs on a separate thread.
  */
-public class ServerHandle implements Runnable {
+public class ServerHandle implements Runnable, ThreadCompleteListener {
     private static final int PORT = 2197;
     private static final int BACKLOG = 25;
 
-    private static volatile Boolean stopFlag = false;
+    public static final Object numThreadsLock = new Object();
+    private static volatile int numThreadsOpen;
 
-    private static ServerSend serverSendRunnable;
-    private static Socket socket;
+    private static volatile Boolean stopFlag = false;
+    public static volatile Socket socket;
 
     /**
      * run() method required for a class implementing Runnable.
@@ -28,11 +31,13 @@ public class ServerHandle implements Runnable {
     @Override
     public void run() {
         try {
-            serverSendRunnable = ServerApp.serverSendRunnable;
+            numThreadsOpen = 0;
             getRequests();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        while (numThreadsOpen != 0) ;
     }
 
     /**
@@ -43,10 +48,11 @@ public class ServerHandle implements Runnable {
      * @throws IOException if Client's socket is invalid.
      * @throws ClassNotFoundException if fails to identify a Request object.
      */
-    private static void getRequests() throws IOException, ClassNotFoundException {
+    private void getRequests() throws IOException, ClassNotFoundException {
         try (ServerSocket serverSocket = new ServerSocket(PORT, BACKLOG);){
             System.out.println("Awaiting connections on port " + PORT + " ...");
-            // Staying around for multiple connections
+
+            // Start the Client reply component of the network protocol & Staying around for multiple connections.
             while (!stopFlag) {
                 socket = serverSocket.accept();
                 System.out.println("\nIncoming connection from " + socket.getInetAddress() + ":" + socket.getPort());
@@ -57,8 +63,13 @@ public class ServerHandle implements Runnable {
                     System.out.println("Connection does not request a response. Closing socket.\nConnection Closed.");
                     objectInputStream.close();
                 }
-                // Forward unpacked request to ServerSend
-                serverSendRunnable.handleRequest(clientRequest.getClassName(), clientRequest.getMethodName(), clientRequest.getArguments(), socket);
+                // Forward unpacked request to a new ServerSend
+                NotifyingThread threadSend = new ServerSend(socket, clientRequest.getClassName(), clientRequest.getMethodName(), clientRequest.getArguments());
+                threadSend.addListener(this);
+                synchronized (numThreadsLock) {
+                    numThreadsOpen += 1;
+                }
+                threadSend.start();
             }
         }
     }
@@ -67,4 +78,19 @@ public class ServerHandle implements Runnable {
      * Sets the stopFlag to true, ending the while loop in getRequests()
      */
     public static void end() { stopFlag = true; }
+
+    public static Boolean threadsOpen() {
+        if (numThreadsOpen != 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void notifyOfThreadComplete(Thread thread) {
+        synchronized (numThreadsLock) {
+            numThreadsOpen -= 1;
+        }
+    }
 }

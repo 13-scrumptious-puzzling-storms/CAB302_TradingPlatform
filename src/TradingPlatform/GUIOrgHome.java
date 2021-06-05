@@ -185,17 +185,14 @@ public class GUIOrgHome{
                     JOptionPane.showMessageDialog(null, "Please select one row from the 'Buy Orders' table to cancel order.");
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "selected row is: " + String.valueOf(selectedRow) + "with tradeID" + String.valueOf(tradeIDBuy[selectedRow]));
                     int result = JOptionPane.showConfirmDialog(null,"Cancel trade buy order of "+buyData[selectedRow][1]+" "+buyData[selectedRow][0]+"?", "Cancel trade",
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
-                        System.out.print("Trade cancelled");
                         try {
                             TradeManager.setCancel(Integer.valueOf(tradeIDBuy[selectedRow])); //cancel order
 
                             //restore credits (add remaining quantity*price)
-                            System.out.println("buyData" + Arrays.deepToString(buyData));
                             int newCredits = credits + Integer.valueOf(buyData[selectedRow][2])*Integer.valueOf(buyData[selectedRow][3]);
                             OrganisationalUnit.UpdateOrganisationalUnitCredits(organisationalUnitID, newCredits);
 
@@ -260,9 +257,7 @@ public class GUIOrgHome{
                             //Calculate new Asset Quantity
                             //get current asset quantity for organisationAssetID
                             int oldQuantity = OrganisationAsset.getQuantity(orgAssetId);
-                            System.out.println("This is old quantity: " + Integer.valueOf(oldQuantity));
                             int newQuantity = oldQuantity + Integer.valueOf(sellData[selectedRow][2]); //add remaining quantity
-                            System.out.println("This is new quantity: " + Integer.valueOf(Integer.valueOf(sellData[selectedRow][2])));
 
                             //restore the remaining quantity of the asset
                             OrganisationAsset.updateOrganisationalUnitAssetQuantity(orgAssetId, newQuantity);
