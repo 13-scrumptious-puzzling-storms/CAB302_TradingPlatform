@@ -157,6 +157,7 @@ public class GUIMain extends JFrame {
 
         pagePane.setForeground(Color.BLACK);
         pagePane.setBackground(cust3);
+
         homeTab.setBackground(DARK_JUNGLE_GREEN);
         homeTab.setForeground(Color.LIGHT_GRAY);
 

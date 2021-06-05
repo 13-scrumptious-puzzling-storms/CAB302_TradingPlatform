@@ -124,7 +124,7 @@ public class OrganisationAsset {
      * @param quantity number of assets to be added
      * @return organisationAssetID
      */
-    public int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity){
+    public static int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity){
         try {
             Request response = NetworkManager.GetResponse("JDBCOrganisationalAsset", "addOrganisationAsset",
                     new String[]{ Integer.toString(orgUnitID), Integer.toString(assetTypeID), Integer.toString(quantity) });

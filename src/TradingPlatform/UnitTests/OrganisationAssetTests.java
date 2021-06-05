@@ -1,21 +1,25 @@
 package TradingPlatform.UnitTests;
 
+import TradingPlatform.ConnectToTestDB;
 import TradingPlatform.JDBCDataSources.JDBCOrganisationalAsset;
 import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.OrganisationAsset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
 public class OrganisationAssetTests {
 
-
     static Connection connection;
 
     @BeforeAll
     public static void init(){
+        ConnectToTestDB.NewTestConnection();
         connection = DBConnection.getInstance();
     }
 

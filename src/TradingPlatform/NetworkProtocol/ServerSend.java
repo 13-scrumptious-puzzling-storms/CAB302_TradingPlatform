@@ -4,12 +4,15 @@ import TradingPlatform.AccountType;
 import TradingPlatform.JDBCDataSources.*;
 import TradingPlatform.OrganisationalUnit;
 import TradingPlatform.Request;
+import TradingPlatform.TradeReconciliation.TradeOrder;
 
+import javax.xml.transform.Result;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 /**
  * A part of the Server side network protocol.
@@ -120,7 +123,8 @@ public class ServerSend extends NotifyingThread {
                 switch (methodName) {
                     case "addOrganisationAsset": {
                         JDBCOrganisationalAsset DBInterface = new JDBCOrganisationalAsset(connection);
-                        DBInterface.addOrganisationAsset(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]));
+                        int response = DBInterface.addOrganisationAsset(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]));
+                        Transmit(new Request(className, methodName, new String[]{Integer.toString(response)}));
                         break;
                     }
                     case "getOrganisationAssetsAndQuantity": {
@@ -276,6 +280,32 @@ public class ServerSend extends NotifyingThread {
                     case "getRecentTradeDetails":{
                         JDBCTradeReconcileSource DBInterface = new JDBCTradeReconcileSource(connection);
                         String[][] response = (DBInterface.getRecentTradeDetails());
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    case "getCurrentSellOrdersPriceAndQuantityForAsset":{
+                        JDBCTradeReconcileSource DBInterface = new JDBCTradeReconcileSource(connection);
+                        ArrayList<TradeOrder> sellOrders = (DBInterface.getCurrentSellOrders(Integer.parseInt(arguments[0])));
+                        String[][] response = new String[sellOrders.size()][];
+                        for (int i = 0; i < sellOrders.size(); i++) {
+                            response[i] = new String[]{
+                                    Integer.toString(sellOrders.get(i).getPrice()),
+                                    Integer.toString(sellOrders.get(i).getQuantity())
+                            };
+                        }
+                        Transmit(new Request(className, methodName, response));
+                        break;
+                    }
+                    case "getCurrentBuyOrdersPriceAndQuantityForAsset":{
+                        JDBCTradeReconcileSource DBInterface = new JDBCTradeReconcileSource(connection);
+                        ArrayList<TradeOrder> sellOrders = (DBInterface.getCurrentBuyOrders(Integer.parseInt(arguments[0])));
+                        String[][] response = new String[sellOrders.size()][];
+                        for (int i = 0; i < sellOrders.size(); i++) {
+                            response[i] = new String[]{
+                                    Integer.toString(sellOrders.get(i).getPrice()),
+                                    Integer.toString(sellOrders.get(i).getQuantity())
+                            };
+                        }
                         Transmit(new Request(className, methodName, response));
                         break;
                     }
