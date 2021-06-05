@@ -42,22 +42,22 @@ class ButtonEditor extends DefaultCellEditor {
         return button;
     }
 
-    @Override
-    public Object getCellEditorValue() {
-        if (isPushed) {
-            //JOptionPane.showMessageDialog(button, label + ": Ouch!");
-            try {
-                GUIOrder order = new GUIOrder();
-                order.buyPopup();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        isPushed = false;
-        return label;
-    }
+//    @Override
+//    public Object getCellEditorValue() {
+//        if (isPushed) {
+//            //JOptionPane.showMessageDialog(button, label + ": Ouch!");
+//            try {
+//                GUIOrder order = new GUIOrder();
+//                order.buyPopup();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        isPushed = false;
+//        return label;
+//    }
 
     @Override
     public boolean stopCellEditing() {

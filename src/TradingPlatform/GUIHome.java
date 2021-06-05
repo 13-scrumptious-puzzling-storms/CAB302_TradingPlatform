@@ -14,7 +14,8 @@ public class GUIHome extends JFrame{
 
     public User user;
 
-    String TableHeading[] = {"Recent Trades","Price","Quantity"};
+    String TableOneHeading[] = {"Asset Name","Price","Quantity"};
+    String TableTwoHeading[] = {"Recent Trades","Price","Quantity"};
 
     public GUIHome(JPanel HomeTab, User user) throws IOException, ClassNotFoundException {
         homePanel(HomeTab);
@@ -31,13 +32,17 @@ public class GUIHome extends JFrame{
         buyButton.setPreferredSize(new Dimension(200, 100));
         buyButton.setMinimumSize(new Dimension(50, 50));
         buyButton.setBackground(cust1);
-        buyButton.addActionListener(e -> {
-            try {
-                buyActionListener(e);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
+        buyButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                // display buy popup
+                try {
+                    GUIOrder order = new GUIOrder(user);
+                    order.popup(false);
+                } catch (Exception m) {
+                    m.printStackTrace();
+                }
             }
         });
 
@@ -46,11 +51,23 @@ public class GUIHome extends JFrame{
         sellButton.setPreferredSize(new Dimension(200, 100));
         sellButton.setMinimumSize(new Dimension(50, 50));
         sellButton.setBackground(cust1);
-        buyButton.addActionListener(this::sellActionListener);
+        sellButton.addActionListener(e -> {
+            try {
+                ActionListener(true);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+        });
 
-        JScrollPane TradesPaneSell = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableHeading)));
-        TradesPaneSell.setPreferredSize(new Dimension(tabWidth, tabHeight));
-        TradesPaneSell.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
+        JScrollPane mostRecentTrades = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading)));
+        mostRecentTrades.setPreferredSize(new Dimension(tabWidth-tabWidth/100, 100));
+        mostRecentTrades.setMinimumSize(new Dimension(tabWidth/2, 50));
+
+        JScrollPane allRecentTrades = GUIMain.tablePane(tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableTwoHeading)));
+        allRecentTrades.setPreferredSize(new Dimension(tabWidth-tabWidth/100, tabHeight-100));
+        allRecentTrades.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
         position.weighty = 1;
         position.gridx = 0;
@@ -64,22 +81,23 @@ public class GUIHome extends JFrame{
         position.anchor = LINE_END;
         panel.add(sellButton, position);
 
-        position.insets = new Insets(50, 0, 0, 0);
+        position.insets = new Insets(20, 0, 0, 0);
         position.anchor = CENTER;
         position.gridx = 0;
         position.gridy = 2;
         position.gridwidth = 3;
-        panel.add(TradesPaneSell, position);
+        panel.add(mostRecentTrades, position);
+        position.insets = new Insets(0, 0, 0, 0);
+        position.gridwidth = 3;
+        position.gridy = 3;
+        panel.add(allRecentTrades, position);
 
         panel.setBackground(cust1);
     }
 
-    public void buyActionListener(ActionEvent e) throws IOException, ClassNotFoundException {
-        String event = e.getActionCommand();
-        if(event == "Buy Assets") {
-            GUIOrder order = new GUIOrder(user);
-            order.buyPopup();
-        }
+    public void ActionListener(Boolean isSell) throws IOException, ClassNotFoundException {
+       GUIOrder order = new GUIOrder(user);
+       order.popup(isSell);
     }
     public void sellActionListener(ActionEvent e){
 //        GUIOrder.sellPopup();

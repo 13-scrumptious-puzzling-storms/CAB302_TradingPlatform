@@ -4,16 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * OrganisationAssets stores an asset owned by each OrganisationalUnit and records unique ID for this pair
+ * OrganisationAssets stores an asset owned by each OrganisationalUnit
+ * and records unique ID for this pair. Makes request from the database
+ * regarding organisation asset information
  */
 public class OrganisationAsset {
     private int organisationAssetID;
-    private int organisationUnitID;
-    private String assetType;
-    private int quantity;
-    private static NetworkManager networkManager = ClientApp.networkManager;
-
-    // GUI OrganisationAsset Constructor
+    private final int organisationUnitID;
+    private final String assetType;
+    private final int quantity;
+    private static final NetworkManager networkManager = ClientApp.networkManager;
 
     /**
      * Organisation Asset constructor with given organisational unit ID, asset type, and quantity
@@ -28,7 +28,8 @@ public class OrganisationAsset {
     }
 
     /**
-     *
+     * Creates new empty instance of Organisational Asset to be filled with
+     * information from the database
      */
     public OrganisationAsset() {
             this.organisationUnitID = 0;
@@ -37,12 +38,30 @@ public class OrganisationAsset {
     }
 
 
-    // Get Methods below ...
-    public static String[][] getOrganisationalUnitAssetTable(int orgID) throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsAndQuantity", new String[] {String.valueOf(orgID)});
-        return response.getDoubleString();
+    /**
+     * Creates request to the database to retrieve contents of organisation's assets
+     * table - organisation's assets name and quantity
+     * @param orgID organisational unit ID
+     * @return Double string array containing organisation assset name and quantity
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static String[][] getOrganisationalUnitAssetTable(int orgID) {
+        try {
+            Request response = networkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetsAndQuantity", new String[]{String.valueOf(orgID)});
+            return response.getDoubleString();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
+    /**
+     * Creates request to the database to update the quantity of the organisation's assets
+     * @param orgAssetID organisationAsset ID
+     * @param assetQuantity new quantity to update the amount of assets the organisation owns
+     */
     public static void updateOrganisationalUnitAssetQuantity(int orgAssetID, int assetQuantity){
         try{
             NetworkManager.SendRequest("JDBCOrganisationalAsset", "updateOrganisationAssetsQuantity",
@@ -54,11 +73,13 @@ public class OrganisationAsset {
     }
 
 
-    public int getOrganisationAssetID() {
-        return organisationAssetID;
-    }
-
-    // Gets the orgAssetId for a given unit and asset type, or -1 on error or if the unit doesn't have any of that asset
+    /**
+     * Retrieves the organisationAssetID for a given organisation unit and asset type.
+     * @param orgUnit
+     * @param AssetType
+     * @return  organisationAssetID for given organisation unit and asset typ
+     *          (-1 on an error or if the organisation doesn't have any assets)
+     */
     public static int getOrganisationAssetID(OrganisationalUnit orgUnit, AssetType AssetType){
         try {
             Request response = NetworkManager.GetResponse("JDBCOrganisationalAsset", "getOrganisationAssetId",
@@ -71,14 +92,13 @@ public class OrganisationAsset {
         return -1;
     }
 
-    public int getOrganisationUnitID() {
-        return organisationUnitID;
-    }
-
+    /**
+     * Returns quantity of the instance of the organisationAsset
+     * @return quantity of the instance of the organisationAsset
+     */
     public int getQuantity() {
         return quantity;
     }
-
 
 
     /**
@@ -97,5 +117,4 @@ public class OrganisationAsset {
         return -1;
     }
 
-    //public AssetType getAssetType() { return assetType;  }
 }
