@@ -28,10 +28,12 @@ public class ServerApp {
         try {
             serverReconcileExecutor = Executors.newSingleThreadScheduledExecutor();
             serverReconcileExecutor.scheduleAtFixedRate(() -> {
-                Connection conn = DBConnection.getInstance();
-                // run the trade reconcile thread
-                if (conn != null)
-                    TradeReconcile.ReconcileCurrentTrades(conn);
+                if (DBConnection.getIsConnected()) {
+                    Connection conn = DBConnection.getInstance();
+                    // run the trade reconcile thread
+                    if (conn != null)
+                        TradeReconcile.ReconcileCurrentTrades(conn);
+                }
             }, 0, RECONCILE_TIMER, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
