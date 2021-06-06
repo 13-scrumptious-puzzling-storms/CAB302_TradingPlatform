@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Retrieves data from AssetType table in database
+ */
 public class JDBCAssetType {
     private static final String INSERT_ASSETTYPE = "INSERT INTO AssetType (name) VALUES (?);";
     private static final String GET_ASSETNAME = "SELECT name FROM AssetType WHERE assetTypeID=?";

@@ -88,6 +88,7 @@ public class GUIOrgHome{
             sellTable.setModel(sellTableModel);
             buyTableModel = constructBuyTableModel();
             buyTable.setModel(buyTableModel);
+            //Refresh Credits Label
             LabelCredits.setText("Credits: " + organisationalUnit.getCredits(organisationalUnitID));
         } catch (Exception e) {
             e.printStackTrace();

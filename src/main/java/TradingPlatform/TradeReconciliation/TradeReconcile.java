@@ -7,6 +7,10 @@ import java.net.ConnectException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+/**
+ * Trade reconcile is used to reconcile all valid trades. It updates org asset quantities, credits, and reconciles
+ * buy and sell orders that are compatible with each other.
+ */
 public class TradeReconcile {
     /**
      * This method reconciles all current outstanding trades
