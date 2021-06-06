@@ -16,10 +16,8 @@ public class ClientApp {
     public static Boolean loggedIn;
 
     /**
-     *
+     * Starts Client main method.
      * @param args
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
     public static void main(String[] args) {
         StartClient();
