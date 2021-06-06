@@ -3,7 +3,9 @@
     <property name="testBase" value="testFiles" />
 
     <property name="junitJar" value="lib/junit-jupiter-api-5.4.2.jar" />
+    <property name="junitEngineJar" value="lib/junit-jupiter-engine-5.4.2.jar" />
     <property name="junitPlatformJar" value="lib/junit-platform-commons-1.4.2.jar" />
+    <property name="junitPlatformEngineJar" value="lib/junit-platform-engine-1.4.2.jar" />
     <property name="opentestJar" value="lib/opentest4j-1.1.1.jar" />
     <property name="apiguardianJar" value="lib/apiguardian-api-1.0.0.jar" />
 
@@ -29,11 +31,12 @@
 
     <target name="compileTests" depends="compile" description="Compile tests">
         <!-- Compile unit test source -->
-        <javac srcdir="utest" classpath="${base}:${junitJar}:${junitPlatformJar}:${opentestJar}:${apiguardianJar}"
+        <javac srcdir="utest" classpath="${base}:${junitJar}:${junitPlatformJar}:${junitPlatformEngineJar}:${junitEngineJar}:${opentestJar}:${apiguardianJar}"
                destdir="utestclasses"
                includeantruntime="false">
             <include name="TradingPlatform/JDBCDataSources/*.java" />
             <include name="TradingPlatform/TradeReconciliation/*.java" />
+            <include name="TradingPlatform/NetworkProtocol/*.java" />
         </javac>
     </target>
 
@@ -41,7 +44,7 @@
         <junitlauncher printSummary="true" failureProperty="junit.failure">
             <classpath>
                 <pathelement path="utestclasses:${base}" />
-                <pathelement path="${junitJar}:${junitPlatformJar}:${opentestJar}:${apiguardianJar}" />
+                <pathelement path="${junitJar}:${junitEngineJar}:${junitPlatformJar}:${junitPlatformEngineJar}:${opentestJar}:${apiguardianJar}" />
             </classpath>
             <testclasses outputDir="${testBase}">
                 <fileset dir="utestclasses"/>

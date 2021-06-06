@@ -8,27 +8,28 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 
-public class ReconcileTests {
+public class TestReconcile {
     static Connection connection;
     static JDBCTradeReconcileSource reconcileSource;
 
     @BeforeEach
-    public void resetDb(){
+    public void init(){
         MockDatabaseFunctions.InitDb();
         connection = MockDatabaseFunctions.getConnection();
         reconcileSource = new JDBCTradeReconcileSource(connection);
     }
 
-    @AfterAll
-    public static void DeleteTestDb(){
-        MockDatabaseFunctions.CloseDatabase();
-    }
-
     @Test
-    public void TestReconcile(){
+    public void testReconcile(){
+        init();
         TradeReconcile.ReconcileCurrentTrades(connection);
         // Check that there are no reconcilable trades left
         var assetTypeIds = reconcileSource.getCurrentReconcilableAssetTypeIds();
         assert (assetTypeIds.size() == 0);
+    }
+
+    @AfterAll
+    public static void testAfterAll(){
+        MockDatabaseFunctions.CloseDatabase();
     }
 }
