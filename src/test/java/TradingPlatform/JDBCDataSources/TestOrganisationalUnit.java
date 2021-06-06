@@ -74,7 +74,7 @@ public class TestOrganisationalUnit {
 
     @Test
     public void testBaseCaseID1(){
-        ServerApp.main(null);
+        ServerApp.main(new String[] {"testMode"});
         org2 = new OrganisationalUnit(1);
         assert(org2.getID() == 1);
         assert(org2.getName().equals("ITAdmin"));
