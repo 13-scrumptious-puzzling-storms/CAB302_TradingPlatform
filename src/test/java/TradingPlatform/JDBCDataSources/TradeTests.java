@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 
 
-public class TestTrade {
+public class TradeTests {
     static Connection connection;
     private JDBCTradeDataSource trade;
 

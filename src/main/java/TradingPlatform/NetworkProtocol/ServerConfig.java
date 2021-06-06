@@ -11,7 +11,7 @@ import java.io.*;
 public class ServerConfig {
     private static final int PROP_FILE_LINES = 4;
     private static final String GET_DEFAULT_PROPS_FILE = "./default_db.txt";
-    private static final String DEFAULT_PROPS_FILE = "./db.props";
+    private static final String TEST_PROPS_FILE = "./db_testdb.props";
 
     public static Boolean defaultPropsExists = false;
 
@@ -164,6 +164,18 @@ public class ServerConfig {
         try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(propsFile))) {
             bufferedWriter.write(propsFileData);
         }
+    }
+
+    public static void testMode() {
+        setPropsFile(TEST_PROPS_FILE);
+        setPropsURL("sqlite:testdb.db");
+        setPropsSchema("");
+        setPropsUser("");
+        setPropsPass("");
+        try { writePropsFile(); }
+        catch (IOException e) { e.printStackTrace(); }
+        DBConnection.setPropsFile(getPropsFile().toString());
+        DBConnection.getInstance();
     }
 
     /**

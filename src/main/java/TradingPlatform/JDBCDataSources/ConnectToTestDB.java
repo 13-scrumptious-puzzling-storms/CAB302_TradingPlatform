@@ -18,9 +18,7 @@ public class ConnectToTestDB {
     public static void NewTestConnection() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(TEST_PROPS_FILE))) {
             bufferedWriter.write("jdbc.url=jdbc:sqlite:testdb.db\njdbc.schema=\njdbc.username=\njdbc.password=");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { }
         MockDatabaseFunctions.InitDb();
         DBConnection.setPropsFile(TEST_PROPS_FILE);
     }
