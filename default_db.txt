@@ -1,1 +1,1 @@
-C:\Users\bella\Documents\BellaCloud\Uni\Year 3\CAB302\CAB302_2\db_SPSTradingdb.props
+C:\Users\liamf\Documents\Personal\GitHub\CAB302_TradingPlatform\db_SPSTradingdb.props

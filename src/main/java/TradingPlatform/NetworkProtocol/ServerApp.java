@@ -25,7 +25,7 @@ public class ServerApp {
      * be executed in testMode (if args[0] == "testMode").
      */
     public static void main(String[] args) {
-        if (args[0] == "testMode") {
+        if (args.length > 0 && args[0] == "testMode") {
             StartServer(true);
         } else {
             StartServer(false);
