@@ -1,9 +1,6 @@
 package TradingPlatform.JDBCDataSources;
 
-import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.OrganisationalUnit;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
