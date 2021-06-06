@@ -32,10 +32,8 @@ public class GUIHome extends JFrame{
      * GUIHome constructor, adds the home panel to the home tab panel
      * @param HomeTab A JPanel which to add Home contents in
      * @param user A User that belongs to the organisational unit
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public GUIHome(JPanel HomeTab, User user) throws IOException, ClassNotFoundException {
+    public GUIHome(JPanel HomeTab, User user)  {
         homePanel(HomeTab);
         this.user = user;
 
@@ -47,10 +45,8 @@ public class GUIHome extends JFrame{
     /**
      * Constructs components and adds them into the JPanel for the Home tab.
      * @param panel A JPanel which to add Home contents in
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public void homePanel(JPanel panel) throws IOException, ClassNotFoundException {
+    public void homePanel(JPanel panel)  {
 
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
@@ -61,11 +57,7 @@ public class GUIHome extends JFrame{
         buyButton.setMinimumSize(new Dimension(50, 50));
         buyButton.setBackground(cust1);
         buyButton.addActionListener(e -> {
-            try {
-                ActionListener(false);
-            } catch (IOException | ClassNotFoundException ioException) {
-                ioException.printStackTrace();
-            }
+            ActionListener(false);
         });
 
         JButton sellButton = new JButton("Sell Assets");
@@ -74,11 +66,7 @@ public class GUIHome extends JFrame{
         sellButton.setMinimumSize(new Dimension(50, 50));
         sellButton.setBackground(cust1);
         sellButton.addActionListener(e -> {
-            try {
-                ActionListener(true);
-            } catch (IOException | ClassNotFoundException ioException) {
-                ioException.printStackTrace();
-            }
+            ActionListener(true);
         });
 
         mostRecentTradesTable = tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading));
@@ -135,10 +123,8 @@ public class GUIHome extends JFrame{
     /**
      * Calls the GUIOrder buy or sell order depending on if isSell is true or false
      * @param isSell A Boolean determining if the order is a Sell (true) or Buy (false)
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public void ActionListener(Boolean isSell) throws IOException, ClassNotFoundException {
+    public void ActionListener(Boolean isSell) {
        GUIOrder order = new GUIOrder(user);
        order.popup(isSell);
     }

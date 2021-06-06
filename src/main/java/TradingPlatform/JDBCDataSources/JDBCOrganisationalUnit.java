@@ -42,7 +42,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
     /**
      * Creates instance of the prepared statements for the connection to the database
-     * @param connection
+     * @param connection connection instance to the database
      */
     public JDBCOrganisationalUnit(Connection connection){
         this.connection = connection;
@@ -66,9 +66,9 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     /**
      * Creates new organisationalUnit using organisation name and number of credits
      * returns organisationalUnit ID
-     * @param orgName organisation's name
-     * @param orgCredits number of credits belonging to the organisational unit
-     * @return organisationalUnit ID
+     * @param orgName organisation's name - valid String orgName
+     * @param orgCredits number of credits belonging to the organisational unit - valid int (from zero onwards)
+     * @return organisationalUnit ID - valid int (from one onwards)
      */
     public int addOrganisationalUnit(String orgName, int orgCredits) {
         try {
@@ -96,8 +96,8 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
     /**
      * retrieves name of organisational unit with the given ID
-     * @param orgUnitId organisationalUnit ID
-     * @return name of the organisation
+     * @param orgUnitId organisationalUnit ID - valid int (from one onwards)
+     * @return name of the organisation in a String
      */
     public String getOrganisationalUnitName(int orgUnitId) {
         try {
@@ -117,8 +117,8 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
     /**
      * retrieves number of credits belonging to the organisational unit
-     * @param OrgUnitId organisationalUnit ID
-     * @return number of credits belonging to the organisational unit
+     * @param OrgUnitId organisationalUnit ID - valid int (from one onwards)
+     * @return number of credits belonging to the organisational unit - valid int (from zero onwards)
      */
     public int getOrganisationalUnitCredits(int OrgUnitId) {
         try {
@@ -139,7 +139,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     /**
      * retrieves constructed organisational unit with all details given
      * the organisationalUnit ID
-     * @param orgUnitId organisationalUnit ID
+     * @param orgUnitId organisationalUnit ID - valid int (from one onwards)
      * @return OrganisationalUnit of the given organisationalUnitID
      */
     public OrganisationalUnit getOrganisationalUnit(int orgUnitId) {
@@ -165,8 +165,8 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
 
     /**
      * updates the number of credits of a given organisational unit
-     * @param OrgUnitID organisationalUnit ID
-     * @param updatedCredits new number of credits owned by given organisationalUnit
+     * @param OrgUnitID organisationalUnit ID - valid int (from one onwards)
+     * @param updatedCredits new number of credits owned by given organisationalUnit - valid int (from zero onwards)
      * @return returns true if successful, false otherwise
      */
     public Boolean UpdateOrganisationalUnitCredits(int OrgUnitID, int updatedCredits){
@@ -191,7 +191,7 @@ public class JDBCOrganisationalUnit implements OrganisationalUnitSource {
     /**
      * Returns the names and ID of the organisationalUnit. For IT admin when editing
      * users and organisationalUnits
-     * @return double array of organisationalUnit names and IDs
+     * @return valid double array of organisationalUnit names and IDs
      */
     public String[][] getAllOrganisationalUnits(){
         ArrayList<String[]> orgNames = new ArrayList<>();

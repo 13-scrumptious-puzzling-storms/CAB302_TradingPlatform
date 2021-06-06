@@ -136,14 +136,14 @@ public class JDBCTradeDataSource implements TradeDataSource {
      * @return A String of the price as either "sell" or "buy"
      */
     @Override
-    public String GetType(int tradeId) {
+    public String getType(int tradeId) {
         try {
             getType.clearParameters();
             getType.setInt(1, tradeId);
             ResultSet rs = getType.executeQuery();
 
             if (rs.next()) {
-                Boolean tempType = rs.getBoolean("isSellOrder");
+                boolean tempType = Boolean.parseBoolean(rs.getString(1));
                 String type;
                 if(tempType == true){
                     type = "sell";

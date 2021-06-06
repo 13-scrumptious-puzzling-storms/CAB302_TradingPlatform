@@ -43,8 +43,6 @@ public class OrganisationAsset {
      * table - organisation's assets name and quantity
      * @param orgID organisational unit ID
      * @return Double string array containing organisation assset name and quantity
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
     public static String[][] getOrganisationalUnitAssetTable(int orgID) {
         try {

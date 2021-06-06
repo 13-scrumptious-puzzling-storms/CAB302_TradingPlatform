@@ -44,10 +44,8 @@ public class GUIMain extends JFrame {
     /**
      * Creates the GUI, and calls other GUI classes to add them to the main JTabbedPane
      * @param user The current User
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public GUIMain(User user) throws IOException, ClassNotFoundException {
+    public GUIMain(User user)  {
         super("SPS Trading");
         UIManager.put("TabbedPane.selected", cust1);
         UIManager.put("Button.foreground", Color.WHITE);
