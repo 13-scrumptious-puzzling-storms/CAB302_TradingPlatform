@@ -210,13 +210,13 @@ public class GUIOrder extends JFrame{
                     assetTableModel = GUIOrgHome.constructAssetTableModel();
                     assetTable.setModel(assetTableModel);
                     JOptionPane.showMessageDialog(panel, "New SELL order for " + quantity + " " + asset + " at " + price + " credit(s)!",
-                            "Edit Credits", JOptionPane.INFORMATION_MESSAGE);
+                            "Order Complete", JOptionPane.INFORMATION_MESSAGE);
                 }else{
                     if(currentQuantity == -1){
                         currentQuantity = 0;
                     }
                     JOptionPane.showMessageDialog(panel, "Insufficient quantity!\nOrganisational Unit : " + organisationalUnit.getName() + " has " + currentQuantity + " " + asset + "s.\nYou attempted to sell " + quantity + " unit(s)!",
-                            "Edit Credits", JOptionPane.WARNING_MESSAGE);
+                            "Edit Quantity", JOptionPane.WARNING_MESSAGE);
                 }
             }else{
                 int currentCredits = organisationalUnit.organisationCredit;
