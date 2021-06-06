@@ -31,6 +31,13 @@ public class DBConnection {
         instance = null;
     }
 
+    /**
+     * @return returns the String propsFile.
+     */
+    public static String getPropsFile() {
+        return propsFile;
+    }
+
     private static Boolean isConnected = false;
 
     /**
@@ -63,12 +70,8 @@ public class DBConnection {
             instance = DriverManager.getConnection(url + "/" + schema, username, password);
             isConnected = true;
             System.out.println("DBConnection: Successfully connected to database.");
-        } catch (SQLException sqle) {
-            System.err.println(sqle);
-        } catch (FileNotFoundException fnfe) {
-            System.err.println(fnfe);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println(ex);
         }
         if (!isConnected) {
             System.out.println("DBConnection: Failed to connect to database with current .props file!");
