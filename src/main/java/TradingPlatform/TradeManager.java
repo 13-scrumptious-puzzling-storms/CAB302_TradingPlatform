@@ -11,50 +11,6 @@ public class TradeManager {
     private static NetworkManager networkManager = ClientApp.networkManager;
 
     /**
-     *
-     * @param asset The asset to get the buy orders for.
-     * @return buyOrders
-     */
-    public Map<AssetType, Integer> getBuyOrders(AssetType asset){
-        return null;
-    }
-
-    /**
-     * gets the current SELL orders for an asset.
-     * @param asset The asset to get the sell orders for.
-     * @return sellOrders
-     */
-    public Map<AssetType, Integer> getSellOrders(AssetType asset){
-        return null;
-    }
-
-    /**
-     * Determines what SELL orders to BUY from if the trade
-     * is valid, and calls updateDatabase.
-     */
-    public void executeTrade(){
-
-    }
-
-    /**
-     * returns true if the trade can be executed
-     * @return isValid
-     */
-    public Boolean validTrade(){
-        return null;
-    }
-
-    /**
-     * Talks to the server(?) to update organisation's credits and assets
-     * as well as updates the BUY/SELL order to complete if necessary.
-     * @param sellOrg The org selling an asset.
-     * @param buyOrg The org buying an asset.
-     */
-    public void updateDatabase(int sellOrg, int buyOrg){
-
-    }
-
-    /**
      * Gets an array of the most recent reconciled trades for each asset
      * @return A String[][] response from the server
      * @throws IOException
@@ -99,22 +55,6 @@ public class TradeManager {
     public static String[][] getBuyOrders(int orgID) throws IOException, ClassNotFoundException {
         Request response = networkManager.GetResponse("JDBCTradeDataSource", "getBuyOrders", new String[] {String.valueOf(orgID)});
         return response.getDoubleString();
-    }
-
-    /**
-     * Gets the organisation asset ID for a given trade, returns -1 on error
-     * @param tradeId An int representing the current trade ID
-     * @return An int representing the organisation asset ID
-     */
-    public static int getOrganisationAssetId(int tradeId) {
-        try {
-            var response = NetworkManager.GetResponse("JDBCTradeDataSource", "getOrgAssetId", new String[] {String.valueOf(tradeId)});
-            var args = response.getArguments();
-            return Integer.parseInt(args[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
     }
 
     /**

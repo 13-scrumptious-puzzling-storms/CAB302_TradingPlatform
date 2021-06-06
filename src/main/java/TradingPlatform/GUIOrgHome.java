@@ -275,7 +275,7 @@ public class GUIOrgHome{
                             Trade.setCancel(tradeId); //cancel order
 
                             // Get the org asset id from the trade id
-                            int orgAssetId = TradeManager.getOrganisationAssetId(tradeId);
+                            int orgAssetId = Trade.getOrganisationAssetId(tradeId);
 
                             //Calculate new Asset Quantity
                             //get current asset quantity for organisationAssetID
