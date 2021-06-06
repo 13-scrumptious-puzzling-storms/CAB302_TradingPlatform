@@ -6,6 +6,10 @@ import TradingPlatform.OrganisationalUnit;
 
 import java.sql.*;
 
+/**
+ * The JDBC user datasource is a class used to get a user's details from the database.
+ * The static methods in the class are used to interact with a specific user, or to add a user / find a user's id
+ */
 public class JDBCUserDataSource implements UserDataSource {
 
     private static final String GET_USER = "SELECT * FROM User WHERE userId=?";
@@ -24,6 +28,12 @@ public class JDBCUserDataSource implements UserDataSource {
     private OrganisationalUnit organisationalUnit;
     private final Connection connection;
 
+    /**
+     * This constructor initialises the JDBC user datasource for a specific user, and the
+     * non static methods (such as getUsername) will return the user's details
+     * @param userId the userid of the user used for this instance of the datasource
+     * @param connection the connection to the database
+     */
     public JDBCUserDataSource(int userId, Connection connection){
         this.userId = userId;
         this.connection = connection;
@@ -52,6 +62,9 @@ public class JDBCUserDataSource implements UserDataSource {
 
     /**
      * Tries to find the user matching the username and password
+     * @param username the user's username - case insensitive
+     * @param password the user's hashed password - case sensitive
+     * @param connection the connection to the database
      * @return the userId of the user, or -1 if not found
      */
     public static int getUserId(String username, String password, Connection connection){
@@ -72,6 +85,12 @@ public class JDBCUserDataSource implements UserDataSource {
 
     /**
      * Adds a new user to the database if the username does not exist
+     * @param username the user's username
+     * @param password the user's hashed password
+     * @param AccountType the account type of the user
+     * @param OrganisationUnitId the organisation unit id of the orgUnit that the user belongs to
+     * @param connection the connection to the database
+     * @return True if the user was successfully created, false on error (e.g. org doesn't exist, username isn't unique)
      */
     public static boolean addUser(String username, String password, AccountType AccountType, int OrganisationUnitId, Connection connection){
         boolean success;

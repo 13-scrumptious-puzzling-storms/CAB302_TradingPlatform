@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 /**
  * Responsible for the frontend and backend of the Server's GUI.
- * Uses ServerConfig for the backend of data getting & setting.
+ * Uses ServerConfig for the backend of data getting and setting.
  */
 public class GUIManager extends JFrame implements ActionListener {
     // Screen Sizing

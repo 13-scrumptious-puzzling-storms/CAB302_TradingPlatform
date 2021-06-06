@@ -49,8 +49,6 @@ public class GUIOrder extends JFrame{
     /**
      * The main method for calling the buy/sell popup. Other classes will call this when they need a buy/sell popup.
      * @param isSell A Boolean determining if the order is a Sell (true) or Buy (false)
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
     public void popup(Boolean isSell)  {
         buy = new JPanel();

@@ -49,7 +49,8 @@ public class ITAdministrator extends User {
         try {
             Request response = NetworkManager.GetResponse("JDBCUserDataSource", "addUser",
                     new String[] {username, hashedPassword, accountType.name(), Integer.toString(unit.getID())});
-            success = Boolean.parseBoolean(response.getArguments()[0]); // Whether the user was successfully added.
+            // Whether the user was successfully added.
+            success = Boolean.parseBoolean(response.getArguments()[0]);
         } catch (Exception e) {
             e.printStackTrace();
             success = false;
@@ -154,7 +155,7 @@ public class ITAdministrator extends User {
     /**
      * Gets the details of all the organisational units. This method is in this class, because it is only
      * used on the Administrator page for combo box drop downs.
-     * @return A
+     * @return An ArrayList of all the organisational units.
      */
     public static ArrayList<OrganisationalUnit> GetAllOrgUnits(){
         // Get the user's data from the server
