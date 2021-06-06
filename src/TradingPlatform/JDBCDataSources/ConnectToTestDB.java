@@ -1,4 +1,4 @@
-package TradingPlatform;
+package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.JDBCDataSources.MockDatabaseFunctions;

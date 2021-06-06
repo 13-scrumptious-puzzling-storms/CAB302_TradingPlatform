@@ -1,6 +1,5 @@
 package TradingPlatform.JDBCDataSources;
 
-import TradingPlatform.ConnectToTestDB;
 import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.OrganisationAsset;
 import TradingPlatform.OrganisationalUnit;
