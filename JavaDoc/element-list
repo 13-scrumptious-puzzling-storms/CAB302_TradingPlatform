@@ -1,2 +1,5 @@
 TradingPlatform
+TradingPlatform.Interfaces
+TradingPlatform.JDBCDataSources
 TradingPlatform.NetworkProtocol
+TradingPlatform.TradeReconciliation
