@@ -2,6 +2,10 @@ package TradingPlatform.TradeReconciliation;
 
 import java.sql.Timestamp;
 
+/**
+ * This tradeorder class is an object that is just used to store information about a trade order, it does not
+ * interface the server or database in any way.
+ */
 public class TradeOrder {
     private int tradeOrderId;
     private int organisationAssetId;

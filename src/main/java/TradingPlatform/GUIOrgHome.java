@@ -18,7 +18,7 @@ import static TradingPlatform.GUIMain.*;
  * and cancel orders made by their organisational unit.
  */
 public class GUIOrgHome{
-
+    //Table column headings
     public static String BuyHeading[] = {"Buy Orders","Quantity","Remaining Quantity", "Price",};
     public static String[] SellHeading = {"Sell Orders","Quantity","Remaining Quantity", "Price"};
     public static String[] AssetHeading = {"Asset Item","Quantity"};
@@ -88,6 +88,7 @@ public class GUIOrgHome{
             sellTable.setModel(sellTableModel);
             buyTableModel = constructBuyTableModel();
             buyTable.setModel(buyTableModel);
+            //Refresh Credits Label
             LabelCredits.setText("Credits: " + organisationalUnit.getCredits(organisationalUnitID));
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,15 +153,18 @@ public class GUIOrgHome{
         tradesAssets.add("Trades", tablesPane);
         tradesAssets.add("Assets", Assets);
         tradesAssets.addChangeListener(new ChangeListener() {
+            //Changing button visibility
             public void stateChanged(ChangeEvent e) {
                 JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
                 int selectedTab = tabbedPane.getSelectedIndex();
+                //If trades tab is selected
                 if (selectedTab == 0) {
                     removeBuyOrderButton.setVisible(true);
                     removeSellOrderButton.setVisible(true);
                     buyButton.setVisible(false);
                     sellButton.setVisible(false);
                 }
+                //If Assets tab is selected
                 else if (selectedTab == 1) {
                     removeBuyOrderButton.setVisible(false);
                     removeSellOrderButton.setVisible(false);
@@ -169,10 +173,11 @@ public class GUIOrgHome{
                 }
             }
         });
+        //Set size for tabs if not full screen
         tradesAssets.setPreferredSize(new Dimension(tabWidth, tabHeight));
         tradesAssets.setMinimumSize(new Dimension(tabWidth/2, tabHeight/2));
         JScrollPane pageScroll = new JScrollPane();
-        pageScroll.add(panel2);
+        pageScroll.add(panel2); //add to orgHome panel
     }
 
     /**
@@ -195,17 +200,17 @@ public class GUIOrgHome{
         panel2.add(removeButton, position);
         removeButton.addActionListener(new ActionListener()
         {
-            public void actionPerformed(ActionEvent e)
+            public void actionPerformed(ActionEvent e) //when button is selected
             {
                 int selectedRow = table.getSelectedRow();
-                if(selectedRow == -1){
+                if(selectedRow == -1){ //when no row is selected
                     JOptionPane.showMessageDialog(null, "Please select one row from the 'Buy Orders' table to cancel order.");
                 }
-                else{
+                else{ //when onw row is selected
                     int result = JOptionPane.showConfirmDialog(null,"Cancel trade buy order of "+buyData[selectedRow][1]+" "+buyData[selectedRow][0]+"?", "Cancel trade",
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
-                    if(result == JOptionPane.YES_OPTION){
+                    if(result == JOptionPane.YES_OPTION){ //if user wishes to cancel selected buy order
                         try {
                             Trade.setCancel(Integer.valueOf(tradeIDBuy[selectedRow])); //cancel order
 
@@ -223,7 +228,7 @@ public class GUIOrgHome{
                         } catch (Exception m) {
                             m.printStackTrace();
                         }
-                    }else {
+                    }else { //user decided not to cancel selected buy order
                         JOptionPane.showMessageDialog(null, "Trade cancellation unsuccessful");
                     }
                 }
