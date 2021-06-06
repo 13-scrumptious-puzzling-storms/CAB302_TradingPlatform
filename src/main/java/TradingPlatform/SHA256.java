@@ -23,6 +23,7 @@ public class SHA256 {
             return stringHash;
         }
         catch (NoSuchAlgorithmException ex) {
+            // Algorithm does exist. This exception will never be thrown.
             ex.printStackTrace();
             return password;
         }
