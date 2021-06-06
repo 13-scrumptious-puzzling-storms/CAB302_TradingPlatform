@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 
-public class AssetTypeTests {
+public class TestAssetType {
 
     static Connection connection;
 

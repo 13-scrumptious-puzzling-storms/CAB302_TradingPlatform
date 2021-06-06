@@ -38,7 +38,7 @@ public class Trade{
      * @param type A boolean showing the trade type (true for buy, false for sell).
      * @param price An int showing the price of the asset for the trade.
      */
-    public void addTradeOrder(int orgAssetId, int quantity, boolean type, int price){
+    public void addTradeOrder(int orgAssetId, int quantity, boolean type, int price) {
         try {
             networkManager.SendRequest("JDBCTradeDataSource", "addTradeOrder", new String[] {String.valueOf(orgAssetId), String.valueOf(quantity), String.valueOf(type), String.valueOf(price)});
         } catch (IOException e) {
@@ -50,12 +50,31 @@ public class Trade{
      * sets the trade to cancelled
      * @param tradeID An int representing the current trade ID
      * @return A Boolean response from the server
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public static Boolean setCancel(int tradeID) throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("JDBCTradeDataSource", "setCancel", new String[] {String.valueOf(tradeID)});
+    public static Boolean setCancel(int tradeID) {
+        Request response = null;
+        try {
+            response = networkManager.GetResponse("JDBCTradeDataSource", "setCancel", new String[] {String.valueOf(tradeID)});
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return response.getResponse();
+    }
+
+    /**
+     * Gets the organisation asset ID for a given trade, returns -1 on error
+     * @param tradeId An int representing the current trade ID
+     * @return An int representing the organisation asset ID
+     */
+    public static int getOrganisationAssetId(int tradeId) {
+        try {
+            var response = NetworkManager.GetResponse("JDBCTradeDataSource", "getOrgAssetId", new String[] {String.valueOf(tradeId)});
+            var args = response.getArguments();
+            return Integer.parseInt(args[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     /**
