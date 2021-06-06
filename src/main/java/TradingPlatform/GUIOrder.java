@@ -150,9 +150,12 @@ public class GUIOrder extends JFrame{
      */
     private void RefreshContent(){
         try {
+            //gets the asset ID based on the selected item
             var assetName = itemNameInput.getSelectedItem();
             AssetType asset = new AssetType(assetName.toString());
             int assetId = asset.getAssetId();
+
+            //reconstructs the data models in the table
             var dataModel1 = GUIMain.constructTable(TradeManager.getCurrentBuyOrdersPriceAndQuantityForAsset(assetId), AssetBuyHeading);
             BuyOrderTable.setModel(dataModel1);
             var dataModel2 = GUIMain.constructTable(TradeManager.getCurrentSellOrdersPriceAndQuantityForAsset(assetId), AssetSellHeading);
