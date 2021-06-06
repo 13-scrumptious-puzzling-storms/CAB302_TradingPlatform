@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 //
-public class TestOrganisationalUnit {
+public class OrganisationalUnittes {
 
     static Connection connection;
     static JDBCOrganisationalUnit reconcileSource;

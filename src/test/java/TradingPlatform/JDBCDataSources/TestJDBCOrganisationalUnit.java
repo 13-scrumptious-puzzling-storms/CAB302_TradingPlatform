@@ -14,7 +14,7 @@ public class TestJDBCOrganisationalUnit {
     static JDBCOrganisationalUnit reconcileSource;
 
 
-    @BeforeEach
+//    @BeforeEach
     public void init() {
         MockDatabaseFunctions.InitDb();
         connection = MockDatabaseFunctions.getConnection();
@@ -24,11 +24,13 @@ public class TestJDBCOrganisationalUnit {
 
     @Test
     public void testServerInstance(){
+        init();
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
     }
 
     @Test
     public void testServerAddOrganisationalUnit(){
+        init();
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert(unit.addOrganisationalUnit("New Organisation", 10) == 6);
         init();
@@ -36,44 +38,57 @@ public class TestJDBCOrganisationalUnit {
 
     @Test
     public void testServerAddOrganisationalUnitError(){
+        init();
         //unit name already exists
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert(unit.addOrganisationalUnit("Storms", 0) == -1);
         init();
     }
 
+    // Boundary, getting name from first row.
     @Test
     public void testServerGetOrganisationalUnitName(){
+        init();
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert (unit.getOrganisationalUnitName(1).equals("ITAdmin"));
     }
 
+    // Boundary, getting name from last row.
     @Test
     public void testServerGetOrganisationalUnitName2(){
+        init();
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert (unit.getOrganisationalUnitName(5).equals("Storms"));
     }
 
+    // Boundary, getting name from invalid row.
     @Test
     public void testServerGetOrganisationalUnitNameError(){
+        init();
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert (unit.getOrganisationalUnitName(-1) == null);
     }
 
+    // Boundary, getting credits from first row.
     @Test
     public void testGetOrganisationalUnitCredits(){
+        init();
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert(unit.getOrganisationalUnitCredits(1) == 1000);
     }
 
+    // Boundary, getting credits from second-last row.
     @Test
     public void testGetOrganisationalUnitCredits2(){
+        init();
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert(unit.getOrganisationalUnitCredits(4) == 500);
     }
 
+    // Boundary, getting organisational unit from first row.
     @Test
     public void testServerGetOrganisationalUnit(){
+        init();
         JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
         OrganisationalUnit unit = unitSource.getOrganisationalUnit(1);
         assert (unit != null);
@@ -81,8 +96,10 @@ public class TestJDBCOrganisationalUnit {
         assert (unit.getCredits() == 1000);
     }
 
+    // Boundary, getting organisational unit from last row.
     @Test
     public void testServerGetOrganisationalUnit2(){
+        init();
         JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
         OrganisationalUnit unit = unitSource.getOrganisationalUnit(5);
         assert (unit != null);
@@ -91,8 +108,10 @@ public class TestJDBCOrganisationalUnit {
         assert (unit.getCredits() == 50);
     }
 
+    // Boundary, getting organisational unit from invalid row.
     @Test
     public void testServerGetOrganisationalUnitError(){
+        init();
         JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
         OrganisationalUnit unit = unitSource.getOrganisationalUnit(-1);
         assert (unit == null);
@@ -100,6 +119,7 @@ public class TestJDBCOrganisationalUnit {
 
     @Test
     public void testServerUpdateOrganisationalUnitCredits(){
+        init();
         JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
         Boolean successful = unitSource.UpdateOrganisationalUnitCredits(2, 255);
         assert(successful == true);
@@ -110,16 +130,17 @@ public class TestJDBCOrganisationalUnit {
 
     @Test
     public void testServerUpdateOrganisationalUnitCreditsError(){
+        init();
         //organisational unit ID invalid
         JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
         Boolean successful = unitSource.UpdateOrganisationalUnitCredits(-1, 250);
-        System.out.println(successful);
         assert(successful == false);
         init();
     }
 
     @Test
     public void testServerUpdateOrganisationalUnitCreditsError2(){
+        init();
         //updated credits invalid
         JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
         Boolean successful = unitSource.UpdateOrganisationalUnitCredits(1, -250);
@@ -129,6 +150,7 @@ public class TestJDBCOrganisationalUnit {
 
     @Test
     public void testServerGetAllOrganisationalUnits(){
+        init();
         JDBCOrganisationalUnit unitSource = new JDBCOrganisationalUnit(connection);
         String[][] result = unitSource.getAllOrganisationalUnits();
         assert(result != null);
