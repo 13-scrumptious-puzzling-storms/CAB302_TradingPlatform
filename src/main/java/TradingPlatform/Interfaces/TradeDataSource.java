@@ -29,12 +29,6 @@ public interface TradeDataSource {
     int getQuantity(int tradeId);
 
     /**
-     * Returns the organisation linked to the current trade
-     * @return organisation
-     */
-//    String getOrganisation();
-
-    /**
      * Sets the amount of assets remaining in the order
      * @param amount
      */
