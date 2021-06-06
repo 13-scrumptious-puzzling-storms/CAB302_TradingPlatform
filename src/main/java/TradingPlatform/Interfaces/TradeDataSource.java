@@ -14,7 +14,7 @@ public interface TradeDataSource {
      * Gets the type of Trade, either BUY or SELL
      * @return type
      */
-    String GetType(int tradeId);
+    String getType(int tradeId);
 
     /**
      * Gets the asset from the trade
