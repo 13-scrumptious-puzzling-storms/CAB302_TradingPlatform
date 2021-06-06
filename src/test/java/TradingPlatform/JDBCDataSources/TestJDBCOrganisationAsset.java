@@ -11,7 +11,7 @@ public class TestJDBCOrganisationAsset {
     static JDBCOrganisationalAsset reconcileSource;
 
 
-    @BeforeEach
+//    @BeforeEach
     public void init() {
         MockDatabaseFunctions.InitDb();
         connection = MockDatabaseFunctions.getConnection();
@@ -20,23 +20,27 @@ public class TestJDBCOrganisationAsset {
 
     @Test
     public void testServerInstance(){
+        init();
         JDBCOrganisationalAsset orgAsset = new JDBCOrganisationalAsset(connection);
     }
 
     @Test
     public void testServerGetOrganisationAssetOrgUnitID(){
+        init();
         JDBCOrganisationalAsset orgAsset = new JDBCOrganisationalAsset(connection);
         assert(orgAsset.getOrganisationAssetOrgUnitID(1) == 2);
     }
 
     @Test
     public void testServerGetOrganisationAssetOrgUnitIDError(){
+        init();
         JDBCOrganisationalAsset orgAsset = new JDBCOrganisationalAsset(connection);
         assert(orgAsset.getOrganisationAssetOrgUnitID(-1) == -1);
     }
 
     @Test
     public void testGetOrganisationAssetsAndQuantity(){
+        init();
         JDBCOrganisationalAsset orgAsset = new JDBCOrganisationalAsset(connection);
         String[][] assetsAndQuantity = orgAsset.getOrganisationAssetsAndQuantity(2);
         System.out.println(Arrays.deepToString(assetsAndQuantity));
@@ -55,24 +59,28 @@ public class TestJDBCOrganisationAsset {
 
     @Test
     public void testGetOrganisationAssetQuantityError(){
+        init();
         JDBCOrganisationalAsset orgAsset = new JDBCOrganisationalAsset(connection);
         assert(orgAsset.getOrganisationAssetQuantity(-1) == -1);
     }
 
     @Test
     public void testGetOrganisationTypeQuantity(){
+        init();
         JDBCOrganisationalAsset orgAsset = new JDBCOrganisationalAsset(connection);
         assert(orgAsset.getOrganisationAssetTypeID(1) == 1);
     }
 
     @Test
     public void testGetOrganisationAssetTypeError(){
+        init();
         JDBCOrganisationalAsset orgAsset = new JDBCOrganisationalAsset(connection);
         assert(orgAsset.getOrganisationAssetTypeID(-1) == -1);
     }
 
     @Test
     public void testGetOrganisationAssetsAndQuantityr(){
+        init();
         JDBCOrganisationalAsset orgAsset = new JDBCOrganisationalAsset(connection);
         assert(orgAsset.getOrganisationAssetTypeID(-1) == -1);
     }
