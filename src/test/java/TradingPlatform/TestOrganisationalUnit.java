@@ -1,6 +1,9 @@
-package TradingPlatform.JDBCDataSources;
+package TradingPlatform;
 
 import TradingPlatform.ClientApp;
+import TradingPlatform.JDBCDataSources.ConnectToTestDB;
+import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
+import TradingPlatform.JDBCDataSources.MockDatabaseFunctions;
 import TradingPlatform.NetworkProtocol.DBConnection;
 import TradingPlatform.NetworkProtocol.ServerApp;
 import TradingPlatform.OrganisationAsset;
