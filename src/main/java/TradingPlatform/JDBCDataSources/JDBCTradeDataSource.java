@@ -47,7 +47,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
     private PreparedStatement getSellOrders;
     private PreparedStatement countOrders;
 
-
+    //instance of the connection to the database
     private Connection connection;
 
 
@@ -59,6 +59,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
         this.connection = connection;
 
         try {
+            // Preparing Statements
             Statement st = connection.createStatement();
 
             addTrade = connection.prepareStatement(INSERT_TRADE);
@@ -100,7 +101,6 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 addTrade.setString(4, "false");
             }
             addTrade.setInt(5, price);
-//            addTrade.setBoolean(6, false);
             addTrade.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -312,6 +312,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             countOrders.setString(2, "false");
             ResultSet num = countOrders.executeQuery();
 
+            //find the number of returned rows
             int count;
             if (num.next()) {
                 count = num.getInt("num");
@@ -319,6 +320,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 count = 0;
             }
 
+            //put values into String[][]
             String[][] assets = new String[count][];
             int i = 0;
             while (rs.next()) {
@@ -355,6 +357,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             countOrders.setString(2, "true");
             ResultSet num = countOrders.executeQuery();
 
+            //find the number of returned rows
             int count;
             if (num.next()) {
                 count = num.getInt("num");
@@ -362,6 +365,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 count = 0;
             }
 
+            //put values into String[][]
             String[][] assets = new String[count][];
             int i = 0;
             while (rs.next()) {

@@ -2,7 +2,6 @@ package TradingPlatform;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 import static TradingPlatform.GUIMain.*;
 import static TradingPlatform.GUIOrgHome.*;
@@ -18,6 +17,7 @@ public class GUIOrder extends JFrame{
     private User user;
     private OrganisationalUnit organisationalUnit;
 
+    //J UI components
     private JComboBox itemNameInput;
     private JTextField quantityInput;
     private JTextField priceInput;
@@ -28,12 +28,13 @@ public class GUIOrder extends JFrame{
     private JLabel order;
 
     private JOptionPane popUp;
-    private JPanel buy;
+    private JPanel orderPanel;
     private JPanel panel;
 
     private volatile JTable BuyOrderTable;
     private volatile JTable SellOrderTable;
 
+    //creating table headings
     String AssetBuyHeading[] = {"Buy Price", "Quantity"};
     String AssetSellHeading[] = {"Sell Price", "Quantity"};
 
@@ -51,15 +52,18 @@ public class GUIOrder extends JFrame{
      * @param isSell A Boolean determining if the order is a Sell (true) or Buy (false)
      */
     public void popup(Boolean isSell)  {
-        buy = new JPanel();
-        buy.setSize(new Dimension(width/2, height/2));
+        //setting up the popup
+        orderPanel = new JPanel();
+        orderPanel.setSize(new Dimension(width/2, height/2));
         popUp = new JOptionPane();
 
+        //setting up panel and its layout
         panel = new JPanel();
         panel.setPreferredSize(new Dimension(width - width/3, 300));
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
+        //Creates a different heading depending on if it is a BUY or SELL order
         if(isSell){
             order = new JLabel("CREATE NEW SELL ORDER");
         }
@@ -67,12 +71,13 @@ public class GUIOrder extends JFrame{
             order = new JLabel("CREATE NEW BUY ORDER");
         }
 
+        //setting up labels
         itemName = new JLabel("Item Name: ");
         quantity = new JLabel("Quantity: ");
         price = new JLabel("Price (per unit): ");
-
         order.setFont(new Font("Verdana", Font.BOLD, 30));
 
+        //setting up input components
         String[] data = AssetType.getAllAssetNames();
         itemNameInput = new JComboBox(data);
         itemNameInput.setPreferredSize(new Dimension(width/4, 20));
@@ -85,6 +90,7 @@ public class GUIOrder extends JFrame{
         priceInput.setEditable(true);
         priceInput.setEnabled(true);
 
+        //setting the positions of elements within panel
         position.weightx = 1;
         position.weighty = 1;
         position.gridx = 1;
@@ -111,11 +117,13 @@ public class GUIOrder extends JFrame{
         position.gridy = 3;
         panel.add(priceInput, position);
 
+        //adding an action listener to the itemNameInput JComboBox
         var assetName = itemNameInput.getSelectedItem();
         AssetType asset = new AssetType(assetName.toString());
         int assetId = asset.getAssetId();
         itemNameInput.addActionListener(e -> RefreshContent());
 
+        //Creating current buy and sell order tables
         BuyOrderTable = tableCreator(GUIMain.constructTable(TradeManager.getCurrentBuyOrdersPriceAndQuantityForAsset(assetId), AssetBuyHeading));
         JScrollPane RecentBuy = GUIMain.tablePane(BuyOrderTable);
         RecentBuy.setPreferredSize(new Dimension(tabWidth/6, 100));
@@ -126,6 +134,7 @@ public class GUIOrder extends JFrame{
         RecentSell.setPreferredSize(new Dimension(tabWidth/6, 100));
         RecentSell.setMinimumSize(new Dimension(tabWidth/10, 50));
 
+        //positioning of tables
         position.insets = new Insets(0, 0, 0, 0);
         position.gridx = 3;
         position.gridy = 1;
@@ -134,9 +143,10 @@ public class GUIOrder extends JFrame{
         position.gridy = 3;
         panel.add(RecentSell, position);
 
+        //sets the preferred size of the panel
+        orderPanel.setPreferredSize(new Dimension(200, 200));
 
-        buy.setPreferredSize(new Dimension(200, 200));
-
+        //creates the order if user presses OK button
         if (JOptionPane.showInternalConfirmDialog(null, panel, "" , JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
             updateOrder(isSell);
         }
@@ -170,8 +180,11 @@ public class GUIOrder extends JFrame{
      */
     private void updateOrder(Boolean isSell){
 
+        //making sure there are inputs
         if (quantityInput.getText() != null && !quantityInput.getText().equals("")) {
             int quantity;
+
+            //trying to convert quantity input to an Integer, calls a dialog box if it throws an exception
             try {
                 quantity = Integer.parseInt(quantityInput.getText());
             } catch (NumberFormatException e) {
@@ -181,6 +194,8 @@ public class GUIOrder extends JFrame{
                 return;
             }
             int price;
+
+            //trying to convert price input to an Integer, calls a dialog box if it throws an exception
             try {
                 price = Integer.parseInt(priceInput.getText());
             } catch (NumberFormatException e) {
@@ -189,54 +204,83 @@ public class GUIOrder extends JFrame{
                         "Edit Credits", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            //getting the item from the item name input
             var asset = itemNameInput.getSelectedItem();
 
-
+            //getting assetType and the organisational unit
             AssetType buyAsset = new AssetType(asset.toString());
             int orgID = organisationalUnit.getID();
             int orgAssetId = OrganisationAsset.getOrganisationAssetID(organisationalUnit, buyAsset);
 
-
+            //creating new trade order instance
             Trade order = new Trade(isSell, buyAsset, quantity, price, orgID);
 
+            //if the order is a sell order
             if(isSell){
+
+                //checks if the quantity inputted is less than the amount the organisation has currently
                 int currentQuantity = OrganisationAsset.getQuantity(orgAssetId);
                 if( currentQuantity >= quantity){
+
+                    //calls functions to update the database
                     OrganisationAsset.updateOrganisationalUnitAssetQuantity(orgAssetId, currentQuantity - quantity);
                     order.addTradeOrder(orgAssetId, quantity, isSell, price);
+
+                    //updates the tableModels
                     sellTableModel = GUIOrgHome.constructSellTableModel();
                     sellTable.setModel(sellTableModel);
                     assetTableModel = GUIOrgHome.constructAssetTableModel();
                     assetTable.setModel(assetTableModel);
+
+                    //Confirms the order
                     JOptionPane.showMessageDialog(panel, "New SELL order for " + quantity + " " + asset + " at " + price + " credit(s)!",
                             "Order Complete", JOptionPane.INFORMATION_MESSAGE);
                 }else{
+
+                    //calls a warning message
                     if(currentQuantity == -1){
                         currentQuantity = 0;
                     }
                     JOptionPane.showMessageDialog(panel, "Insufficient quantity!\nOrganisational Unit : " + organisationalUnit.getName() + " has " + currentQuantity + " " + asset + "s.\nYou attempted to sell " + quantity + " unit(s)!",
                             "Edit Quantity", JOptionPane.WARNING_MESSAGE);
                 }
-            }else{
+            }
+
+            //if the order is a buy order
+            else{
+
+                //checks if the organisational unit has the sufficient number of credits
                 int currentCredits = organisationalUnit.organisationCredit;
                 if(currentCredits >= price*quantity){
+
+                    //updates the database
                     organisationalUnit.UpdateOrganisationalUnitCredits(orgID, currentCredits - price*quantity);
                     if(orgAssetId < 0){
+                        //adds asset to the org if the organisation doesn't have one already
                         orgAssetId = OrganisationAsset.addOrganisationAsset(orgID, buyAsset.getAssetId(), 0);
                     }
                     order.addTradeOrder(orgAssetId, quantity, isSell, price);
+
+                    //updates tableModel and credit label
                     buyTableModel = GUIOrgHome.constructBuyTableModel();
                     buyTable.setModel(buyTableModel);
                     GUIOrgHome.LabelCredits.setText("Credits: " + String.valueOf(currentCredits - price*quantity));
+
+                    //confirms the order
                     JOptionPane.showMessageDialog(panel, "New BUY order for " + quantity + " " + asset + " at " + price + " credit(s)!",
                             "Order Complete", JOptionPane.INFORMATION_MESSAGE);
                 }
                 else{
+
+                    //calls a warning message
                     JOptionPane.showMessageDialog(panel, "Insufficient funds!\nOrganisational Unit : " + organisationalUnit.getName() + " has " + currentCredits + " credits.\nYou attempted to use " + price*quantity + " credit(s)!",
                             "Edit Credits", JOptionPane.WARNING_MESSAGE);
                 }
             }
         } else {
+
+            //calls a warning message if all details aren't filled in
             JOptionPane.showMessageDialog(panel, "Please enter all details of your order",
                     "Edit Details", JOptionPane.WARNING_MESSAGE);
         }
