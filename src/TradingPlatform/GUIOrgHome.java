@@ -213,7 +213,7 @@ public class GUIOrgHome{
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
                         try {
-                            TradeManager.setCancel(Integer.valueOf(tradeIDBuy[selectedRow])); //cancel order
+                            Trade.setCancel(Integer.valueOf(tradeIDBuy[selectedRow])); //cancel order
 
                             //restore credits (add remaining quantity*price)
                             int newCredits = credits + Integer.valueOf(buyData[selectedRow][2])*Integer.valueOf(buyData[selectedRow][3]);
@@ -272,7 +272,7 @@ public class GUIOrgHome{
                         System.out.print("Trade cancelled");
                         try {
                             int tradeId = Integer.valueOf(tradeIDSell[selectedRow]);
-                            TradeManager.setCancel(tradeId); //cancel order
+                            Trade.setCancel(tradeId); //cancel order
 
                             // Get the org asset id from the trade id
                             int orgAssetId = TradeManager.getOrganisationAssetId(tradeId);
