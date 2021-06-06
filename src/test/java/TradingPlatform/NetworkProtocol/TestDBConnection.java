@@ -57,5 +57,6 @@ public class TestDBConnection {
         // Run the test
         // Since no file set, this will throw, but catch exception.
         connection = DBConnection.getInstance();
+        assert (connection == null);
     }
 }

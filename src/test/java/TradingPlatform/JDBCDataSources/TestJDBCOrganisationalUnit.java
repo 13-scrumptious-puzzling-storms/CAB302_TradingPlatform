@@ -40,7 +40,6 @@ public class TestJDBCOrganisationalUnit {
         //unit name already exists
         JDBCOrganisationalUnit unit = new JDBCOrganisationalUnit(connection);
         assert(unit.addOrganisationalUnit("Storms", 0) == -1);
-        init();
     }
 
     // Boundary, getting name from first row.
