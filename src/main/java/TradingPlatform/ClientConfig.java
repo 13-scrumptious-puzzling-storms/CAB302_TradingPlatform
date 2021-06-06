@@ -80,7 +80,7 @@ public class ClientConfig {
      * Sets the fields to default values and invokes
      * WriterServerAddress to write these to .txt.
      */
-    private static void SetDefaultAddress() {
+    public static void SetDefaultAddress() {
         ipAddress = DEFAULT_IP;
         port = DEFAULT_PORT;
         WriteServerAddress();

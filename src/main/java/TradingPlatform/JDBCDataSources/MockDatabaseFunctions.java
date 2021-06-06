@@ -65,15 +65,12 @@ public class MockDatabaseFunctions {
     }
 
     public static void CloseDatabase(){
-        try {
-            connection.close();
-            File db = new File(testDbName);
-            boolean deleted = db.delete();
-            System.out.println(db.exists());
-            System.out.println("Deleted test db " + testDbName + ": " + deleted);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+        try { connection.close(); }
+        catch (Exception ex) { System.out.println("No connection to close."); }
+        File db = new File(testDbName);
+        boolean deleted = db.delete();
+        System.out.println(db.exists());
+        System.out.println("Deleted test db " + testDbName + ": " + deleted);
     }
 
     //region SQL to init database
@@ -199,7 +196,7 @@ public class MockDatabaseFunctions {
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (3, 'katecha', '" + SHA256.hashPassword("DupliKate") + "', 3, 0)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (4, 'sammyeve', '" + SHA256.hashPassword("AtomEve") + "', 4, 0)",
             "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (5, 'markgrayson', '" + SHA256.hashPassword("Invincible") + "', 5, 0)",
-            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (6, 'root', '�\\�s�;6\u0011�T��\u0013���\u0001#��w\u001Eq4!����\u001FS�', 2, 0)",
+            "INSERT INTO User (userID, username, password, organisationUnitID, userRole) VALUES (6, 'root', 'H\u0013IM\u0013~\u00161��\u0001լ�n{��t�\u0011��VV^�\u001Dsvw�', 2, 0)",
 
 // Foreign key constraints
             "PRAGMA foreign_keys = on",

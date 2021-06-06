@@ -21,10 +21,15 @@ public class ServerApp {
 
     /**
      * The main method invokes StartServer();
-     * @param args
+     * @param args indicates whether the Server should
+     * be executed in testMode (if args[0] == "testMode").
      */
     public static void main(String[] args) {
-        StartServer();
+        if (args.length > 0 && args[0] == "testMode") {
+            StartServer(true);
+        } else {
+            StartServer(false);
+        }
     }
 
     /**
@@ -32,9 +37,9 @@ public class ServerApp {
      * Starting ServerHandle on a separate thread.
      * Starting serverReconcileExecutor on a separate thread.
      * Starting the Server GUI (GUIManager) on the AWT
-     * event-dispatching thread.
+     * event-dispatching thread (if not in testMode).
      */
-    private static void StartServer() {
+    private static void StartServer(Boolean testMode) {
         System.out.println("Starting Server ...");
 
         // Start the Client requests handler for the Server.
@@ -57,12 +62,16 @@ public class ServerApp {
             e.printStackTrace();
         }
 
-        // Start the Server GUI.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new GUIManager();
-            }
-        });
+        if (!testMode) {
+            // Start the Server GUI.
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    new GUIManager();
+                }
+            });
+        } else {
+            ServerConfig.testMode();
+        }
     }
 
     /**

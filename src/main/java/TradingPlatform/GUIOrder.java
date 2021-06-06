@@ -52,7 +52,7 @@ public class GUIOrder extends JFrame{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public void popup(Boolean isSell) throws IOException, ClassNotFoundException {
+    public void popup(Boolean isSell)  {
         buy = new JPanel();
         buy.setSize(new Dimension(width/2, height/2));
         popUp = new JOptionPane();
@@ -166,10 +166,8 @@ public class GUIOrder extends JFrame{
      * UpdateOrder handles the trade order. It makes sure all values are valid and calls warning messages if it is not.
      * It then calls the functions to add the new buy or sell trade to the database.
      * @param isSell A Boolean determining if the order is a Sell (true) or Buy (false)
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    private void updateOrder(Boolean isSell) throws IOException, ClassNotFoundException {
+    private void updateOrder(Boolean isSell){
 
         if (quantityInput.getText() != null && !quantityInput.getText().equals("")) {
             int quantity;

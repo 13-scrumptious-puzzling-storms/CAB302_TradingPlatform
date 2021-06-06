@@ -10,7 +10,7 @@ public class ITAdministrator extends User {
     /**
      * @param userID User's userid.
      */
-    public ITAdministrator(int userID) throws IOException, ClassNotFoundException {
+    public ITAdministrator(int userID)  {
         super(userID);
     }
 

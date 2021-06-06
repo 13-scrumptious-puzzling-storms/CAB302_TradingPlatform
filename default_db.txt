@@ -1,1 +1,1 @@
-C:\Java\CAB302_TradingPlatform\db_testdb.props
+C:\Users\liamf\Documents\Personal\GitHub\CAB302_TradingPlatform\db_SPSTradingdb.props

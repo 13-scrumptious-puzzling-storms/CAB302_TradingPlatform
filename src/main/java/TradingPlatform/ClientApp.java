@@ -13,7 +13,7 @@ public class ClientApp {
     private static GUILogin guiLogin;
     private static GUIMain guiMain;
 
-    private static Boolean loggedIn;
+    public static Boolean loggedIn;
 
     /**
      *

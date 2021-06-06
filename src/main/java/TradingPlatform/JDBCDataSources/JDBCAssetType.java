@@ -46,7 +46,7 @@ public class JDBCAssetType {
     /**
      * Creates new assetType and returns unique ID
      * @param assetName name of asset to be created
-     * @return unique ID given to the assetType
+     * @return unique ID given to the assetType - valid int (from one onwards)
      */
     public int addAssetType(String assetName){
         try {
@@ -75,7 +75,7 @@ public class JDBCAssetType {
      * Retrieves the asset name associated with the unique
      * asset ID
      * @param assetId unique asset ID
-     * @return name of the asset associated with the unique
+     * @return name of the asset associated with the unique - valid String
      */
     public String getAssetName(int assetId) {
         try {
@@ -154,7 +154,7 @@ public class JDBCAssetType {
 
     /**
      * Retrieves asset ID associated with the asset name
-     * @param assetName name of asset`
+     * @param assetName name of asset - valid String that exists in the database
      * @return Returns the id of the asset with the given name, or -1 on error
      */
     public int getAssetId(String assetName) {

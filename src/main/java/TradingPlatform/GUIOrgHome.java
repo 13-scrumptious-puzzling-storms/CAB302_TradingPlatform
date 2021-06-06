@@ -7,8 +7,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -65,10 +63,8 @@ public class GUIOrgHome{
      * GUIOrg home constructor, adding the organisational home tab to pane
      * @param OrgHomeTab Tab which to add organisational home contents
      * @param user User that belongs to the organisational unit
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public GUIOrgHome(JPanel OrgHomeTab, User user) throws IOException, ClassNotFoundException {
+    public GUIOrgHome(JPanel OrgHomeTab, User user) {
         this.user = user;
         this.organisationalUnit = user.getOrganisationalUnit();
         this.organisationalUnitID = organisationalUnit.getID();
@@ -101,10 +97,8 @@ public class GUIOrgHome{
     /**
      * Main method for adding components to Tab (buttons, tables, labels)
      * @param panel2 panel to add all orgHome components to
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public void orgHomePanel(JPanel panel2) throws IOException, ClassNotFoundException {
+    public void orgHomePanel(JPanel panel2)  {
 
         tradesAssets = new JTabbedPane();
         tradesAssets.setBackground(cust3);
@@ -275,7 +269,7 @@ public class GUIOrgHome{
                             Trade.setCancel(tradeId); //cancel order
 
                             // Get the org asset id from the trade id
-                            int orgAssetId = TradeManager.getOrganisationAssetId(tradeId);
+                            int orgAssetId = Trade.getOrganisationAssetId(tradeId);
 
                             //Calculate new Asset Quantity
                             //get current asset quantity for organisationAssetID
@@ -394,10 +388,8 @@ public class GUIOrgHome{
      * constructs buy order table model using information retrieved from
      * the database
      * @return buy order table model
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public static DefaultTableModel constructBuyTableModel() throws IOException, ClassNotFoundException {
+    public static DefaultTableModel constructBuyTableModel()  {
         //Retrieve trades buy table for organisational unit
         String[][] tradesBuy = TradeManager.getBuyOrders(organisationalUnitID);
         int buySize = tradesBuy.length;
@@ -426,10 +418,8 @@ public class GUIOrgHome{
      * constructs sell order table model using information retrieved from
      * the database
      * @return sell order table model
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public static DefaultTableModel constructSellTableModel() throws IOException, ClassNotFoundException {
+    public static DefaultTableModel constructSellTableModel()  {
         //Retrieve trades sell table for organisational unit
         String[][] tradesSell = TradeManager.getSellOrders(organisationalUnitID);
         int sellSize = tradesSell.length;
@@ -459,10 +449,8 @@ public class GUIOrgHome{
      * constructs asset table model using information retrieved from
      * the database
      * @return asset table model of assets belonging to the organisational unit
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
-    public static DefaultTableModel constructAssetTableModel() throws IOException, ClassNotFoundException {
+    public static DefaultTableModel constructAssetTableModel(){
         //JPanel AssetsPanel = new JPanel();
         String[][] OrgAssets = OrganisationAsset.getOrganisationalUnitAssetTable(organisationalUnitID);
         int size = OrgAssets.length;
