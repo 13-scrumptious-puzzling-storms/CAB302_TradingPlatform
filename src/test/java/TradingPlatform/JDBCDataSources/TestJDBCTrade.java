@@ -3,6 +3,7 @@ package TradingPlatform.JDBCDataSources;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.sqlite.SQLiteException;
 
 import java.sql.Connection;
 
@@ -41,6 +42,18 @@ public class TestJDBCTrade {
         assert(TradeSource.getCancel(tradeId));
     }
 
+    //lower boundary case
+    @Test
+    public void testBoundaryCancelled(){
+        init();
+        int tradeId = 1;
+        boolean isCancelled = TradeSource.getCancel(tradeId);
+        if (!isCancelled){
+            TradeSource.setCancel(tradeId);
+        }
+        assert(TradeSource.getCancel(tradeId));
+    }
+
     @Test
     public void testRemaining(){
         init();
@@ -53,6 +66,15 @@ public class TestJDBCTrade {
     public void testRemaining2(){
         init();
         int tradeId = 10;
+        int remaining = TradeSource.getRemaining(tradeId);
+        TradeSource.setRemaining(tradeId, remaining-3);
+        assert(TradeSource.getRemaining(tradeId) == remaining-3);
+    }
+
+    @Test
+    public void testBoundaryRemaining(){
+        init();
+        int tradeId = 1;
         int remaining = TradeSource.getRemaining(tradeId);
         TradeSource.setRemaining(tradeId, remaining-3);
         assert(TradeSource.getRemaining(tradeId) == remaining-3);
@@ -78,18 +100,52 @@ public class TestJDBCTrade {
     }
 
     @Test
-    public void testGetQuantity(){
+    public void testBoundaryValue(){
+        init();
+        assert(TradeSource.value(1) == 5);
+    }
+
+    @Test
+    public void testLastValue(){
+        init();
+        assert(TradeSource.value(15) == 1);
+    }
+
+    @Test
+    public void testBoundaryGetQuantity(){
         init();
         assert(TradeSource.getQuantity(1) == 25);
     }
 
     @Test
-    public void testGetAsset(){
+    public void testGetQuantity(){
+        init();
+        assert(TradeSource.getQuantity(7) == 50);
+    }
+
+    @Test
+    public void testLastGetQuantity(){
+        init();
+        assert(TradeSource.getQuantity(15) == 3);
+    }
+
+    @Test
+    public void testBoundaryGetAsset(){
         init();
         assert(TradeSource.getAsset(1) == 5);
     }
 
+    @Test
+    public void testGetAsset(){
+        init();
+        assert(TradeSource.getAsset(9) == 9);
+    }
 
+    @Test
+    public void testLastGetAsset(){
+        init();
+        assert(TradeSource.getAsset(15) == 2);
+    }
 
     @AfterAll
     public static void DeleteTestDb(){

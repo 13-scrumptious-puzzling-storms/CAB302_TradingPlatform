@@ -1,13 +1,7 @@
 package TradingPlatform;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +19,7 @@ public class GUIHome extends JFrame{
     private volatile JTable mostRecentTradesTable;
     private volatile JTable allRecentTradesTable;
 
+    //creating table headings
     String TableOneHeading[] = {"Asset Name","Price","Quantity"};
     String TableTwoHeading[] = {"Recent Trades","Price","Quantity"};
 
@@ -48,9 +43,11 @@ public class GUIHome extends JFrame{
      */
     public void homePanel(JPanel panel)  {
 
+        //setting up home panel layout
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
 
+        //Setting up buy button and adding an action listener
         JButton buyButton = new JButton("Buy Assets");
         buyButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         buyButton.setPreferredSize(new Dimension(200, 100));
@@ -60,6 +57,7 @@ public class GUIHome extends JFrame{
             ActionListener(false);
         });
 
+        //Setting up sell button and adding an action listener
         JButton sellButton = new JButton("Sell Assets");
         sellButton.setFont(new Font("Verdana", Font.PLAIN, 16));
         sellButton.setPreferredSize(new Dimension(200, 100));
@@ -69,16 +67,19 @@ public class GUIHome extends JFrame{
             ActionListener(true);
         });
 
+        //Setting up most recent trades table
         mostRecentTradesTable = tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading));
         var mostRecentTrades = GUIMain.tablePane(mostRecentTradesTable);
         mostRecentTrades.setPreferredSize(new Dimension(tabWidth-tabWidth/100, 100));
         mostRecentTrades.setMinimumSize(new Dimension(tabWidth/2, 50));
 
+        //Setting up recent trades table
         allRecentTradesTable = tableCreator(GUIMain.constructTable(TradeManager.getRecentTradeDetails(), TableTwoHeading));
         var allRecentTrades = GUIMain.tablePane(allRecentTradesTable);
         allRecentTrades.setPreferredSize(new Dimension(tabWidth-tabWidth/100, tabHeight-100));
         allRecentTrades.setMinimumSize(new Dimension(tabWidth/2, tabHeight));
 
+        //positioning components and adding them to the panel
         position.weighty = 1;
         position.gridx = 0;
         position.gridy = 1;
@@ -102,6 +103,7 @@ public class GUIHome extends JFrame{
         position.gridy = 3;
         panel.add(allRecentTrades, position);
 
+        //adding background colour
         panel.setBackground(cust1);
     }
 
@@ -111,6 +113,8 @@ public class GUIHome extends JFrame{
      */
     private void RefreshContent(){
         try {
+
+            //reconstructing tableModels
             var dataModel1 = GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading);
             mostRecentTradesTable.setModel(dataModel1);
             var dataModel2 = GUIMain.constructTable(TradeManager.getRecentTradeDetails(), TableTwoHeading);

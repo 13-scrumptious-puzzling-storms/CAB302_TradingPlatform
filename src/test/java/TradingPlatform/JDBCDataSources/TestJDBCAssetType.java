@@ -22,9 +22,9 @@ public class TestJDBCAssetType {
     @Test
     public void getAssetNameTest(){
         init();
-        int orgID = 1;
+        int assetID = 1;
         String assetName = "Pen";
-        assert((asset.getAssetName(orgID).equals(assetName)));
+        assert((asset.getAssetName(assetID).equals(assetName)));
     }
 
     @Test
