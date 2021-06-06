@@ -14,6 +14,10 @@ import java.util.concurrent.TimeUnit;
 import static TradingPlatform.GUIMain.*;
 import static java.awt.GridBagConstraints.*;
 
+/**
+ * Constructs components to create the GUIHome page. The user can see the most recent reconciled trade orders,
+ * and create new Buy/Sell orders.
+ */
 public class GUIHome extends JFrame{
 
     public User user;
@@ -24,7 +28,12 @@ public class GUIHome extends JFrame{
     String TableOneHeading[] = {"Asset Name","Price","Quantity"};
     String TableTwoHeading[] = {"Recent Trades","Price","Quantity"};
 
-    public GUIHome(JPanel HomeTab, User user) throws IOException, ClassNotFoundException {
+    /**
+     * GUIHome constructor, adds the home panel to the home tab panel
+     * @param HomeTab A JPanel which to add Home contents in
+     * @param user A User that belongs to the organisational unit
+     */
+    public GUIHome(JPanel HomeTab, User user)  {
         homePanel(HomeTab);
         this.user = user;
 
@@ -33,18 +42,11 @@ public class GUIHome extends JFrame{
         exec.scheduleWithFixedDelay(this::RefreshContent, 5, 5, TimeUnit.SECONDS);
     }
 
-    private void RefreshContent(){
-        try {
-            var dataModel1 = GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading);
-            mostRecentTradesTable.setModel(dataModel1);
-            var dataModel2 = GUIMain.constructTable(TradeManager.getRecentTradeDetails(), TableTwoHeading);
-            allRecentTradesTable.setModel(dataModel2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void homePanel(JPanel panel) throws IOException, ClassNotFoundException {
+    /**
+     * Constructs components and adds them into the JPanel for the Home tab.
+     * @param panel A JPanel which to add Home contents in
+     */
+    public void homePanel(JPanel panel)  {
 
         panel.setLayout(new GridBagLayout());
         GridBagConstraints position = new GridBagConstraints();
@@ -54,18 +56,8 @@ public class GUIHome extends JFrame{
         buyButton.setPreferredSize(new Dimension(200, 100));
         buyButton.setMinimumSize(new Dimension(50, 50));
         buyButton.setBackground(cust1);
-        buyButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                // display buy popup
-                try {
-                    GUIOrder order = new GUIOrder(user);
-                    order.popup(false);
-                } catch (Exception m) {
-                    m.printStackTrace();
-                }
-            }
+        buyButton.addActionListener(e -> {
+            ActionListener(false);
         });
 
         JButton sellButton = new JButton("Sell Assets");
@@ -74,13 +66,7 @@ public class GUIHome extends JFrame{
         sellButton.setMinimumSize(new Dimension(50, 50));
         sellButton.setBackground(cust1);
         sellButton.addActionListener(e -> {
-            try {
-                ActionListener(true);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
-            }
+            ActionListener(true);
         });
 
         mostRecentTradesTable = tableCreator(GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading));
@@ -119,7 +105,26 @@ public class GUIHome extends JFrame{
         panel.setBackground(cust1);
     }
 
-    public void ActionListener(Boolean isSell) throws IOException, ClassNotFoundException {
+    /**
+     * Periodically refreshes table models for the most recent reconciled trades for each asset,
+     * and all recent reconciled trades.
+     */
+    private void RefreshContent(){
+        try {
+            var dataModel1 = GUIMain.constructTable(TradeManager.getMostRecentAssetTypeTradeDetails(), TableOneHeading);
+            mostRecentTradesTable.setModel(dataModel1);
+            var dataModel2 = GUIMain.constructTable(TradeManager.getRecentTradeDetails(), TableTwoHeading);
+            allRecentTradesTable.setModel(dataModel2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Calls the GUIOrder buy or sell order depending on if isSell is true or false
+     * @param isSell A Boolean determining if the order is a Sell (true) or Buy (false)
+     */
+    public void ActionListener(Boolean isSell) {
        GUIOrder order = new GUIOrder(user);
        order.popup(isSell);
     }

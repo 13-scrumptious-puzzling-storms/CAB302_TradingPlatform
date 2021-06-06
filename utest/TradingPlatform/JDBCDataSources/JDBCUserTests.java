@@ -1,7 +1,6 @@
-package TradingPlatform.UnitTests;
+package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.AccountType;
-import TradingPlatform.JDBCDataSources.JDBCUserDataSource;
 import TradingPlatform.SHA256;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,17 +8,17 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 
-public class UserTests {
+public class JDBCUserTests {
     static Connection connection;
 
     @BeforeAll
     public static void init(){
-        connection = TestDatabaseFunctions.getConnection();
+        connection = MockDatabaseFunctions.getConnection();
     }
 
     @AfterAll
     public static void deleteDb(){
-        TestDatabaseFunctions.CloseDatabase();
+        MockDatabaseFunctions.CloseDatabase();
     }
 
     @Test

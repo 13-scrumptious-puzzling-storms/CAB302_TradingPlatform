@@ -1,7 +1,5 @@
-package TradingPlatform.UnitTests;
+package TradingPlatform.JDBCDataSources;
 
-import TradingPlatform.JDBCDataSources.JDBCAssetType;
-import TradingPlatform.JDBCDataSources.JDBCOrganisationalUnit;
 import TradingPlatform.NetworkProtocol.DBConnection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

@@ -7,10 +7,11 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * The main GUI class. Calls other GUI classes to construct the SPS Trading client application.
+ */
 public class GUIMain extends JFrame {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = 692675871418401803L;
 
     // Screen Ratio
@@ -21,16 +22,10 @@ public class GUIMain extends JFrame {
     public static final Color cust1 = new Color(38,139,133);
     public static final Color cust2 = new Color(51,61,68);
     public static final Color cust3 = new Color(72,191,146);
-    public static final Color CELADON_GREEN = new Color(38,139,133);
-    public static final Color OCEAN_GREEN = new Color(72,191,146);
-    public static final Color CRIMSON = new Color(214, 40, 57);
-    public static final Color CHARCOAL = new Color(51,61,68);
     public static final Color DARK_JUNGLE_GREEN = new Color(13, 27, 30);
-    public static final Color WHITE = Color.WHITE;
 
     public static Object[] getColours(){
-        Object[] colours = new Object[]{cust1, cust2, cust3};
-        return colours;
+        return new Object[]{cust1, cust2, cust3};
     }
     // Display the window.
     private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -46,52 +41,19 @@ public class GUIMain extends JFrame {
     //orgTab
     public JPanel orgTab = new JPanel();
 
-    public String data[][] = {{"Vinod","MCA","Computer"},
-            {"Deepak","PGDCA","History"},
-            {"Ranjan","M.SC.","Biology"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"},
-            {"Radha","BCA","Computer"}};
-
-    public GUIMain(User user) throws IOException, ClassNotFoundException {
+    /**
+     * Creates the GUI, and calls other GUI classes to add them to the main JTabbedPane
+     * @param user The current User
+     */
+    public GUIMain(User user)  {
         super("SPS Trading");
         UIManager.put("TabbedPane.selected", cust1);
         UIManager.put("Button.foreground", Color.WHITE);
         UIManager.put("Button.background", cust1);
-//        JFrame.setDefaultLookAndFeelDecorated(false);
+
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -169,6 +131,11 @@ public class GUIMain extends JFrame {
 
     }
 
+    /**
+     * Creates a JScrollPane to store a table
+     * @param table The JTable wanted to be stored
+     * @return tradesScrollTable
+     */
     public static JScrollPane tablePane(JTable table){
 
         JScrollPane tradesScrollTable = new JScrollPane(table);
@@ -183,11 +150,22 @@ public class GUIMain extends JFrame {
         return tradesScrollTable;
     }
 
+    /**
+     * Creates a DefaultTabelModel to store the data in
+     * @param data A String[][] that holds the table data
+     * @param headingType A String[] that holds the table headings
+     * @return a DefaultTableModel, model
+     */
     public static DefaultTableModel constructTable(String[][] data, String[] headingType){
         DefaultTableModel model = new DefaultTableModel(data, headingType);
         return model;
     }
 
+    /**
+     * Creates the table to be displayed
+     * @param model A DefaultTableModel with the data to go in the table
+     * @return A JTable, table
+     */
     public static JTable tableCreator (DefaultTableModel model){
         JTable table = new JTable(model);
         JTableHeader anHeader = table.getTableHeader();

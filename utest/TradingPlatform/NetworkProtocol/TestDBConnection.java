@@ -1,9 +1,8 @@
 package TradingPlatform.NetworkProtocol;
 
-import java.sql.Connection;
-
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import java.sql.Connection;
 
 public class TestDBConnection {
     Connection connection;

@@ -3,8 +3,10 @@ package TradingPlatform.JDBCDataSources;
 import TradingPlatform.Interfaces.TradeDataSource;
 
 import java.sql.*;
-import java.util.Arrays;
 
+/**
+ * Retrieves information from the database relating to trade orders
+ */
 public class JDBCTradeDataSource implements TradeDataSource {
 
     private static final String INSERT_TRADE = "INSERT INTO TradeOrders (organisationAssetID, quantity, remainingQuantity, isSellOrder, price, cancelled, createdTime) VALUES (?, ?, ?, ?, ?, 'false', strftime('%Y-%m-%d %H:%M:%f','now'))";
@@ -48,8 +50,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
 
     private Connection connection;
 
-    private int TradeId;
 
+    /**
+     * Constructs an instance of the prepared statements for the connection to the database
+     * @param connection A Connection used to connect to the database
+     */
     public JDBCTradeDataSource(Connection connection){
         this.connection = connection;
 
@@ -75,6 +80,13 @@ public class JDBCTradeDataSource implements TradeDataSource {
         }
     }
 
+    /**
+     * Inserts a new trade order into the database
+     * @param orgAssetId An int representing the Organisation Asset ID
+     * @param quantity An int representing the quantity
+     * @param type An boolean representing the trade type BUY (false) / SELL (true)
+     * @param price An int representing the price
+     */
     @Override
     public void addTradeOrder(int orgAssetId, int quantity, boolean type, int price){
         try {
@@ -95,6 +107,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         }
     }
 
+    /**
+     * Gets the price used for the trade from the database
+     * @param tradeId An int representing the ID of the trade
+     * @return An int of the price
+     */
     @Override
     public int value(int tradeId) {
         try {
@@ -113,6 +130,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return -1;
     }
 
+    /**
+     * Gets the type of the trade from the database
+     * @param tradeId An int representing the ID of the trade
+     * @return A String of the price as either "sell" or "buy"
+     */
     @Override
     public String GetType(int tradeId) {
         try {
@@ -137,6 +159,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return null;
     }
 
+    /**
+     * Gets the organisationAssetId of the trade from the database
+     * @param tradeId An int representing the ID of the trade
+     * @return An int for the organisationAssetId
+     */
     @Override
     public int getAsset(int tradeId) {
         try {
@@ -155,6 +182,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return -1;
     }
 
+    /**
+     * Gets the quantity of the trade from the database
+     * @param tradeId An int representing the ID of the trade
+     * @return An int for the quantity
+     */
     @Override
     public int getQuantity(int tradeId) {
         try {
@@ -173,6 +205,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return -1;
     }
 
+    /**
+     * Sets the remaining quantity of the trade from the database
+     * @param tradeId An int representing the ID of the trade
+     * @param amount An int representing the new quantity
+     */
     @Override
     public void setRemaining(int tradeId, int amount){
         try {
@@ -186,6 +223,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         }
     }
 
+    /**
+     * Gets the remaining quantity of the trade from the database
+     * @param tradeId An int representing the ID of the trade
+     * @return An int for the remaining quantity
+     */
     @Override
     public int getRemaining(int tradeId) {
         try {
@@ -204,6 +246,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return -1;
     }
 
+    /**
+     * Sets the trade to cancelled in the database
+     * @param tradeId An int representing the ID of the trade
+     * @return A Boolean true if trade successfully cancelled
+     */
     @Override
     public Boolean setCancel(int tradeId){
         try {
@@ -218,6 +265,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         }
     }
 
+    /**
+     * Gets the cancelled column of the trade from the database
+     * @param tradeId An int representing the ID of the trade
+     * @return A Boolean for if it is cancelled
+     */
     @Override
     public Boolean getCancel(int tradeId){
         try{
@@ -244,6 +296,11 @@ public class JDBCTradeDataSource implements TradeDataSource {
         return null;
     }
 
+    /**
+     * Gets all buy orders from the database for an organisation
+     * @param orgUnitId An int representing the organisation unit ID
+     * @return A String[][] with the orders
+     */
     public String[][] getBuyOrders(int orgUnitId){
         try {
             getBuyOrders.clearParameters();
@@ -254,13 +311,13 @@ public class JDBCTradeDataSource implements TradeDataSource {
             countOrders.setInt(1, orgUnitId);
             countOrders.setString(2, "false");
             ResultSet num = countOrders.executeQuery();
+
             int count;
             if (num.next()) {
                 count = num.getInt("num");
             }else {
                 count = 0;
             }
-//            HashSet<Integer> assets = new HashSet<Integer>();
 
             String[][] assets = new String[count][];
             int i = 0;
@@ -274,16 +331,19 @@ public class JDBCTradeDataSource implements TradeDataSource {
                 assets[i] = ass;
                 i++;
             }
-            System.out.println("Buy assets are: " + Arrays.deepToString(assets));
             return assets;
         }
         catch (SQLException throwables){
-            System.out.println("Into the catch");
             throwables.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * Gets all sell orders from the database for an organisation
+     * @param orgUnitId An int representing the organisation unit ID
+     * @return A String[][] with the orders
+     */
     public String[][] getSellOrders(int orgUnitId){
         try {
             getSellOrders.clearParameters();
@@ -294,6 +354,7 @@ public class JDBCTradeDataSource implements TradeDataSource {
             countOrders.setInt(1, orgUnitId);
             countOrders.setString(2, "true");
             ResultSet num = countOrders.executeQuery();
+
             int count;
             if (num.next()) {
                 count = num.getInt("num");

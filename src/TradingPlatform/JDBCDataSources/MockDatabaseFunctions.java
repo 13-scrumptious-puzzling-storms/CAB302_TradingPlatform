@@ -1,7 +1,6 @@
-package TradingPlatform.UnitTests;
+package TradingPlatform.JDBCDataSources;
 
 import TradingPlatform.SHA256;
-import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.sql.Connection;
@@ -11,13 +10,16 @@ import java.sql.SQLException;
 /**
  * This class is used for created a test database with test data.
  */
-public class TestDatabaseFunctions {
+public class MockDatabaseFunctions {
     private static Connection connection;
     private static final String testDbName = "testdb.db";
 
-    @Test
-    public void CreateDB(){
-        TestDatabaseFunctions.InitDb();
+    /**
+     * This is a temporary function to initialise the testdb quickly.
+     * @param args ignored args for main function
+     */
+    public static void main(String[] args){
+        MockDatabaseFunctions.InitDb();
     }
 
     /**
@@ -72,7 +74,6 @@ public class TestDatabaseFunctions {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
     }
 
     //region SQL to init database

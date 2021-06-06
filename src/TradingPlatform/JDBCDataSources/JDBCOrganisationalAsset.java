@@ -46,7 +46,7 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
 
     /**
      * Creates instance of the prepared statements for the connection to the database
-     * @param connection
+     * @param connection connection instance from the database (valid connection)
      */
     public JDBCOrganisationalAsset(Connection connection){
         this.connection = connection;
@@ -68,8 +68,8 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
 
     /**
      * Retrieves organisationalUnitID of the organisationAsset
-     * @param orgAssetId organisationAssetID
-     * @return organisationalUnitID
+     * @param orgAssetId organisationAssetID - valid int (from one onwards)
+     * @return organisationalUnitID - valid int (from one onwards)
      */
     public int getOrganisationAssetOrgUnitID(int orgAssetId) {
         try {
@@ -89,8 +89,8 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
 
     /**
      * Retrieves quantity of the organisationAsset
-     * @param orgAssetId organisationAsset ID
-     * @return quantity of the organisationAssetID
+     * @param orgAssetId organisationAsset ID - valid int (from one onwards)
+     * @return quantity of the organisationAssetID - valid int (from zero onwards)
      */
     public int getOrganisationAssetQuantity(int orgAssetId) {
         try {
@@ -111,8 +111,8 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
     /**
      * Retrieves the asset ID that belongs to
      * the given organisationAssetID
-     * @param orgAssetId organisationAsset ID
-     * @return asset ID of the given organisationAssetID
+     * @param orgAssetId organisationAsset ID - valid int (from one onwards)
+     * @return asset ID of the given organisationAssetID - valid int (from one onwards)
      */
     public int getOrganisationAssetTypeID(int orgAssetId) {
         try {
@@ -132,7 +132,7 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
 
     /**
      * Retrieves the organisation's asset names and quantity
-     * @param orgUnitId organisationUnit ID
+     * @param orgUnitId organisationUnit ID - valid int (from one onwards)
      * @return organisationUnits assets and quantities in double string array
      */
     public String[][] getOrganisationAssetsAndQuantity(int orgUnitId){
@@ -171,10 +171,10 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
 
     /**
      * Adds new organisationAsset to the database using organisationUnitID, assetTypeId, and quantity
-     * @param orgUnitID organisationUnit ID to add organisationAsset to
-     * @param assetTypeID Asset type ID of asset that is to be added
-     * @param quantity quantity to add organisationAsset to
-     * @return ID of the organisation asset
+     * @param orgUnitID organisationUnit ID to add organisationAsset to - valid int (from one onwards)
+     * @param assetTypeID Asset type ID of asset that is to be added - valid int (from one onwards)
+     * @param quantity quantity to add organisationAsset to - valid int (from zero onwards)
+     * @return ID of the organisation asset - valid int (from one onwards)
      */
     public int addOrganisationAsset(int orgUnitID, int assetTypeID, int quantity) {
         try {
@@ -204,8 +204,8 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
 
     /**
      * Updates the quantity of an organisation asset with given ID
-     * @param orgAssetID organisationAsset ID to be updated
-     * @param quantity new quantity of the organisationAsset
+     * @param orgAssetID organisationAsset ID to be updated -valid int (from one onwards)
+     * @param quantity new quantity of the organisationAsset- valid int (from zero onwards)
      */
     public void UpdateOrganisationAssetQuantity(int orgAssetID, int quantity){
         synchronized (JDBCThreadLock.UpdateDbLock) {
@@ -223,8 +223,8 @@ public class JDBCOrganisationalAsset implements OrganisationalAssetSource {
 
     /**
      * Returns the organisationAssetID for a given organisationalUnit and AssetType
-     * @param orgUnitId organisationUnit ID
-     * @param assetTypeId assetTypeID
+     * @param orgUnitId valid int (from one onwards) - organisationUnit ID
+     * @param assetTypeId  valid int (from one onwards) - assetTypeID
      * @return organisationAssetID (-1 on error)
      */
     public int getOrganisationAssetId(int orgUnitId, int assetTypeId){
