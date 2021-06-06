@@ -12,8 +12,7 @@ public class TestReconcile {
     static Connection connection;
     static JDBCTradeReconcileSource reconcileSource;
 
-    @BeforeEach
-    public void init(){
+    private void init(){
         MockDatabaseFunctions.InitDb();
         connection = MockDatabaseFunctions.getConnection();
         reconcileSource = new JDBCTradeReconcileSource(connection);
