@@ -102,18 +102,6 @@ public class TradeManager {
     }
 
     /**
-     * sets the trade to cancelled
-     * @param tradeID An int representing the current trade ID
-     * @return A Boolean response from the server
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public static Boolean setCancel(int tradeID) throws IOException, ClassNotFoundException {
-        Request response = networkManager.GetResponse("JDBCTradeDataSource", "setCancel", new String[] {String.valueOf(tradeID)});
-        return response.getResponse();
-    }
-
-    /**
      * Gets the organisation asset ID for a given trade, returns -1 on error
      * @param tradeId An int representing the current trade ID
      * @return An int representing the organisation asset ID
