@@ -33,6 +33,7 @@ public class TestJDBCOrganisationalUnit {
         init();
     }
 
+    // Exceptional case
     @Test
     public void testServerAddOrganisationalUnitError(){
         init();
