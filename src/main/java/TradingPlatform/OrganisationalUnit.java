@@ -47,7 +47,7 @@ public class OrganisationalUnit implements Serializable {
 
     /**
      * Sets given ID as the new organisation ID in the given instance of the organisational unit
-     * @param newID
+     * @param newID new organisational unit - valid int (one or greater)
      */
     public void setId(int newID){
         this.organisationID = newID;
