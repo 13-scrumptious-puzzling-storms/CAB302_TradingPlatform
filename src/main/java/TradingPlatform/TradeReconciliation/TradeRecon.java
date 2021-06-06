@@ -1,5 +1,9 @@
 package TradingPlatform.TradeReconciliation;
 
+/**
+ * This trade recon class is an object that is just used to store information about a trade reconciliation, it does not
+ * interface the server or database in any way.
+ */
 public class TradeRecon {
     private int sellOrderId;
     private int buyOrderId;

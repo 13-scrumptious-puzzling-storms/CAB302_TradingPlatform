@@ -8,6 +8,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Trade reconcile source is used to add records to the reconcile table, to retrieve reconcilable trade orders
+ * and to get historical asset trades (for historical sell price).
+ */
 public class JDBCTradeReconcileSource implements TradeReconcileSource {
 
     private static final String INSERT_RECON = "INSERT INTO TradeRecon (sellOrderId, buyOrderId, quantity, createdTime) VALUES (?, ?, ?, strftime('%Y-%m-%d %H:%M:%f','now'))";
@@ -128,6 +132,10 @@ public class JDBCTradeReconcileSource implements TradeReconcileSource {
     private static PreparedStatement countRecentRec;
 
 
+    /**
+     * Creates a reconcile source with the given connection to the database.
+     * @param connection the connection to the database
+     */
     public JDBCTradeReconcileSource(Connection connection){
 
         try {

@@ -44,13 +44,13 @@ public class TestJDBCOrganisationAsset {
         assert(assetsAndQuantity[0][1].equals("Pen"));
         assert(assetsAndQuantity[0][2].equals("50"));
 
-        assert(assetsAndQuantity[0][0].equals("2"));
-        assert(assetsAndQuantity[0][1].equals("Printer"));
-        assert(assetsAndQuantity[0][2].equals("200"));
+        assert(assetsAndQuantity[1][0].equals("2"));
+        assert(assetsAndQuantity[1][1].equals("Printer"));
+        assert(assetsAndQuantity[1][2].equals("200"));
 
-        assert(assetsAndQuantity[0][0].equals("3"));
-        assert(assetsAndQuantity[0][1].equals("Ruler"));
-        assert(assetsAndQuantity[0][2].equals("100"));
+        assert(assetsAndQuantity[2][0].equals("3"));
+        assert(assetsAndQuantity[2][1].equals("Ruler"));
+        assert(assetsAndQuantity[2][2].equals("100"));
     }
 
     @Test
